@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -7,36 +7,119 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Use Prisma Schema file to define your entities: https://www.prisma.io/docs/concepts/components/prisma-schema.
-// Run `wasp db migrate-dev` in the CLI to create the database tables,
-// then run `wasp db studio` to open Prisma Studio and view your db models.
+// NOTE: This project started on SQLite, so enum-like columns and array
+// columns are stored as String / JSON-string. Valid values are enforced
+// at the app layer (Zod in src/shared/types.ts). Now on Postgres but the
+// JSON-string shape is left intact — converting to native enums + String[]
+// is a separate refactor (touches every read/write site + Zod) and is not
+// required for Phase 11 (jobs).
+
+// Wasp fills in auth fields automatically.
 model User {
-  id       String @id @default(uuid())
-  username String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
 
-  tasks Task[]
-  tags  Tag[]
+  email                     String          @unique
+  username                  String          @unique
+  lastActiveTimestamp       DateTime        @default(now())
+  isAdmin                   Boolean         @default(false)
+  name                      String?
+
+  paymentProcessorUserId    String?         @unique
+  subscriptionStatus        String?         // 'active', 'cancel_at_period_end', 'past_due', 'deleted', 'not_subscribed', 'disabled'
+  subscriptionPlan          String?         // 'mini', 'premium'
+  
+  datePaid                  DateTime?
+  subscriptionEndDate       DateTime?
+
+  beats Beat[]
 }
 
-model Task {
-  id          String   @id @default(uuid())
-  description String
-  isDone      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+model Beat {
+  id                   String   @id @default(uuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug                 String   @unique
+  title                String
+  brief                String
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  // BeatStatus: DRAFT | DESIGNING | AWAITING_CLARIFICATION | SCOUTING | ACTIVE | PAUSED | FAILED
+  status               String   @default("DRAFT")
+  // CadenceType: TIME_BASED | ON_DEMAND
+  cadenceType          String
+  cronExpression       String?
+  timezone             String   @default("Europe/Warsaw")
+  // Depth: BRIEF | STANDARD | DEEP
+  depth                String   @default("STANDARD")
+  outputLanguage       String   @default("en")
 
-  tags Tag[]
+  specMemoryStoreId    String?
+  historyMemoryStoreId String?
+  designSessionId      String?
+
+  summary              String?
+  // JSON array of defaults applied by Beat Designer
+  defaultsApplied      String   @default("[]")
+
+  sourceCount          Int?
+  // coverage assessment: healthy | thin | sparse
+  coverageAssessment   String?
+  coverageNote         String?
+
+  // JSON: { questions: string[], sessionId: string, reasoning: string }
+  pendingClarification String?
+
+  // Phase 11 sweeper bookkeeping: last time scheduleSweeperJob fired this
+  // beat's generateIssueJob. Compared against cron-parser.next(currentDate=lastScheduledAt)
+  // to decide if a new firing is due. On-demand runs do NOT bump this — only
+  // the cron sweeper does.
+  lastScheduledAt      DateTime?
+
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  issues               Issue[]
+
+  @@index([userId, status])
 }
 
-model Tag {
-  id    String @id @default(uuid())
-  name  String @unique
-  color String
+model Issue {
+  id           String      @id @default(uuid())
+  beatId       String
+  beat         Beat        @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  sessionId    String
+  publishedAt  DateTime    @default(now())
+  issueDate    DateTime
+  subject      String
+  dek          String
+  coverageNote String?
+  htmlBody     String
+  plainBody    String
+  // EmailStatus: PENDING | SENT | FAILED
+  emailStatus  String      @default("PENDING")
+  emailSentAt  DateTime?
+  items        IssueItem[]
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  @@index([beatId, publishedAt])
+}
 
-  tasks Task[]
+model IssueItem {
+  id                  String    @id @default(uuid())
+  issueId             String
+  issue               Issue     @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  orderIndex          Int
+  headline            String
+  summary             String
+  whyItMatters        String?
+  primarySourceUrl    String
+  // JSON array of secondary URLs
+  secondarySourceUrls String    @default("[]")
+  // JSON array of tag strings
+  tags                String    @default("[]")
+  fingerprint         String
+  // Feedback: POSITIVE | NEGATIVE | (null = no feedback)
+  feedback            String?
+  feedbackAt          DateTime?
+  feedbackToken       String?   @unique
+
+  @@index([issueId, orderIndex])
 }

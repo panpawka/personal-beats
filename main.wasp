@@ -2,99 +2,263 @@ app personalBeat {
   wasp: {
     version: "^0.23.0"
   },
-  title: "personal-beat",
+  title: "Personal Newsroom",
+
   head: [
+    "<meta charSet='utf-8' />",
+    "<meta name='description' content='Feednode – Zautomatyzowana Obsługa Opinii Google Maps. Automatyzacja i personalizacja odpowiedzi na opinie klientów, analiza nastroju, wsparcie wielojęzyczne.' />",
+    "<meta name='author' content='Feednode' />",
+    "<meta name='keywords' content='Feednode, zarządzanie reputacją, automatyzacja, Google Maps, SaaS, opinie klientów, analiza sentimentowa' />",
+    
+    "<meta property='og:type' content='website' />",
+    "<meta property='og:title' content='Feednode' />",
+    "<meta property='og:site_name' content='Feednode' />",
+    "<meta property='og:url' content='https://feednode.lemonode.pl' />",
+    "<meta property='og:description' content='Feednode to zaawansowane narzędzie SaaS, które automatyzuje obsługę opinii Google Maps, pomagając firmom budować pozytywny wizerunek online.' />",
+    "<meta property='og:image' content='https://feednode.lemonode.pl/banner.webp' />",
+    "<meta name='twitter:image' content='https://feednode.lemonode.pl/banner.webp' />",
+    "<meta name='twitter:image:width' content='800' />",
+    "<meta name='twitter:image:height' content='400' />",
+    "<meta name='twitter:card' content='summary_large_image' />",
     "<link rel='icon' href='/favicon.ico' />",
   ],
   auth: {
     userEntity: User,
     methods: {
+      // NOTE: If you decide to not use email auth, make sure to also delete the related routes and pages below.
+      //   (RequestPasswordReset(Route|Page), PasswordReset(Route|Page), EmailVerification(Route|Page))
       email: {
         fromField: {
-          name: "Basic App",
-          email: "hello@example.com"
+          name: "Personal Beat",
+          email: "noreply@lemonode.pl"
         },
-        userSignupFields: import { userSignupFields } from "@src/auth/email/userSignupFields",
         emailVerification: {
-          clientRoute: EmailVerificationRoute,
+          clientRoute: EmailVerificationPageRoute,
+          getEmailContentFn: import { getVerificationEmailContent } from "@src/auth/email-and-pass/emails",
         },
         passwordReset: {
-          clientRoute: PasswordResetRoute,
-        }
+          clientRoute: PasswordResetPageRoute,
+          getEmailContentFn: import { getPasswordResetEmailContent } from "@src/auth/email-and-pass/emails",
+        },
+        userSignupFields: import { getEmailUserFields } from "@src/auth/userSignupFields",
       },
+      // Uncomment to enable Google Auth (check https://wasp-lang.dev/docs/auth/social-auth/google for setup instructions):
+      // google: { // Guide for setting up Auth via Google
+      //   userSignupFields: import { getGoogleUserFields } from "@src/auth/userSignupFields",
+      //   configFn: import { getGoogleAuthConfig } from "@src/auth/userSignupFields",
+      // },
+      // Uncomment to enable GitHub Auth (check https://wasp-lang.dev/docs/auth/social-auth/github for setup instructions):
+      // gitHub: {
+      //   userSignupFields: import { getGitHubUserFields } from "@src/auth/userSignupFields",
+      //   configFn: import { getGitHubAuthConfig } from "@src/auth/userSignupFields",
+      // },
     },
-    onAuthSucceededRedirectTo: "/",
+    onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
+    onAfterEmailVerified: import { onAfterEmailVerified } from "@src/auth/hooks",
+    onAuthSucceededRedirectTo: "/dashboard",
     onAuthFailedRedirectTo: "/login",
   },
   emailSender: {
-    provider: Dummy,
+    provider: Mailgun,
+    defaultFrom: {
+      name: "Personal Beat",
+      email: "hello@lemonode.pl",
+    },
+  },
+
+  db: {
+    // Run `wasp db seed` to seed the database with the seed functions below:
+    seeds: [
+      // Admin user 
+      import { seedAdminWithReviews } from "@src/server/scripts/dbSeed",
+    ]
   },
   client: {
     rootComponent: import { App } from "@src/App",
   }
 }
 
-// #region Auth
-route LoginRoute { path: "/login", to: LoginPage }
+//#region Auth Pages
+route LoginPageRoute { path: "/login", to: LoginPage }
 page LoginPage {
-  component: import { LoginPage } from "@src/auth/email/LoginPage"
+  component: import Login from "@src/auth/LoginPage"
 }
 
-route SignupRoute { path: "/signup", to: SignupPage }
+route SignupPageRoute { path: "/signup", to: SignupPage }
 page SignupPage {
-  component: import { SignupPage } from "@src/auth/email/SignupPage"
+  component: import { Signup } from "@src/auth/SignupPage"
 }
 
-route RequestPasswordResetRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
+route RequestPasswordResetPageRoute { path: "/request-password-reset", to: RequestPasswordResetPage }
 page RequestPasswordResetPage {
-  component: import { RequestPasswordResetPage } from "@src/auth/email/RequestPasswordResetPage",
+  component: import { RequestPasswordResetPage } from "@src/auth/email-and-pass/RequestPasswordResetPage",
 }
 
-route PasswordResetRoute { path: "/password-reset", to: PasswordResetPage }
+route PasswordResetPageRoute { path: "/password-reset", to: PasswordResetPage }
 page PasswordResetPage {
-  component: import { PasswordResetPage } from "@src/auth/email/PasswordResetPage",
+  component: import { PasswordResetPage } from "@src/auth/email-and-pass/PasswordResetPage",
 }
 
-route EmailVerificationRoute { path: "/email-verification", to: EmailVerificationPage }
+route EmailVerificationPageRoute { path: "/email-verification", to: EmailVerificationPage }
 page EmailVerificationPage {
-  component: import { EmailVerificationPage } from "@src/auth/email/EmailVerificationPage",
+  component: import { EmailVerificationPage } from "@src/auth/email-and-pass/EmailVerificationPage",
 }
 // #endregion Auth
 
-// #region Tasks
-route TasksRoute { path: "/", to: TasksPage }
-page TasksPage {
+// #region Newsroom
+route LandingRoute { path: "/", to: LandingPage }
+page LandingPage {
+  component: import { LandingPage } from "@src/pages/LandingPage"
+}
+
+route DashboardRoute { path: "/dashboard", to: DashboardPage }
+page DashboardPage {
   authRequired: true,
-  component: import { TasksPage } from "@src/tasks/TasksPage"
+  component: import { DashboardPage } from "@src/pages/DashboardPage"
 }
 
-query getTasks {
-  fn: import { getTasks } from "@src/tasks/queries",
-  entities: [Task, Tag]
+route NewBeatRoute { path: "/beats/new", to: NewBeatPage }
+page NewBeatPage {
+  authRequired: true,
+  component: import { NewBeatPage } from "@src/pages/NewBeatPage"
 }
 
-action createTask {
-  fn: import { createTask } from "@src/tasks/actions",
-  entities: [Task]
+route BeatDetailRoute { path: "/beats/:beatId", to: BeatDetailPage }
+page BeatDetailPage {
+  authRequired: true,
+  component: import { BeatDetailPage } from "@src/pages/BeatDetailPage"
 }
 
-action updateTaskStatus {
-  fn: import { updateTaskStatus } from "@src/tasks/actions",
-  entities: [Task]
+route IssueDetailRoute { path: "/beats/:beatId/issues/:issueId", to: IssueDetailPage }
+page IssueDetailPage {
+  authRequired: true,
+  component: import { IssueDetailPage } from "@src/pages/IssueDetailPage"
+}
+// #endregion Newsroom
+
+// #region Operations
+query getBeats {
+  fn: import { getBeats } from "@src/server/queries",
+  entities: [Beat, Issue]
 }
 
-action deleteCompletedTasks {
-  fn: import { deleteCompletedTasks } from "@src/tasks/actions",
-  entities: [Task],
+query getBeat {
+  fn: import { getBeat } from "@src/server/queries",
+  entities: [Beat]
 }
 
-query getTags {
-  fn: import { getTags } from "@src/tags/queries",
-  entities: [Tag]
+query getIssuesForBeat {
+  fn: import { getIssuesForBeat } from "@src/server/queries",
+  entities: [Beat, Issue]
 }
 
-action createTag {
-  fn: import { createTag } from "@src/tags/actions",
-  entities: [Tag]
+query getIssue {
+  fn: import { getIssue } from "@src/server/queries",
+  entities: [Beat, Issue, IssueItem]
 }
-// #endregion Tasks
+
+action createBeat {
+  fn: import { createBeat } from "@src/server/actions",
+  entities: [Beat]
+}
+
+action submitClarification {
+  fn: import { submitClarification } from "@src/server/actions",
+  entities: [Beat]
+}
+
+action pauseBeat {
+  fn: import { pauseBeat } from "@src/server/actions",
+  entities: [Beat]
+}
+
+action resumeBeat {
+  fn: import { resumeBeat } from "@src/server/actions",
+  entities: [Beat]
+}
+
+action deleteBeat {
+  fn: import { deleteBeat } from "@src/server/actions",
+  entities: [Beat]
+}
+
+action triggerOnDemandRun {
+  fn: import { triggerOnDemandRun } from "@src/server/actions",
+  entities: [Beat, Issue]
+}
+
+action submitItemFeedback {
+  fn: import { submitItemFeedback } from "@src/server/actions",
+  entities: [Beat, Issue, IssueItem]
+}
+// #endregion Operations
+
+// #region Streaming
+api streamBeatCreation {
+  httpRoute: (GET, "/api/stream/beat/:beatId"),
+  fn: import { streamBeatCreation } from "@src/server/streaming",
+  middlewareConfigFn: import { streamRouteMiddleware } from "@src/server/streaming",
+  auth: true,
+  entities: [Beat]
+}
+
+apiNamespace streamNs {
+  middlewareConfigFn: import { streamNamespaceMiddleware } from "@src/server/streaming",
+  path: "/api/stream"
+}
+// #endregion Streaming
+
+// #region Feedback
+api feedbackMagicLink {
+  httpRoute: (GET, "/feedback/:token"),
+  fn: import { feedbackMagicLink } from "@src/server/feedback",
+  auth: false,
+  entities: [IssueItem]
+}
+// #endregion Feedback
+
+// #region Jobs (Phase 11 — pg-boss)
+//
+// Pattern B: one global per-minute sweeper fans out generateIssueJob to
+// any ACTIVE TIME_BASED beat whose cron is due. Pause = flip status,
+// sweeper skips. No per-beat job-id bookkeeping. See PLAN.md Phase 11.
+
+job generateIssueJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { generateIssue } from "@src/server/jobs/generateIssue",
+    executorOptions: {
+      pgBoss: {=json { "retryLimit": 0, "expireInMinutes": 30 } json=}
+    }
+  },
+  entities: [Beat, Issue, IssueItem]
+}
+
+job scheduleSweeperJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { scheduleSweeper } from "@src/server/jobs/scheduleSweeper",
+    executorOptions: {
+      pgBoss: {=json { "retryLimit": 0, "expireInMinutes": 5 } json=}
+    }
+  },
+  schedule: {
+    cron: "* * * * *"
+  },
+  entities: [Beat]
+}
+
+job applyFeedbackJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { applyFeedback } from "@src/server/jobs/applyFeedback",
+    executorOptions: {
+      pgBoss: {=json { "retryLimit": 0, "expireInMinutes": 30 } json=}
+    }
+  },
+  schedule: {
+    cron: "15 3 * * *"
+  },
+  entities: [Beat, Issue, IssueItem]
+}
+// #endregion Jobs
