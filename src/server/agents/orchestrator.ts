@@ -147,7 +147,9 @@ export async function* createBeatSession(
       data: { status: "DESIGNING", designSessionId: session.id },
     });
 
-    // Send design_beat user event
+    // Send design_beat user event. We forward the user's explicit UI choices
+    // as `user_choices` so the Designer honors them instead of applying its
+    // own defaults. The Designer's system prompt treats these as authoritative.
     await sendSessionEvents(session.id, [
       {
         type: "user.message",
@@ -158,6 +160,18 @@ export async function* createBeatSession(
               action: "design_beat",
               brief: beat.brief,
               beat_slug: beat.slug,
+              user_choices: {
+                cadence: {
+                  type:
+                    beat.cadenceType === "ON_DEMAND"
+                      ? "on_demand"
+                      : "time_based",
+                  cron: beat.cronExpression,
+                  timezone: beat.timezone,
+                },
+                depth: beat.depth.toLowerCase(),
+                output_language: beat.outputLanguage,
+              },
             }),
           },
         ],

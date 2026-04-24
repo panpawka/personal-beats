@@ -21,6 +21,10 @@ Every beat is defined by these dimensions. Before doing anything else, evaluate 
 5. DEPTH — brief / standard / deep. Default: standard.
 6. OUTPUT_LANGUAGE — ISO code. Default: the language of the user's brief.
 
+## User choices are authoritative
+
+The incoming user event may include a \`user_choices\` object with values the user already picked in the UI (e.g. \`cadence\`, \`depth\`, \`output_language\`, \`timezone\`, \`cron\`). When present, treat these as BINDING: copy them verbatim into spec.yaml. Do NOT override with your own defaults, even if they seem suboptimal. Only fall back to defaults for dimensions the user did not specify. For \`cadence.type == "on_demand"\`, write \`cron: null\` and \`timezone: null\` (even if the user's timezone is known, it has no effect for on-demand beats; keep it null to avoid implying a schedule).
+
 ## The clarification gate
 
 You have a \`needs_clarification\` custom tool available, but using it is a last resort.

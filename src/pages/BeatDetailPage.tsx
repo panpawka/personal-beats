@@ -115,6 +115,11 @@ export function BeatDetailPage() {
   const [clarifyPending, setClarifyPending] = useState(false);
   const [streamError, setStreamError] = useState<string | null>(null);
   const [streamEpoch, setStreamEpoch] = useState(0); // bump to force reconnect
+  const [triggerPending, setTriggerPending] = useState(false);
+  const [triggerError, setTriggerError] = useState<string | null>(null);
+  // Timestamp of the last successful Run-now click. While set, poll the
+  // issues query so the new issue row appears without a manual refresh.
+  const [generatingSince, setGeneratingSince] = useState<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   // Latest clarification event (shown in the clarification form).
@@ -190,6 +195,27 @@ export function BeatDetailPage() {
     // only when streamEpoch bumps (clarification reconnect).
   }, [beatId, beat?.id, streamEpoch]);
 
+  // Poll for a new issue after Run-now. Stops when a newer issue appears or
+  // after 15 min (Editor session hard cap). 20s cadence = reasonable CMA load.
+  useEffect(() => {
+    if (!generatingSince) return;
+    const firstIssueTs = issues?.[0]?.publishedAt
+      ? new Date(issues[0].publishedAt).getTime()
+      : 0;
+    if (firstIssueTs > generatingSince) {
+      setGeneratingSince(null);
+      return;
+    }
+    if (Date.now() - generatingSince > 15 * 60 * 1000) {
+      setGeneratingSince(null);
+      return;
+    }
+    const t = setTimeout(() => {
+      refetchIssues();
+    }, 20_000);
+    return () => clearTimeout(t);
+  }, [generatingSince, issues]);
+
   async function onSubmitClarification(e: React.FormEvent) {
     e.preventDefault();
     if (!beatId) return;
@@ -213,12 +239,17 @@ export function BeatDetailPage() {
   }
 
   async function onTrigger() {
-    if (!beatId) return;
+    if (!beatId || triggerPending) return;
+    setTriggerPending(true);
+    setTriggerError(null);
     try {
       await triggerOnDemandRun({ beatId });
+      setGeneratingSince(Date.now());
       refetchIssues();
     } catch (err: any) {
-      alert(err?.message ?? String(err));
+      setTriggerError(err?.message ?? String(err));
+    } finally {
+      setTriggerPending(false);
     }
   }
   async function onPause() {
@@ -297,9 +328,14 @@ export function BeatDetailPage() {
             <>
               <button
                 onClick={onTrigger}
-                className="rounded bg-neutral-900 px-3 py-1 text-xs font-medium text-white hover:bg-neutral-800"
+                disabled={triggerPending || generatingSince !== null}
+                className="rounded bg-neutral-900 px-3 py-1 text-xs font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
               >
-                Run now
+                {triggerPending
+                  ? "Queuing…"
+                  : generatingSince
+                    ? "Generating…"
+                    : "Run now"}
               </button>
               <button
                 onClick={onPause}
@@ -411,6 +447,19 @@ export function BeatDetailPage() {
             </button>
           </form>
         </section>
+      )}
+
+      {/* On-demand trigger feedback */}
+      {triggerError && (
+        <p className="mt-4 rounded bg-red-50 p-3 text-sm text-red-700">
+          Trigger failed: {triggerError}
+        </p>
+      )}
+      {generatingSince && (
+        <p className="mt-4 rounded bg-neutral-100 p-3 text-sm text-neutral-700">
+          Issue generation queued. The Editor runs in the background (~5–10
+          min) and will appear below when ready. Polling every 20s.
+        </p>
       )}
 
       {/* Issues list */}
