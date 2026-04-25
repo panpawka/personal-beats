@@ -1,16 +1,18 @@
 /**
- * Phase 11 — applyFeedbackJob worker (cron: daily ~03:15).
+ * Daily applyFeedbackJob (cron ~03:15).
  *
- * For each ACTIVE beat, finds IssueItem rows with feedback recorded in the
- * last 24h and feeds them to the Designer agent in feedback-learning mode.
- * The agent appends "Learned from feedback" entries to relevance.md so the
- * next Editor session weights items differently.
+ * For each ACTIVE beat with recent feedback, runs the Designer in
+ * feedback-learning mode (phase=RELEVANCE) via the shared driver. We run
+ * runPhaseTick directly in-process (not via driveAgentJob) because:
+ *   - RELEVANCE is short (minute-scale), no re-enqueue cycles expected.
+ *   - Sequential per-beat bounds CMA load.
  *
- * Sequential per-beat to keep CMA load bounded — these are minute-scale
- * sessions, parallelizing 50+ beats would burn quota.
+ * If a tick returns reenqueue (rare — a single Designer turn > MAX_TICK_MS),
+ * we requeue this one beat on driveAgentJob to finish asynchronously.
  */
 import type { ApplyFeedbackJob } from "wasp/server/jobs";
-import { updateRelevanceSession } from "../agents/orchestrator.js";
+import { driveAgentJob } from "wasp/server/jobs";
+import { runPhaseTick } from "../agents/drive.js";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -48,15 +50,39 @@ export const applyFeedback: ApplyFeedbackJob<
     const batch = items.map((it) => ({
       item_headline: it.headline,
       source_url: it.primarySourceUrl,
-      feedback: it.feedback === "POSITIVE" ? ("up" as const) : ("down" as const),
+      feedback:
+        it.feedback === "POSITIVE" ? ("up" as const) : ("down" as const),
     }));
 
     try {
-      await updateRelevanceSession(beat.id, batch);
+      const verdict = await runPhaseTick({
+        beatId: beat.id,
+        phase: "RELEVANCE",
+        kickoff: true,
+        kickoffPayload: { feedback_batch: batch },
+      });
+      if (verdict.state === "reenqueue") {
+        await driveAgentJob.submit(
+          {
+            beatId: beat.id,
+            phase: "RELEVANCE",
+            kickoff: false,
+          },
+          { singletonKey: `drive-${beat.id}` },
+        );
+        console.log(`[applyFeedback:${beat.slug}] re-enqueued to driveAgentJob`);
+      } else if (verdict.state === "failed") {
+        console.error(
+          `[applyFeedback:${beat.slug}] failed: ${verdict.error}`,
+        );
+        continue;
+      }
       processed += 1;
-      console.log(`[applyFeedback:${beat.slug}] applied ${batch.length} items`);
+      console.log(
+        `[applyFeedback:${beat.slug}] applied ${batch.length} items`,
+      );
     } catch (err) {
-      console.error(`[applyFeedback:${beat.slug}] failed: ${err}`);
+      console.error(`[applyFeedback:${beat.slug}] threw: ${err}`);
     }
   }
 

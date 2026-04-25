@@ -1,159 +1,235 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router";
-import {
-  useQuery,
-  getIssue,
-  submitItemFeedback,
-} from "wasp/client/operations";
-import type { Feedback } from "../shared/types";
+import { Link, useNavigate, useParams } from "react-router";
+import { useQuery, getIssue, getBeat } from "wasp/client/operations";
+import { useAuth } from "wasp/client/auth";
+import { AppShell } from "../layout/AppShell";
+import { Masthead } from "../layout/Masthead";
+import { EditorialButton } from "../components/editorial/Button";
+import { Icon } from "../components/editorial/Icon";
+
+function safeParseArray(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function extractDomain(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function formatEmailMetaDate(date: Date | string): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  if (Number.isNaN(d.getTime())) return "—";
+  return d.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function userEmailFrom(user: unknown): string | null {
+  if (!user || typeof user !== "object") return null;
+  const u = user as Record<string, unknown>;
+  const direct = typeof u.email === "string" ? u.email : null;
+  if (direct) return direct;
+  const ids = (u.identities as { email?: { id?: string } } | undefined) ?? undefined;
+  return ids?.email?.id ?? null;
+}
 
 export function IssueDetailPage() {
   const { beatId, issueId } = useParams<{ beatId: string; issueId: string }>();
-  const { data: issue, isLoading, error, refetch } = useQuery(getIssue, {
+  const navigate = useNavigate();
+  const { data: user } = useAuth();
+  const { data: issue, isLoading, error } = useQuery(getIssue, {
     issueId: issueId!,
   });
-
-  const [pendingItemId, setPendingItemId] = useState<string | null>(null);
-
-  async function onFeedback(itemId: string, feedback: Feedback) {
-    setPendingItemId(itemId);
-    try {
-      await submitItemFeedback({ issueItemId: itemId, feedback });
-      refetch();
-    } catch (err: any) {
-      alert(err?.message ?? String(err));
-    } finally {
-      setPendingItemId(null);
-    }
-  }
+  const { data: beat } = useQuery(
+    getBeat,
+    { beatId: beatId! },
+    { enabled: !!beatId },
+  );
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl p-8">
-        <p className="text-neutral-500">Loading…</p>
-      </div>
+      <AppShell>
+        <Masthead showDate={false} />
+        <div
+          className="content pb-loading"
+          style={{
+            fontFamily: "var(--mono)",
+            color: "var(--ink-3)",
+            fontSize: 11,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}
+        >
+          Loading issue
+        </div>
+      </AppShell>
     );
   }
+
   if (error || !issue) {
     return (
-      <div className="mx-auto max-w-3xl p-8">
-        <p className="text-red-600">Issue not found.</p>
-        <Link
-          to={beatId ? `/beats/${beatId}` : "/dashboard"}
-          className="mt-4 inline-block text-sm underline"
-        >
-          Back
-        </Link>
-      </div>
+      <AppShell>
+        <Masthead showDate={false} title="Issue not found" />
+        <div className="content">
+          <div className="editorial-error">
+            This issue doesn't exist or you don't have access.
+          </div>
+          <Link
+            to={beatId ? `/beats/${beatId}` : "/dashboard"}
+            className="pb-btn pb-btn-ghost"
+            style={{ marginTop: 18, display: "inline-flex" }}
+          >
+            <Icon name="arrow-left" size={13} />
+            <span>Back</span>
+          </Link>
+        </div>
+      </AppShell>
     );
   }
 
+  const toEmail = userEmailFrom(user) ?? "you";
+  const fromEmail = "hello@lemonode.pl";
+  const issueDate = issue.issueDate ?? issue.publishedAt;
+  const folioDate = formatEmailMetaDate(issueDate);
+  const sentDate = issue.emailSentAt ? formatEmailMetaDate(issue.emailSentAt) : folioDate;
+  const emailFailed = issue.emailStatus === "FAILED";
+
   return (
-    <div className="mx-auto max-w-3xl p-8">
-      <Link
-        to={`/beats/${beatId}`}
-        className="text-sm text-neutral-500 hover:underline"
-      >
-        ← Back to beat
-      </Link>
+    <AppShell>
+      <Masthead
+        showDate={false}
+        right={
+          <>
+            <EditorialButton
+              variant="ghost"
+              onClick={() => navigate(beatId ? `/beats/${beatId}` : "/dashboard")}
+            >
+              <Icon name="arrow-left" size={13} />
+              <span>Back to beat</span>
+            </EditorialButton>
+            <EditorialButton
+              variant="ghost"
+              onClick={() => {
+                if (typeof window === "undefined") return;
+                window.print();
+              }}
+            >
+              <Icon name="external" size={13} />
+              <span>Print</span>
+            </EditorialButton>
+          </>
+        }
+      />
 
-      <header className="mt-4">
-        <h1 className="text-2xl font-semibold">{issue.subject}</h1>
-        {issue.dek && (
-          <p className="mt-1 text-base text-neutral-600">{issue.dek}</p>
-        )}
-        <p className="mt-2 text-xs text-neutral-500">
-          {new Date(issue.publishedAt).toLocaleString()} · email:{" "}
-          {issue.emailStatus}
-          {issue.emailSentAt
-            ? ` · sent ${new Date(issue.emailSentAt).toLocaleString()}`
-            : ""}
-        </p>
-        {issue.coverageNote && (
-          <p className="mt-2 text-xs text-neutral-500">
-            Coverage: {issue.coverageNote}
-          </p>
-        )}
-      </header>
+      <div className="email-frame">
+        {emailFailed ? (
+          <div
+            className="editorial-error"
+            style={{ maxWidth: 640, margin: "0 auto 18px" }}
+          >
+            Delivery pending — email bounced. You can still read the issue below.
+          </div>
+        ) : null}
+        <article className="email-window">
+          <div className="email-meta">
+            <span className="from">{fromEmail}</span>
+            <span className="sep-dot">→</span>
+            <span>{toEmail}</span>
+            <span style={{ marginLeft: "auto" }}>{sentDate}</span>
+          </div>
 
-      {/* Rendered email preview */}
-      {issue.htmlBody && (
-        <section className="mt-6">
-          <h2 className="mb-2 text-sm font-semibold text-neutral-700">
-            Email preview
-          </h2>
-          <iframe
-            title="issue preview"
-            srcDoc={issue.htmlBody}
-            sandbox="allow-same-origin"
-            className="h-[800px] w-full rounded border border-neutral-200 bg-white"
-          />
-        </section>
-      )}
+          <header className="email-masthead">
+            <div className="est">
+              {beat?.title ? beat.title : "Personal Newsroom"} · Vol. I
+            </div>
+            <h1>{issue.subject}</h1>
+            {issue.dek ? <p className="deck">{issue.dek}</p> : null}
+            <div className="email-folio">
+              <span>{folioDate}</span>
+              <span>
+                {issue.items.length}{" "}
+                {issue.items.length === 1 ? "story" : "stories"}
+              </span>
+            </div>
+          </header>
 
-      {/* Items with feedback */}
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">Items</h2>
-        <ul className="mt-3 space-y-4">
-          {issue.items.map((item) => {
-            const isPending = pendingItemId === item.id;
-            return (
-              <li
-                key={item.id}
-                className="rounded border border-neutral-200 bg-white p-4"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-base font-semibold">{item.headline}</h3>
-                    <p className="mt-1 text-sm text-neutral-700">
-                      {item.summary}
-                    </p>
-                    {item.whyItMatters && (
-                      <p className="mt-2 text-sm italic text-neutral-600">
-                        {item.whyItMatters}
-                      </p>
-                    )}
-                    <a
-                      href={item.primarySourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-2 inline-block text-xs text-blue-600 hover:underline"
-                    >
-                      {item.primarySourceUrl}
-                    </a>
-                  </div>
-                  <div className="flex shrink-0 flex-col gap-1">
-                    <button
-                      onClick={() => onFeedback(item.id, "POSITIVE")}
-                      disabled={isPending}
-                      className={`rounded border px-2 py-1 text-xs ${
-                        item.feedback === "POSITIVE"
-                          ? "border-emerald-400 bg-emerald-50 text-emerald-800"
-                          : "border-neutral-300 hover:bg-neutral-100"
-                      } disabled:opacity-50`}
-                      aria-pressed={item.feedback === "POSITIVE"}
-                    >
-                      👍
-                    </button>
-                    <button
-                      onClick={() => onFeedback(item.id, "NEGATIVE")}
-                      disabled={isPending}
-                      className={`rounded border px-2 py-1 text-xs ${
-                        item.feedback === "NEGATIVE"
-                          ? "border-red-400 bg-red-50 text-red-800"
-                          : "border-neutral-300 hover:bg-neutral-100"
-                      } disabled:opacity-50`}
-                      aria-pressed={item.feedback === "NEGATIVE"}
-                    >
-                      👎
-                    </button>
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    </div>
+          <div className="email-body">
+            {issue.coverageNote ? (
+              <div className="email-tldr">
+                <span className="label">Editor's note</span>
+                {issue.coverageNote}
+              </div>
+            ) : null}
+
+            {issue.items.length === 0 ? (
+              <p className="pb-body" style={{ color: "var(--ink-3)" }}>
+                This issue had no publishable items.
+              </p>
+            ) : (
+              issue.items.map((item, i) => {
+                const secondary = safeParseArray(item.secondarySourceUrls);
+                const allSources = [item.primarySourceUrl, ...secondary].filter(Boolean);
+                const tags = safeParseArray(item.tags);
+                return (
+                  <article className="story" key={item.id}>
+                    <div className="story-eyebrow">
+                      <span className="cat">№{String(i + 1).padStart(2, "0")}</span>
+                      {tags.slice(0, 2).map((t) => (
+                        <span key={t}>{t}</span>
+                      ))}
+                    </div>
+                    <h2>{item.headline}</h2>
+                    {item.whyItMatters ? (
+                      <p className="story-deck">{item.whyItMatters}</p>
+                    ) : null}
+                    <div className="story-body">
+                      <p>{item.summary}</p>
+                    </div>
+                    <div className="story-meta">
+                      <div className="sources">
+                        {allSources.slice(0, 4).map((url, si) => (
+                          <a
+                            key={`${url}-${si}`}
+                            href={url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="source"
+                          >
+                            {extractDomain(url)}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            )}
+          </div>
+
+          <footer className="email-foot">
+            <div>
+              You are reading issue №{String(issue.items.length ? 1 : 0).padStart(3, "0")} of{" "}
+              {beat?.title ?? "your beat"}.
+            </div>
+            <div style={{ marginTop: 6 }}>
+              <Link to={beatId ? `/beats/${beatId}` : "/dashboard"}>
+                Adjust this beat
+              </Link>
+            </div>
+          </footer>
+        </article>
+      </div>
+    </AppShell>
   );
 }

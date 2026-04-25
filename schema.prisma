@@ -55,7 +55,28 @@ model Beat {
 
   specMemoryStoreId    String?
   historyMemoryStoreId String?
+
+  // Legacy per-phase session id columns — superseded by currentSessionId +
+  // currentPhase below. Retained so the migration is additive (no data
+  // loss). Not read or written by the new driver.
   designSessionId      String?
+  scoutSessionId       String?
+  editorSessionId      String?
+
+  // Active CMA session + phase. Replaces per-phase id columns. Only one
+  // phase runs at a time per beat (singletonKey on driveAgentJob).
+  // AgentPhase: DESIGNER | SCOUT | EDITOR | RELEVANCE
+  currentPhase         String?
+  currentSessionId     String?
+  // CMA event-stream cursor for the active session. driveAgentJob re-enqueues
+  // between ticks; the cursor prevents re-processing already-ingested events.
+  lastEventId          String?
+  // Consecutive reenqueues without progress on the current phase. Reset on
+  // kickoff, phase_done/failed/waiting_for_user, and whenever a tick ingests
+  // fresh events. Guard against zombie sessions that never emit a terminal
+  // signal (e.g. server crashed between advancing the event cursor and
+  // handling a session.status_idle).
+  reenqueueCount       Int      @default(0)
 
   summary              String?
   // JSON array of defaults applied by Beat Designer
@@ -75,11 +96,54 @@ model Beat {
   // the cron sweeper does.
   lastScheduledAt      DateTime?
 
+
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
   issues               Issue[]
+  agentEvents          AgentEvent[]
+  agentMessages        AgentMessage[]
 
   @@index([userId, status])
+}
+
+// Durable event log for CMA sessions. One row per ingested event from
+// client.beta.sessions.events.list. Unique on (sessionId, eventId) dedups
+// re-polls. driveAgentJob writes; UI polls via getAgentEvents.
+model AgentEvent {
+  id         String   @id @default(uuid())
+  beatId     String
+  beat       Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  sessionId  String
+  // AgentPhase: DESIGNER | SCOUT | EDITOR | RELEVANCE
+  phase      String
+  // CMA event id. Null for synthetic server-side markers (phase.started, phase.failed).
+  eventId    String?
+  // CMA event type (e.g. agent.message, session.status_idle, agent.custom_tool_use)
+  // or synthetic (phase.started, phase.failed).
+  type       String
+  // Normalized payload: { text?, toolName?, toolInput?, stopReason?, error?, summary? }.
+  // We do NOT store the raw CMA payload (can be large + contains deltas).
+  payload    String
+  occurredAt DateTime @default(now())
+
+  @@unique([sessionId, eventId])
+  @@index([beatId, occurredAt])
+}
+
+// Queue of user-originated messages to inject into a running CMA session.
+// submitClarification writes; driveAgentJob drains + marks consumed.
+model AgentMessage {
+  id         String    @id @default(uuid())
+  beatId     String
+  beat       Beat      @relation(fields: [beatId], references: [id], onDelete: Cascade)
+  sessionId  String
+  // MessageKind: CLARIFICATION_REPLY | USER_FOLLOWUP
+  kind       String
+  text       String
+  createdAt  DateTime  @default(now())
+  consumedAt DateTime?
+
+  @@index([sessionId, consumedAt])
 }
 
 model Issue {

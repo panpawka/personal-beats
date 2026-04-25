@@ -12,12 +12,8 @@ import type {
 } from "wasp/server/operations";
 import { CronExpressionParser } from "cron-parser";
 import slugify from "slugify";
-import { generateIssueJob } from "wasp/server/jobs";
+import { driveAgentJob, generateIssueJob } from "wasp/server/jobs";
 import { deleteMemoryStore } from "./agents/client.js";
-
-// Orchestrator kickoff lives in Phase 7's SSE endpoint (src/server/streaming.ts).
-// Actions here only mutate DB state; the SSE connection is the single driver of
-// createBeatSession / resumeBeatSession to avoid double-provisioning stores.
 import {
   CadenceTypeValues,
   DepthValues,
@@ -51,7 +47,6 @@ async function generateUniqueSlug(source: string): Promise<string> {
     if (!exists) return candidate;
     candidate = `${base}-${i}`;
   }
-  // Fallback: random suffix
   return `${base}-${Date.now().toString(36)}`;
 }
 
@@ -120,8 +115,13 @@ export const createBeat: CreateBeat<
     },
   });
 
-  // The Designer/Scout run starts when the client opens the SSE stream for
-  // this beat (Phase 7). Returning beatId here so the UI can navigate there.
+  // Kick off the Designer phase immediately. driveAgentJob is durable —
+  // the UI does not need to hold a connection open while the agent runs.
+  await driveAgentJob.submit(
+    { beatId: beat.id, phase: "DESIGNER", kickoff: true },
+    { singletonKey: `drive-${beat.id}` },
+  );
+
   return { beatId: beat.id };
 };
 
@@ -137,28 +137,44 @@ export const submitClarification: SubmitClarification<
   const beat = await loadOwnedBeat(beatId, context.user.id);
 
   if (beat.status !== "AWAITING_CLARIFICATION") {
-    throw new HttpError(409, `beat not awaiting clarification (${beat.status})`);
+    throw new HttpError(
+      409,
+      `beat not awaiting clarification (${beat.status})`,
+    );
   }
   const trimmed = (reply ?? "").trim();
   if (trimmed.length < 1 || trimmed.length > 4000) {
     throw new HttpError(400, "reply must be 1–4000 characters");
   }
+  if (!beat.currentSessionId || beat.currentPhase !== "DESIGNER") {
+    throw new HttpError(
+      409,
+      "no active Designer session on beat to resume",
+    );
+  }
 
-  // Persist the reply so the SSE endpoint's resumeBeatSession can pick it up
-  // when the client reconnects. Status stays AWAITING_CLARIFICATION until SSE
-  // kicks off the follow-up user.message.
-  await context.entities.Beat.update({
-    where: { id: beatId },
+  // Queue the reply for the driver's next tick.
+  await prisma.agentMessage.create({
     data: {
-      pendingClarification: JSON.stringify({
-        ...(beat.pendingClarification
-          ? JSON.parse(beat.pendingClarification)
-          : {}),
-        reply: trimmed,
-        reply_at: new Date().toISOString(),
-      }),
+      beatId,
+      sessionId: beat.currentSessionId,
+      kind: "CLARIFICATION_REPLY",
+      text: trimmed,
     },
   });
+
+  // Flip status so the UI renders "designing" immediately; driver will
+  // re-flip to AWAITING_CLARIFICATION if the Designer asks again.
+  await context.entities.Beat.update({
+    where: { id: beatId },
+    data: { status: "DESIGNING", pendingClarification: null },
+  });
+
+  // Wake the driver. singletonKey ensures we don't stack parallel ticks.
+  await driveAgentJob.submit(
+    { beatId, phase: "DESIGNER", kickoff: false },
+    { singletonKey: `drive-${beatId}` },
+  );
 
   return { ok: true };
 };
@@ -177,8 +193,6 @@ export const pauseBeat: PauseBeat<{ beatId: string }, Beat> = async (
   if (beat.status !== "ACTIVE") {
     throw new HttpError(409, `cannot pause from ${beat.status}`);
   }
-  // Phase 11 pattern B: no pg-boss cancel needed. scheduleSweeperJob filters
-  // on status="ACTIVE", so flipping to PAUSED is sufficient to halt firings.
   return context.entities.Beat.update({
     where: { id: beatId },
     data: { status: "PAUSED" },
@@ -194,9 +208,6 @@ export const resumeBeat: ResumeBeat<{ beatId: string }, Beat> = async (
   if (beat.status !== "PAUSED") {
     throw new HttpError(409, `cannot resume from ${beat.status}`);
   }
-  // Pattern B: just flip status. Reset lastScheduledAt to now so a beat
-  // paused for days doesn't immediately back-fire every missed cron tick
-  // — sweeper anchors to lastScheduledAt and would otherwise flood.
   return context.entities.Beat.update({
     where: { id: beatId },
     data: { status: "ACTIVE", lastScheduledAt: new Date() },
@@ -214,8 +225,6 @@ export const deleteBeat: DeleteBeat<
   if (!context.user) throw new HttpError(401);
   const beat = await loadOwnedBeat(beatId, context.user.id);
 
-  // Best-effort memory store cleanup — ignore failures so a stale CMA state
-  // can't block DB deletion.
   for (const storeId of [beat.specMemoryStoreId, beat.historyMemoryStoreId]) {
     if (!storeId) continue;
     try {
@@ -245,6 +254,27 @@ export const triggerOnDemandRun: TriggerOnDemandRun<
     throw new HttpError(409, `beat not ACTIVE (status=${beat.status})`);
   }
 
+  // Reject if an Editor session is currently active for this beat — but only
+  // if the phase is actually making progress. A beat whose Beat row hasn't
+  // been touched in EDITOR_STALE_MS is a zombie (worker crashed, pg-boss
+  // expired, etc.); reset its phase cursor so the user can retry.
+  if (beat.currentPhase === "EDITOR" && beat.currentSessionId) {
+    const ageMs = Date.now() - beat.updatedAt.getTime();
+    const EDITOR_STALE_MS = 15 * 60 * 1000;
+    if (ageMs < EDITOR_STALE_MS) {
+      throw new HttpError(409, "issue generation already in progress");
+    }
+    await prisma.beat.update({
+      where: { id: beatId },
+      data: {
+        currentPhase: null,
+        currentSessionId: null,
+        lastEventId: null,
+        reenqueueCount: 0,
+      },
+    });
+  }
+
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const recentCount = await prisma.issue.count({
     where: { beatId, publishedAt: { gte: since } },
@@ -256,12 +286,9 @@ export const triggerOnDemandRun: TriggerOnDemandRun<
     );
   }
 
-  // Enqueue via pg-boss. singletonKey prevents a user double-clicking the
-  // button from queueing two jobs for the same beat. The job runs Editor
-  // session + Mailgun dispatch; UI polls getIssuesForBeat for the new row.
   await generateIssueJob.submit(
     { beatId, isOnDemand: true },
-    { singletonKey: beatId },
+    { singletonKey: `editor-${beatId}` },
   );
 
   return { queued: true };

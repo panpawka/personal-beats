@@ -6,21 +6,20 @@ app personalBeat {
 
   head: [
     "<meta charSet='utf-8' />",
-    "<meta name='description' content='Feednode – Zautomatyzowana Obsługa Opinii Google Maps. Automatyzacja i personalizacja odpowiedzi na opinie klientów, analiza nastroju, wsparcie wielojęzyczne.' />",
-    "<meta name='author' content='Feednode' />",
-    "<meta name='keywords' content='Feednode, zarządzanie reputacją, automatyzacja, Google Maps, SaaS, opinie klientów, analiza sentimentowa' />",
-    
+    "<meta name='description' content='Personal Newsroom — your own editorial agent. Describe a beat, get a newsletter.' />",
+    "<meta name='author' content='Personal Newsroom' />",
+    "<meta name='keywords' content='Personal Newsroom, editorial agent, newsletter, AI reporter, beats' />",
+
     "<meta property='og:type' content='website' />",
-    "<meta property='og:title' content='Feednode' />",
-    "<meta property='og:site_name' content='Feednode' />",
-    "<meta property='og:url' content='https://feednode.lemonode.pl' />",
-    "<meta property='og:description' content='Feednode to zaawansowane narzędzie SaaS, które automatyzuje obsługę opinii Google Maps, pomagając firmom budować pozytywny wizerunek online.' />",
-    "<meta property='og:image' content='https://feednode.lemonode.pl/banner.webp' />",
-    "<meta name='twitter:image' content='https://feednode.lemonode.pl/banner.webp' />",
-    "<meta name='twitter:image:width' content='800' />",
-    "<meta name='twitter:image:height' content='400' />",
+    "<meta property='og:title' content='Personal Newsroom' />",
+    "<meta property='og:site_name' content='Personal Newsroom' />",
+    "<meta property='og:description' content='Your own editorial agent. Describe a beat, get a newsletter.' />",
     "<meta name='twitter:card' content='summary_large_image' />",
     "<link rel='icon' href='/favicon.ico' />",
+
+    "<link rel='preconnect' href='https://fonts.googleapis.com' />",
+    "<link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />",
+    "<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap' />",
   ],
   auth: {
     userEntity: User,
@@ -157,6 +156,16 @@ query getIssue {
   entities: [Beat, Issue, IssueItem]
 }
 
+query getIssueSessionStatus {
+  fn: import { getIssueSessionStatus } from "@src/server/queries",
+  entities: [Beat, AgentEvent]
+}
+
+query getAgentEvents {
+  fn: import { getAgentEvents } from "@src/server/queries",
+  entities: [Beat, AgentEvent]
+}
+
 action createBeat {
   fn: import { createBeat } from "@src/server/actions",
   entities: [Beat]
@@ -164,7 +173,7 @@ action createBeat {
 
 action submitClarification {
   fn: import { submitClarification } from "@src/server/actions",
-  entities: [Beat]
+  entities: [Beat, AgentMessage]
 }
 
 action pauseBeat {
@@ -184,7 +193,7 @@ action deleteBeat {
 
 action triggerOnDemandRun {
   fn: import { triggerOnDemandRun } from "@src/server/actions",
-  entities: [Beat, Issue]
+  entities: [Beat, Issue, AgentEvent]
 }
 
 action submitItemFeedback {
@@ -192,21 +201,6 @@ action submitItemFeedback {
   entities: [Beat, Issue, IssueItem]
 }
 // #endregion Operations
-
-// #region Streaming
-api streamBeatCreation {
-  httpRoute: (GET, "/api/stream/beat/:beatId"),
-  fn: import { streamBeatCreation } from "@src/server/streaming",
-  middlewareConfigFn: import { streamRouteMiddleware } from "@src/server/streaming",
-  auth: true,
-  entities: [Beat]
-}
-
-apiNamespace streamNs {
-  middlewareConfigFn: import { streamNamespaceMiddleware } from "@src/server/streaming",
-  path: "/api/stream"
-}
-// #endregion Streaming
 
 // #region Feedback
 api feedbackMagicLink {
@@ -231,7 +225,23 @@ job generateIssueJob {
       pgBoss: {=json { "retryLimit": 0, "expireInMinutes": 30 } json=}
     }
   },
-  entities: [Beat, Issue, IssueItem]
+  entities: [Beat, Issue, IssueItem, AgentEvent, AgentMessage]
+}
+
+// Unified agent driver. Handles DESIGNER + SCOUT phases (RELEVANCE reused
+// via the same job with phase=RELEVANCE). EDITOR stays on generateIssueJob
+// since it creates Issue rows + sends email. Bounded-poll per tick with
+// re-enqueue when the CMA session is still running. singletonKey ensures
+// one drive tick per beat at a time.
+job driveAgentJob {
+  executor: PgBoss,
+  perform: {
+    fn: import { driveAgent } from "@src/server/jobs/driveAgent",
+    executorOptions: {
+      pgBoss: {=json { "retryLimit": 0, "expireInMinutes": 25 } json=}
+    }
+  },
+  entities: [Beat, AgentEvent, AgentMessage]
 }
 
 job scheduleSweeperJob {
@@ -259,6 +269,6 @@ job applyFeedbackJob {
   schedule: {
     cron: "15 3 * * *"
   },
-  entities: [Beat, Issue, IssueItem]
+  entities: [Beat, Issue, IssueItem, AgentEvent, AgentMessage]
 }
 // #endregion Jobs

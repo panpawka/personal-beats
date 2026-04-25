@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Beat" ADD COLUMN "reenqueueCount" INTEGER NOT NULL DEFAULT 0;

@@ -34,7 +34,7 @@ A user can have multiple beats. Each beat produces its own newsletter, delivered
 ## 3. User stories (MVP)
 
 1. As a user, I sign up, log in, and see a dashboard of my beats.
-2. I click "Create a new beat" and describe in one sentence what I want.
+2. I click "Create a new beat" and describe in natural language what I want.
 3. The Beat Designer either (a) creates the beat directly if the brief is clear, or (b) asks me 1-2 clarifying questions first.
 4. Once the beat is created, I can trigger an on-demand run or let it run on its schedule.
 5. I receive the newsletter by email (SendGrid, polished HTML via react-email).

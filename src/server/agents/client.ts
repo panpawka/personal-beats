@@ -1,36 +1,99 @@
+/**
+ * Thin wrapper around @anthropic-ai/sdk beta sessions. Replaces the old
+ * hand-rolled HTTP + SSE parser. All session/event IO goes through the SDK;
+ * memory-store CRUD stays on the raw REST API because the SDK surface is
+ * less stable there and the calls are infrequent.
+ */
+import Anthropic from "@anthropic-ai/sdk";
+
 const CMA_BASE = "https://api.anthropic.com";
 const BETA_HEADER = "managed-agents-2026-04-01";
 const API_VERSION = "2023-06-01";
 
 function apiKey(): string {
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) {
-    throw new Error("ANTHROPIC_API_KEY is not set in env");
-  }
+  if (!key) throw new Error("ANTHROPIC_API_KEY is not set in env");
   return key;
 }
 
-function headers(accept: "json" | "sse" = "json"): Record<string, string> {
+let _client: Anthropic | null = null;
+export function sdk(): Anthropic {
+  if (_client) return _client;
+  _client = new Anthropic({
+    apiKey: apiKey(),
+    defaultHeaders: { "anthropic-beta": BETA_HEADER },
+  });
+  return _client;
+}
+
+// -------- Session + events (via SDK) --------
+
+export async function createSession(body: {
+  agent: string;
+  environment_id: string;
+  title?: string;
+  resources?: unknown[];
+}): Promise<{ id: string }> {
+  // SDK types may lag behind the beta; cast through unknown for forward-compat.
+  const res = await (sdk().beta.sessions as unknown as {
+    create: (b: unknown) => Promise<{ id: string }>;
+  }).create(body);
+  return { id: res.id };
+}
+
+export async function sendSessionEvents(
+  sessionId: string,
+  events: unknown[],
+): Promise<void> {
+  await (sdk().beta.sessions as unknown as {
+    events: { send: (id: string, b: { events: unknown[] }) => Promise<unknown> };
+  }).events.send(sessionId, { events });
+}
+
+export type ListedEvent = {
+  id?: string;
+  type: string;
+  // Pass-through for the rest of the CMA event shape. The driver destructures
+  // the specific fields it cares about (content, name, input, stop_reason).
+  [k: string]: unknown;
+};
+
+export async function listSessionEvents(
+  sessionId: string,
+  opts: { limit?: number } = {},
+): Promise<ListedEvent[]> {
+  const api = sdk().beta.sessions as unknown as {
+    events: {
+      list: (
+        id: string,
+        opts?: { limit?: number },
+      ) => Promise<{ data: ListedEvent[] }>;
+    };
+  };
+  const page = await api.events.list(sessionId, { limit: opts.limit ?? 100 });
+  return page.data;
+}
+
+// -------- Memory stores (raw REST — SDK coverage is uneven here) --------
+
+function headers(): Record<string, string> {
   return {
     "x-api-key": apiKey(),
     "anthropic-version": API_VERSION,
     "anthropic-beta": BETA_HEADER,
-    accept: accept === "sse" ? "text/event-stream" : "application/json",
+    accept: "application/json",
     "content-type": "application/json",
   };
 }
 
-/**
- * Generic CMA JSON call. Throws with response body on non-2xx.
- */
-export async function cma<T = unknown>(
+async function cma<T>(
   method: "GET" | "POST" | "DELETE",
   path: string,
   body?: unknown,
 ): Promise<T> {
   const res = await fetch(`${CMA_BASE}${path}`, {
     method,
-    headers: headers("json"),
+    headers: headers(),
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   const text = await res.text();
@@ -40,87 +103,6 @@ export async function cma<T = unknown>(
     );
   }
   return text ? (JSON.parse(text) as T) : (undefined as T);
-}
-
-export type SseEvent = { type: string; data: unknown };
-
-/**
- * Stream CMA SSE endpoint. Yields parsed events. Caller breaks out on
- * terminal event types (session.status_idle, session.error, etc.).
- */
-export async function* cmaStream(path: string): AsyncIterable<SseEvent> {
-  const res = await fetch(`${CMA_BASE}${path}`, {
-    method: "GET",
-    headers: headers("sse"),
-  });
-  if (!res.ok || !res.body) {
-    const errText = await res.text();
-    throw new Error(
-      `CMA stream ${path} -> ${res.status}: ${errText.slice(0, 500)}`,
-    );
-  }
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-
-  let buffer = "";
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-
-    let boundary = buffer.indexOf("\n\n");
-    while (boundary !== -1) {
-      const raw = buffer.slice(0, boundary);
-      buffer = buffer.slice(boundary + 2);
-      boundary = buffer.indexOf("\n\n");
-
-      let eventType: string | null = null;
-      let dataPayload = "";
-      for (const line of raw.split("\n")) {
-        if (line.startsWith(":")) continue; // comment / heartbeat
-        if (line.startsWith("event:")) {
-          eventType = line.slice(6).trim();
-        } else if (line.startsWith("data:")) {
-          dataPayload += line.slice(5).trim();
-        }
-      }
-      if (!dataPayload) continue;
-
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(dataPayload);
-      } catch {
-        parsed = dataPayload;
-      }
-      const type =
-        eventType ??
-        (typeof parsed === "object" && parsed !== null && "type" in parsed
-          ? String((parsed as { type: unknown }).type)
-          : "unknown");
-      yield { type, data: parsed };
-    }
-  }
-}
-
-// -------- Convenience wrappers --------
-
-export async function createAgent(body: Record<string, unknown>): Promise<{
-  id: string;
-  version: number;
-}> {
-  const res = await cma<{ id: string; version: number }>(
-    "POST",
-    "/v1/agents",
-    body,
-  );
-  return res;
-}
-
-export async function createEnvironment(body: Record<string, unknown>): Promise<{
-  id: string;
-}> {
-  return await cma<{ id: string }>("POST", "/v1/environments", body);
 }
 
 export async function createMemoryStore(
@@ -149,21 +131,15 @@ export async function deleteMemoryStore(storeId: string): Promise<void> {
   await cma("DELETE", `/v1/memory_stores/${storeId}`);
 }
 
-export async function createSession(body: Record<string, unknown>): Promise<{
-  id: string;
-}> {
-  return await cma<{ id: string }>("POST", "/v1/sessions", body);
+// Unused after the refactor — kept to support tooling scripts that reference
+// the bulk agent/env creation paths. Safe to delete if no callers remain.
+export async function createAgent(
+  body: Record<string, unknown>,
+): Promise<{ id: string; version: number }> {
+  return await cma<{ id: string; version: number }>("POST", "/v1/agents", body);
 }
-
-export async function sendSessionEvents(
-  sessionId: string,
-  events: unknown[],
-): Promise<void> {
-  await cma("POST", `/v1/sessions/${sessionId}/events?beta=true`, { events });
-}
-
-export function streamSession(sessionId: string): AsyncIterable<SseEvent> {
-  // The managed-agents stream path is /events/stream (not /stream — that
-  // routes to an older, incompatible agent-api beta).
-  return cmaStream(`/v1/sessions/${sessionId}/events/stream?beta=true`);
+export async function createEnvironment(
+  body: Record<string, unknown>,
+): Promise<{ id: string }> {
+  return await cma<{ id: string }>("POST", "/v1/environments", body);
 }
