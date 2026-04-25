@@ -5,20 +5,20 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 
-const STARTERS = [
-  "Wrocław weekends with the kids",
-  "Iran–Israel daily briefing",
-  "AI agent frameworks",
-  "Polish cinema",
-  "Climbing trips, weekend Europe",
-  "Wrocław restaurant openings",
-];
-
 export function LandingPage() {
   const { data: user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { t } = useLingui();
   const [val, setVal] = useState("");
+
+  const STARTERS = [
+    t`Wrocław weekends with the kids`,
+    t`Iran–Israel daily briefing`,
+    t`AI agent frameworks`,
+    t`Polish cinema`,
+    t`Climbing trips, weekend Europe`,
+    t`Wrocław restaurant openings`,
+  ];
 
   useEffect(() => {
     document.body.classList.add("pb-editorial");
@@ -66,7 +66,7 @@ export function LandingPage() {
 
   return (
     <AppShell>
-      <Masthead section={t`Today's edition · Home`} subMiddle={t`A personal newsroom`} />
+      <Masthead />
       <section className="hero">
         <div className="kicker"><Trans>A personal newsroom, yours alone</Trans></div>
         <h1>
@@ -114,11 +114,11 @@ export function LandingPage() {
           ))}
         </div>
 
-        <div className="hero-foot">
+        {!user ? (<div className="hero-foot">
           <span><Trans>Est. MMXXVI · Vol. I</Trans></span>
           <span><Trans>Beats run quietly. You review, revise, pause any time.</Trans></span>
           <a onClick={() => navigate("/login")}><Trans>Already a reader → log in</Trans></a>
-        </div>
+        </div>):null}
       </section>
     </AppShell>
   );

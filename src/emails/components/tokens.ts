@@ -1,5 +1,4 @@
-// Feednode design-system tokens translated for email clients.
-// Source: src/client/Main.css + design system colors_and_type.css.
+// Personal Newsroom design-system tokens translated for email clients.
 // Inlined hex values only — no CSS vars (Outlook/Gmail ignore them).
 
 export const FONT_SANS =

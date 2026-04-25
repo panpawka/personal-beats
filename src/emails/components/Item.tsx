@@ -1,6 +1,7 @@
 import { Heading, Section, Text } from "@react-email/components";
 import { SecondarySources, SourceLink } from "./SourceLink";
 import { ItemFooter } from "./ItemFooter";
+import { useEmailT } from "../i18n";
 import type { EmailItem } from "../types";
 
 interface StandardItemProps {
@@ -9,6 +10,7 @@ interface StandardItemProps {
 }
 
 export function StandardItem({ item, index }: StandardItemProps) {
+  const t = useEmailT();
   return (
     <Section className="mb-6 pb-5 border-b border-solid border-gray-100">
       <Heading as="h2" className="m-0 mb-2 text-lg font-semibold text-gray-900">
@@ -18,7 +20,7 @@ export function StandardItem({ item, index }: StandardItemProps) {
       {item.why_it_matters ? (
         <Section className="bg-amber-50 border-l-4 border-solid border-amber-400 pl-3 py-2 mb-3">
           <Text className="m-0 text-xs uppercase tracking-wider text-amber-700 font-semibold">
-            Why it matters
+            {t("whyItMatters")}
           </Text>
           <Text className="m-0 text-sm text-gray-800">{item.why_it_matters}</Text>
         </Section>

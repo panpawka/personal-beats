@@ -1,17 +1,26 @@
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { AuthPageLayout } from '../AuthPageLayout';
 import { CustomEmailVerificationForm } from '../components/CustomEmailVerificationForm';
 
 export function EmailVerificationPage() {
+    const { t } = useLingui();
     return (
         <AuthPageLayout
-            title="Weryfikacja e-maila"
-            subtitle="Potwierdzamy Twój adres, aby zabezpieczyć konto."
+            eyebrow={t`Email verification`}
+            title={
+                <Trans>
+                    Confirming <em>you</em>.
+                </Trans>
+            }
+            subtitle={t`We're checking your address so we know where to deliver the paper.`}
             footer={
-                <div className="fd-auth-footer-row">
-                    Wszystko gotowe?{' '}
-                    <WaspRouterLink to={routes.LoginPageRoute.to}>Zaloguj się</WaspRouterLink>
-                </div>
+                <span>
+                    <Trans>
+                        All set?{' '}
+                        <WaspRouterLink to={routes.LoginPageRoute.to}>Sign in</WaspRouterLink>
+                    </Trans>
+                </span>
             }
         >
             <CustomEmailVerificationForm />

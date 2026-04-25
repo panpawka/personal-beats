@@ -13,8 +13,8 @@ export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ ver
     // html stays '' — SendGrid will deliver text-only fallback
   }
   return {
-    subject: 'Zweryfikuj swój adres e-mail — Feednode',
-    text: `Kliknij poniższy link, aby zweryfikować swój adres e-mail:\n\n${verificationLink}\n\nJeśli nie zakładałeś konta w Feednode, zignoruj tę wiadomość.`,
+    subject: 'Verify your email — Personal Newsroom',
+    text: `Click the link below to verify your email:\n\n${verificationLink}\n\nIf you didn't sign up for Personal Newsroom, ignore this message.`,
     html,
   };
 };
@@ -27,8 +27,8 @@ export const getPasswordResetEmailContent: GetPasswordResetEmailContentFn = ({ p
     console.error('PasswordResetEmail render failed', err);
   }
   return {
-    subject: 'Resetowanie hasła — Feednode',
-    text: `Kliknij poniższy link, aby zresetować hasło:\n\n${passwordResetLink}\n\nLink jest ważny przez 1 godzinę. Jeśli nie prosiłeś o reset hasła, zignoruj tę wiadomość.`,
+    subject: 'Reset your password — Personal Newsroom',
+    text: `Click the link below to reset your password:\n\n${passwordResetLink}\n\nThis link expires in 1 hour. If you didn't request a reset, ignore this message.`,
     html,
   };
 };

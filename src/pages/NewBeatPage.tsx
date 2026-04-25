@@ -64,7 +64,7 @@ function deriveTitle(brief: string, _rules: Rules, t: TFn): string {
 }
 
 export function NewBeatPage() {
-  const { t } = useLingui();
+  const { t, i18n } = useLingui();
   const navigate = useNavigate();
 
   const STARTERS = [
@@ -220,6 +220,7 @@ export function NewBeatPage() {
         brief,
         cadenceType: DEFAULT_CADENCE,
         cronExpression: DEFAULT_CRON,
+        outputLanguage: i18n.locale || "en",
       });
       navigate(`/beats/${beatId}`);
     } catch (err) {
@@ -240,7 +241,7 @@ export function NewBeatPage() {
 
   return (
     <AppShell>
-      <Masthead section={t`Designing a new beat`} />
+      <Masthead />
       <div className="design">
         <div className="design-head">
           <div className="lbl"><Trans>The editor · conversation</Trans></div>

@@ -1,8 +1,7 @@
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Trans, useLingui, Plural } from "@lingui/react/macro";
 import { AppShell } from "../../layout/AppShell";
 import { Masthead } from "../../layout/Masthead";
-import { EditorialButton } from "../../components/editorial/Button";
 import { Icon } from "../../components/editorial/Icon";
 import { cadenceLabel } from "../../shared/cadence";
 import { formatShortDate } from "../../lib/formatting";
@@ -48,8 +47,7 @@ interface ActivePanelProps {
 }
 
 export function ActivePanel(props: ActivePanelProps) {
-  const navigate = useNavigate();
-  const { t } = useLingui();
+  const { t, i18n } = useLingui();
   const DEPTH_LABEL: Record<string, string> = {
     BRIEF: t`Tight · 3–5 picks`,
     STANDARD: t`Standard · 8–12 picks`,
@@ -73,27 +71,16 @@ export function ActivePanel(props: ActivePanelProps) {
 
   const isPaused = beat.status === "PAUSED";
   const isActive = beat.status === "ACTIVE";
-  const cadence = cadenceLabel(beat);
+  const cadence = cadenceLabel(beat, i18n);
   const depth = DEPTH_LABEL[beat.depth] ?? beat.depth;
   const lang = (beat.outputLanguage ?? "").toUpperCase();
   const sourceTotal = beat.sourceCount ?? 0;
   const nextRun = beat.cadenceType === "ON_DEMAND" ? t`On demand` : cadence;
-  const createdAtLabel = formatShortDate(beat.createdAt);
+  const createdAtLabel = formatShortDate(beat.createdAt, i18n.locale);
 
   return (
     <AppShell>
-      <Masthead
-        section={t`The beat · ${beat.title}`}
-        subMiddle={isActive ? t`Live` : isPaused ? t`Paused` : beat.status.toLowerCase()}
-        right={
-          <>
-            <EditorialButton variant="ghost" onClick={() => navigate("/dashboard")}>
-              <Icon name="arrow-left" size={13} />
-              <span><Trans>All beats</Trans></span>
-            </EditorialButton>
-          </>
-        }
-      />
+      <Masthead />
 
       <header className="b-hero">
         <div className="meta">
@@ -231,7 +218,7 @@ export function ActivePanel(props: ActivePanelProps) {
                     </div>
                     <div className="right">
                       <div className="when">
-                        {formatShortDate(iss.issueDate ?? iss.publishedAt)}
+                        {formatShortDate(iss.issueDate ?? iss.publishedAt, i18n.locale)}
                       </div>
                       <div className="vote">
                         {iss.emailStatus.toLowerCase()}

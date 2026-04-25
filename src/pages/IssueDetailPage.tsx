@@ -1,10 +1,9 @@
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useQuery, getIssue, getBeat } from "wasp/client/operations";
 import { useAuth } from "wasp/client/auth";
-import { Trans, useLingui } from "@lingui/react/macro";
+import { Trans, useLingui, Plural } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
-import { EditorialButton } from "../components/editorial/Button";
 import { Icon } from "../components/editorial/Icon";
 
 function safeParseArray(raw: string | null | undefined): string[] {
@@ -25,10 +24,10 @@ function extractDomain(url: string): string {
   }
 }
 
-function formatEmailMetaDate(date: Date | string): string {
+function formatEmailMetaDate(date: Date | string, locale: string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleDateString(locale || "en", {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -46,9 +45,8 @@ function userEmailFrom(user: unknown): string | null {
 }
 
 export function IssueDetailPage() {
-  const { t } = useLingui();
+  const { t, i18n } = useLingui();
   const { beatId, issueId } = useParams<{ beatId: string; issueId: string }>();
-  const navigate = useNavigate();
   const { data: user } = useAuth();
   const { data: issue, isLoading, error } = useQuery(getIssue, {
     issueId: issueId!,
@@ -82,7 +80,7 @@ export function IssueDetailPage() {
   if (error || !issue) {
     return (
       <AppShell>
-        <Masthead showDate={false} title={t`Issue not found`} />
+        <Masthead showDate={false} />
         <div className="content">
           <div className="editorial-error">
             <Trans>This issue doesn't exist or you don't have access.</Trans>
@@ -103,36 +101,13 @@ export function IssueDetailPage() {
   const toEmail = userEmailFrom(user) ?? t`you`;
   const fromEmail = "hello@lemonode.pl";
   const issueDate = issue.issueDate ?? issue.publishedAt;
-  const folioDate = formatEmailMetaDate(issueDate);
-  const sentDate = issue.emailSentAt ? formatEmailMetaDate(issue.emailSentAt) : folioDate;
+  const folioDate = formatEmailMetaDate(issueDate, i18n.locale);
+  const sentDate = issue.emailSentAt ? formatEmailMetaDate(issue.emailSentAt, i18n.locale) : folioDate;
   const emailFailed = issue.emailStatus === "FAILED";
 
   return (
     <AppShell>
-      <Masthead
-        showDate={false}
-        right={
-          <>
-            <EditorialButton
-              variant="ghost"
-              onClick={() => navigate(beatId ? `/beats/${beatId}` : "/dashboard")}
-            >
-              <Icon name="arrow-left" size={13} />
-              <span><Trans>Back to beat</Trans></span>
-            </EditorialButton>
-            <EditorialButton
-              variant="ghost"
-              onClick={() => {
-                if (typeof window === "undefined") return;
-                window.print();
-              }}
-            >
-              <Icon name="external" size={13} />
-              <span><Trans>Print</Trans></span>
-            </EditorialButton>
-          </>
-        }
-      />
+      <Masthead showDate={false} />
 
       <div className="email-frame">
         {emailFailed ? (
@@ -162,8 +137,11 @@ export function IssueDetailPage() {
             <div className="email-folio">
               <span>{folioDate}</span>
               <span>
-                {issue.items.length}{" "}
-                {issue.items.length === 1 ? t`story` : t`stories`}
+                <Plural
+                  value={issue.items.length}
+                  one="# story"
+                  other="# stories"
+                />
               </span>
             </div>
           </header>

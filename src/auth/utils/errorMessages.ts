@@ -1,34 +1,39 @@
-const errorTranslations: Record<string, string> = {
-    'Invalid credentials': 'Nieprawidłowy e-mail lub hasło',
-    'Invalid credentials.': 'Nieprawidłowy e-mail lub hasło',
-    'User with this email already exists': 'Użytkownik z tym e-mailem już istnieje',
-    'Email is not verified': 'E-mail nie został zweryfikowany',
-    'Invalid token': 'Nieprawidłowy lub wygasły token',
-    'Token not found in URL': 'Brak tokenu weryfikacyjnego w linku',
+import { msg } from '@lingui/core/macro';
+import type { I18n } from '@lingui/core';
+import type { MessageDescriptor } from '@lingui/core';
 
-    'Password must be at least 8 characters': 'Hasło musi mieć co najmniej 8 znaków',
-    'Password must be at least 8 characters long': 'Hasło musi mieć co najmniej 8 znaków',
-    'Passwords do not match': 'Hasła nie są identyczne',
-
-    'Invalid email format': 'Nieprawidłowy format e-mail',
-    'Email is required': 'E-mail jest wymagany',
-    'Password is required': 'Hasło jest wymagane',
-
-    'Network error': 'Błąd połączenia. Sprawdź połączenie z internetem.',
-    'Failed to fetch': 'Błąd połączenia. Sprawdź połączenie z internetem.',
+/**
+ * Map English error keys (as emitted by Wasp's auth pipeline) to translatable
+ * MessageDescriptors. Both the lookup key and the descriptor's `id` use the
+ * English text — Lingui then renders the active-locale translation.
+ */
+const ERROR_DESCRIPTORS: Record<string, MessageDescriptor> = {
+    'Invalid credentials': msg`Invalid email or password`,
+    'Invalid credentials.': msg`Invalid email or password`,
+    'User with this email already exists': msg`A user with this email already exists`,
+    'Email is not verified': msg`Your email is not verified`,
+    'Invalid token': msg`Invalid or expired token`,
+    'Token not found in URL': msg`Missing verification token in the link`,
+    'Password must be at least 8 characters': msg`Password must be at least 8 characters`,
+    'Password must be at least 8 characters long': msg`Password must be at least 8 characters`,
+    'Passwords do not match': msg`Passwords do not match`,
+    'Invalid email format': msg`Invalid email format`,
+    'Email is required': msg`Email is required`,
+    'Password is required': msg`Password is required`,
+    'Network error': msg`Connection error. Check your internet connection.`,
+    'Failed to fetch': msg`Connection error. Check your internet connection.`,
 };
 
-export function translateAuthError(error: Error | string): string {
+export function translateAuthError(error: Error | string, i18n: I18n): string {
     const errorMessage = typeof error === 'string' ? error : error.message;
 
-    if (errorTranslations[errorMessage]) {
-        return errorTranslations[errorMessage];
-    }
+    const exact = ERROR_DESCRIPTORS[errorMessage];
+    if (exact) return i18n._(exact);
 
-    const lowerMessage = errorMessage.toLowerCase();
-    for (const [key, value] of Object.entries(errorTranslations)) {
-        if (lowerMessage.includes(key.toLowerCase())) {
-            return value;
+    const lower = errorMessage.toLowerCase();
+    for (const [key, descriptor] of Object.entries(ERROR_DESCRIPTORS)) {
+        if (lower.includes(key.toLowerCase())) {
+            return i18n._(descriptor);
         }
     }
 

@@ -15,21 +15,21 @@ export type PasswordResetEmailProps = {
 export function PasswordResetEmail({ passwordResetLink }: PasswordResetEmailProps) {
   return (
     <EmailTemplateLayout
-      title="Reset hasła — Feednode"
-      previewText="Kliknij, aby ustawić nowe hasło. Link ważny 1 godzinę."
-      eyebrow="Bezpieczeństwo konta">
-      <EmailH1>Zresetuj hasło</EmailH1>
+      title="Reset password — Personal Newsroom"
+      previewText="Click to set a new password. Link valid for 1 hour."
+      eyebrow="Account security">
+      <EmailH1>Reset your password</EmailH1>
       <EmailLead>
-        Ktoś — prawdopodobnie Ty — poprosił o reset hasła do Twojego konta
-        Feednode. Kliknij przycisk poniżej, aby ustawić nowe hasło.
+        Someone — probably you — requested a password reset for your Personal
+        Newsroom account. Click the button below to set a new password.
       </EmailLead>
-      <EmailButton href={passwordResetLink}>Zresetuj hasło</EmailButton>
+      <EmailButton href={passwordResetLink}>Reset password</EmailButton>
       <EmailSmall>
-        Link wygasa po 1 godzinie. Jeśli to nie Ty, zignoruj tę wiadomość — Twoje
-        hasło pozostanie bez zmian.
+        This link expires in 1 hour. If this wasn't you, ignore this message —
+        your password stays unchanged.
       </EmailSmall>
       <EmailSmall>
-        Przycisk nie działa? Skopiuj link:{' '}
+        Button not working? Copy this link:{' '}
         <EmailInlineLink href={passwordResetLink}>{passwordResetLink}</EmailInlineLink>
       </EmailSmall>
     </EmailTemplateLayout>

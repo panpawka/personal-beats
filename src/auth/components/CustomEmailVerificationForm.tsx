@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import { verifyEmail } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
-import { Button } from '../../components/ui/button';
 import { translateAuthError } from '../utils/errorMessages';
 import { AuthStatusCard } from './AuthStatusCard';
 
 export function CustomEmailVerificationForm() {
-    const { t } = useLingui();
+    const { t, i18n } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -20,7 +19,7 @@ export function CustomEmailVerificationForm() {
             await verifyEmail({ token });
             setIsSuccess(true);
         } catch (err: unknown) {
-            setError(translateAuthError(err as Error));
+            setError(translateAuthError(err as Error, i18n));
         } finally {
             setIsLoading(false);
         }
@@ -46,37 +45,31 @@ export function CustomEmailVerificationForm() {
     if (isSuccess) {
         return (
             <AuthStatusCard
-                icon="success"
-                title={t`Email verified`}
+                tone="success"
+                label={t`Email verified`}
+                title={t`Your account is active`}
                 description={t`Your account is active. You can sign in now.`}
-                action={{ label: t`Sign in`, to: routes.LoginPageRoute.to }}
+                action={{ label: t`Sign in →`, to: routes.LoginPageRoute.to }}
             />
         );
     }
 
     return (
-        <div className="flex flex-col items-center gap-4 text-center">
-            <h2 className="text-xl font-semibold">
-                <Trans>Email verification</Trans>
-            </h2>
-            <p className="text-sm text-muted-foreground text-balance">
-                {isLoading ? t`Verifying your email address…` : t`Click the button below to finish verification.`}
+        <div className="auth-form" style={{ borderTop: 0 }}>
+            {error && <div className="editorial-error" role="alert">{error}</div>}
+            <p className="auth-sub" style={{ margin: 0 }}>
+                {isLoading
+                    ? t`Verifying your email address…`
+                    : t`Click the button below to finish verification.`}
             </p>
-
-            {error && (
-                <div className="w-full rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-                    {error}
-                </div>
-            )}
-
-            <Button
+            <button
+                type="button"
                 onClick={handleClick}
                 disabled={isLoading}
-                size="lg"
-                className="w-full"
+                className="auth-submit signal"
             >
-                {isLoading ? t`Verifying…` : t`Verify email`}
-            </Button>
+                {isLoading ? t`Verifying…` : t`Verify email →`}
+            </button>
         </div>
     );
 }

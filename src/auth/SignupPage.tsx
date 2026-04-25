@@ -7,15 +7,20 @@ export function Signup() {
     const { t } = useLingui();
     return (
         <AuthPageLayout
-            title={t`Create an account`}
+            eyebrow={t`Found a personal newsroom`}
+            title={
+                <Trans>
+                    Start <em>your</em> paper.
+                </Trans>
+            }
             subtitle={t`14 days free. No card. No commitment.`}
             footer={
-                <div className="fd-auth-footer-row">
+                <span>
                     <Trans>
                         Already have an account?{' '}
                         <WaspRouterLink to={routes.LoginPageRoute.to}>Sign in</WaspRouterLink>
                     </Trans>
-                </div>
+                </span>
             }
         >
             <CustomSignupForm />

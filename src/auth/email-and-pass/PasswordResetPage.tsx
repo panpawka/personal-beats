@@ -1,17 +1,26 @@
 import { Link as WaspRouterLink, routes } from 'wasp/client/router';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { AuthPageLayout } from '../AuthPageLayout';
 import { CustomPasswordResetForm } from '../components/CustomPasswordResetForm';
 
 export function PasswordResetPage() {
+    const { t } = useLingui();
     return (
         <AuthPageLayout
-            title="Ustaw nowe hasło"
-            subtitle="Wybierz hasło, którego używasz tylko tutaj — minimum 8 znaków."
+            eyebrow={t`Reset password`}
+            title={
+                <Trans>
+                    Pick a <em>new</em> password.
+                </Trans>
+            }
+            subtitle={t`Choose a password you only use here — minimum 8 characters.`}
             footer={
-                <div className="fd-auth-footer-row">
-                    Pamiętasz hasło?{' '}
-                    <WaspRouterLink to={routes.LoginPageRoute.to}>Wróć do logowania</WaspRouterLink>
-                </div>
+                <span>
+                    <Trans>
+                        Remembered it?{' '}
+                        <WaspRouterLink to={routes.LoginPageRoute.to}>Back to sign in</WaspRouterLink>
+                    </Trans>
+                </span>
             }
         >
             <CustomPasswordResetForm />

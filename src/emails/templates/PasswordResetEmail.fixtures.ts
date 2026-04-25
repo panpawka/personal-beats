@@ -1,5 +1,5 @@
 import type { PasswordResetEmailProps } from './PasswordResetEmail';
 
 export const mockPasswordResetProps: PasswordResetEmailProps = {
-  passwordResetLink: 'https://feednode.app/password-reset?token=reset123xyz',
+  passwordResetLink: 'https://app.example.com/password-reset?token=reset123xyz',
 };

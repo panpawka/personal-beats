@@ -3,11 +3,6 @@ import { useAuth, logout } from "wasp/client/auth";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { Icon } from "../components/editorial/Icon";
 
-function avatarInitial(email: string | null | undefined): string {
-  if (!email) return "?";
-  const c = email.trim()[0];
-  return c ? c.toUpperCase() : "?";
-}
 
 interface TabDef {
   id: string;
@@ -37,12 +32,6 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
     { id: "issue", label: t`Issue`, glyph: "✉", to: "/dashboard", match: (p) => p.includes("/issues/") },
   ];
 
-  const email =
-    (user as unknown as { email?: string } | null)?.email ??
-    (user as unknown as { identities?: { email?: { id?: string } } } | null)
-      ?.identities?.email?.id ??
-    null;
-
   const goHome = () => {
     navigate(user ? "/dashboard" : "/");
     onClose();
@@ -57,7 +46,7 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
         aria-label={t`Personal Beats home`}
         title={t`Personal Beats`}
       >
-        P
+        <span>P<b>B</b></span>
       </button>
 
       {tabs.map((tab) => {
@@ -87,14 +76,19 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
       {user ? (
         <button
           type="button"
-          className="rail-you"
+          className="rail-tab"
           onClick={() => {
             void logout();
           }}
-          title={`${email ?? t`signed in`} · ${t`click to sign out`}`}
+          title={t`Sign out`}
           aria-label={t`Sign out`}
         >
-          {avatarInitial(email)}
+          <span className="glyph" aria-hidden>
+            <Icon name="external" size={16} />
+          </span>
+          <span className="lbl">
+            <Trans>Logout</Trans>
+          </span>
         </button>
       ) : (
         <Link

@@ -1,5 +1,4 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
-import { useNavigate } from "react-router";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../../layout/AppShell";
 import { Masthead } from "../../layout/Masthead";
@@ -30,9 +29,6 @@ interface DesignerPanelProps {
   sendClarification: (reply: string) => Promise<void>;
   clarifyPending: boolean;
   clarifyError: string | null;
-  onCancel: () => void;
-  onDelete: () => void;
-  deletePending: boolean;
 }
 
 interface ChatItem {
@@ -338,14 +334,9 @@ export function DesignerPanel({
   sendClarification,
   clarifyPending,
   clarifyError,
-  onCancel,
-  onDelete,
-  deletePending,
 }: DesignerPanelProps) {
-  const navigate = useNavigate();
   const { t } = useLingui();
   const STATUS_COPY = useStatusCopy();
-  void navigate;
   const items = useMemo(() => itemsFromEvents(beat, events, t), [beat, events, t]);
   const awaiting = beat.status === "AWAITING_CLARIFICATION" && !!latestClarification;
   const copy = STATUS_COPY[beat.status] ?? {
@@ -355,24 +346,7 @@ export function DesignerPanel({
 
   return (
     <AppShell>
-      <Masthead
-        title={copy.title}
-        right={
-          <>
-            <EditorialButton variant="ghost" onClick={onCancel}>
-              <Trans>Back to beats</Trans>
-            </EditorialButton>
-            <EditorialButton
-              variant="ghost"
-              onClick={onDelete}
-              disabled={deletePending}
-            >
-              <Icon name="trash" size={13} />
-              <span><Trans>Discard</Trans></span>
-            </EditorialButton>
-          </>
-        }
-      />
+      <Masthead />
 
       <div className="designer">
         <div className="designer-l">

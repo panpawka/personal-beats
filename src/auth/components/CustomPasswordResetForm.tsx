@@ -5,14 +5,11 @@ import { z } from 'zod';
 import { useLingui } from '@lingui/react/macro';
 import { resetPassword } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
-import { Button } from '../../components/ui/button';
-import { Field, FieldError, FieldGroup, FieldLabel } from '../../components/ui/field';
-import { Input } from '../../components/ui/input';
 import { translateAuthError } from '../utils/errorMessages';
 import { AuthStatusCard } from './AuthStatusCard';
 
 export function CustomPasswordResetForm() {
-    const { t } = useLingui();
+    const { t, i18n } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const [isSuccess, setIsSuccess] = useState(false);
 
@@ -46,78 +43,76 @@ export function CustomPasswordResetForm() {
             await resetPassword({ token, password: data.newPassword });
             setIsSuccess(true);
         } catch (err: unknown) {
-            setError(translateAuthError(err as Error));
+            setError(translateAuthError(err as Error, i18n));
         }
     }
 
     if (isSuccess) {
         return (
             <AuthStatusCard
-                icon="success"
+                tone="success"
+                label={t`Password updated`}
                 title={t`Password updated`}
                 description={t`You can now sign in with the new password.`}
-                action={{ label: t`Sign in`, to: routes.LoginPageRoute.to }}
+                action={{ label: t`Sign in →`, to: routes.LoginPageRoute.to }}
             />
         );
     }
 
+    const submitting = form.formState.isSubmitting;
+
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
-            <FieldGroup>
-                {error && (
-                    <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
-                        {error}
+        <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="auth-form">
+            {error && <div className="editorial-error" role="alert">{error}</div>}
+
+            <Controller
+                name="newPassword"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                    <div className="auth-field">
+                        <label htmlFor="password">{t`New password`}</label>
+                        <input
+                            {...field}
+                            id="password"
+                            type="password"
+                            placeholder={t`Min. 8 characters`}
+                            autoComplete="new-password"
+                            aria-invalid={fieldState.invalid}
+                            disabled={submitting}
+                            className="auth-input"
+                        />
+                        {fieldState.error && (
+                            <span className="auth-field-err">{fieldState.error.message}</span>
+                        )}
                     </div>
                 )}
+            />
 
-                <Controller
-                    name="newPassword"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="password">{t`New password`}</FieldLabel>
-                            <Input
-                                {...field}
-                                id="password"
-                                type="password"
-                                placeholder={t`Min. 8 characters`}
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                disabled={form.formState.isSubmitting}
-                            />
-                            {fieldState.error && <FieldError errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
+            <Controller
+                name="confirmPassword"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                    <div className="auth-field">
+                        <label htmlFor="confirm-password">{t`Repeat new password`}</label>
+                        <input
+                            {...field}
+                            id="confirm-password"
+                            type="password"
+                            autoComplete="new-password"
+                            aria-invalid={fieldState.invalid}
+                            disabled={submitting}
+                            className="auth-input"
+                        />
+                        {fieldState.error && (
+                            <span className="auth-field-err">{fieldState.error.message}</span>
+                        )}
+                    </div>
+                )}
+            />
 
-                <Controller
-                    name="confirmPassword"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="confirm-password">{t`Repeat new password`}</FieldLabel>
-                            <Input
-                                {...field}
-                                id="confirm-password"
-                                type="password"
-                                autoComplete="new-password"
-                                aria-invalid={fieldState.invalid}
-                                disabled={form.formState.isSubmitting}
-                            />
-                            {fieldState.error && <FieldError errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
-
-                <Button
-                    type="submit"
-                    size="lg"
-                    disabled={form.formState.isSubmitting}
-                    className="w-full"
-                >
-                    {form.formState.isSubmitting ? t`Updating…` : t`Update password`}
-                </Button>
-            </FieldGroup>
+            <button type="submit" disabled={submitting} className="auth-submit">
+                {submitting ? t`Updating…` : t`Update password →`}
+            </button>
         </form>
     );
 }

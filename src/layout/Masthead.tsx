@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router";
 import { useAuth } from "wasp/client/auth";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -12,6 +11,7 @@ import {
   persistLocale,
   type LocaleKey,
 } from "../i18n";
+import { Sun, Moon } from "lucide-react";
 
 function formatDate(date: Date, locale: string): string {
   const weekday = date.toLocaleDateString(locale, { weekday: "short" });
@@ -22,18 +22,9 @@ function formatDate(date: Date, locale: string): string {
 }
 
 interface MastheadProps {
-  /** Section text shown in the sub-strip (left). */
-  section?: string;
-  /** Optional middle text in the sub-strip (e.g. weather, location). */
-  subMiddle?: string;
-  /** Right-side action buttons rendered alongside theme toggle. */
-  right?: ReactNode;
-  /** Backwards-compat alias for `section`. */
-  title?: string;
-  /** Toggle the date+toggle row. Defaults to true. */
   showDate?: boolean;
-  /** Volume label (left of centered title). Defaults to "Vol. I". */
   volume?: string;
+  hideLogin?: boolean;
 }
 
 function LanguageToggle() {
@@ -67,82 +58,51 @@ function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const { t } = useLingui();
   const current = theme === "ink" ? "ink" : "paper";
+  const next = current === "paper" ? "ink" : "paper";
   return (
-    <div className="theme-tog" role="group" aria-label={t`Theme`}>
-      <button
-        type="button"
-        data-on={current === "paper"}
-        onClick={() => setTheme("paper")}
-        aria-pressed={current === "paper"}
-      >
-        <span className="sq paper" aria-hidden />
-        <Trans>Paper</Trans>
-      </button>
-      <button
-        type="button"
-        data-on={current === "ink"}
-        onClick={() => setTheme("ink")}
-        aria-pressed={current === "ink"}
-      >
-        <span className="sq ink" aria-hidden />
-        <Trans>Ink</Trans>
-      </button>
-    </div>
+    <button
+      type="button"
+      className="theme-tog"
+      onClick={() => setTheme(next)}
+      aria-label={t`Theme`}
+      title={t`Theme`}
+    >
+      {current === "paper" ? <Moon size={14} /> : <Sun size={14} />}
+    </button>
   );
 }
 
 export function Masthead({
-  section,
-  subMiddle,
-  right,
-  title,
   showDate = true,
-  volume = "Vol. I",
+  volume,
+  hideLogin = false,
 }: MastheadProps) {
   const { data: user } = useAuth();
   const { i18n, t } = useLingui();
-  const email =
-    (user as unknown as { email?: string } | null)?.email ??
-    (user as unknown as { identities?: { email?: { id?: string } } } | null)
-      ?.identities?.email?.id ??
-    null;
-
   const today = formatDate(new Date(), i18n.locale || "en");
-  const sectionLabel = section ?? title ?? t`Today's edition`;
 
   return (
-    <>
-      <div className="masthead">
-        <div className="masthead-l">{volume}</div>
-        <div className="masthead-c">
-          <Trans>
-            Personal <b>Beats</b>
-          </Trans>
-        </div>
-        <div className="masthead-r">
-          {showDate ? <span className="masthead-date">{today}</span> : null}
-          <LanguageToggle />
-          <ThemeToggle />
-          {!user ? (
-            <Link to="/login" className="masthead-login" aria-label={t`Log in`}>
-              <Icon name="external" size={14} />
-              <span>
-                <Trans>Log in</Trans>
-              </span>
-            </Link>
-          ) : null}
-        </div>
+    <div className="masthead">
+      <div className="masthead-l">
+        {showDate ? <span className="masthead-date">{today}</span> : null}
       </div>
-      {(sectionLabel || subMiddle || email || right) && (
-        <div className="masthead-sub">
-          <span>{sectionLabel}</span>
-          {subMiddle ? <span>{subMiddle}</span> : <span />}
-          <span className="masthead-sub-actions">
-            {email ? <span>{email}</span> : null}
-            {right ? right : null}
-          </span>
-        </div>
-      )}
-    </>
+      <div className="masthead-c">
+        <Trans>
+          Personal <b>Beats</b>
+        </Trans>
+      </div>
+      <div className="masthead-r">
+        <LanguageToggle />
+        <ThemeToggle />
+        {!user && !hideLogin ? (
+          <Link to="/login" className="masthead-login" aria-label={t`Log in`}>
+            <Icon name="external" size={14} />
+            <span>
+              <Trans>Log in</Trans>
+            </span>
+          </Link>
+        ) : null}
+      </div>
+    </div>
   );
 }

@@ -24,10 +24,10 @@ function userEmailFrom(user: unknown): string | null {
 }
 
 export function BeatDetailPage() {
+  useLingui();
   const { beatId } = useParams<{ beatId: string }>();
   const navigate = useNavigate();
   const { data: user } = useAuth();
-  const { t } = useLingui();
   const actions = useBeatActions(beatId);
 
   if (actions.beatLoading) {
@@ -53,7 +53,7 @@ export function BeatDetailPage() {
   if (actions.beatError || !actions.beat) {
     return (
       <AppShell>
-        <Masthead showDate={false} title={t`Beat not found`} />
+        <Masthead showDate={false} />
         <div className="content">
           <div className="editorial-error">
             <Trans>This beat doesn't exist or you don't have access.</Trans>
@@ -94,9 +94,6 @@ export function BeatDetailPage() {
         sendClarification={actions.sendClarification}
         clarifyPending={actions.clarifyPending}
         clarifyError={actions.clarifyError}
-        onCancel={() => navigate("/dashboard")}
-        onDelete={() => actions.remove()}
-        deletePending={actions.deletePending}
       />
     );
   }

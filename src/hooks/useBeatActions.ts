@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
+import { useLingui } from "@lingui/react/macro";
 import {
   useQuery,
   getBeat,
@@ -61,6 +62,7 @@ export function extractLatestClarification(
 
 export function useBeatActions(beatId: string | undefined) {
   const navigate = useNavigate();
+  const { t } = useLingui();
 
   const {
     data: beat,
@@ -182,9 +184,10 @@ export function useBeatActions(beatId: string | undefined) {
     }
   }
 
-  async function remove(confirmMessage = "Delete this beat? This cannot be undone.") {
+  async function remove(confirmMessage?: string) {
     if (!beatId || deletePending) return;
-    if (typeof window !== "undefined" && !window.confirm(confirmMessage)) return;
+    const message = confirmMessage ?? t`Delete this beat? This cannot be undone.`;
+    if (typeof window !== "undefined" && !window.confirm(message)) return;
     setDeletePending(true);
     try {
       await deleteBeat({ beatId });

@@ -6,12 +6,6 @@ import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 import { cadenceLabel } from "../shared/cadence";
 
-const SUGGESTED_BRIEFS = [
-  "Climbing trips, weekend Europe",
-  "Polish kid-lit new releases",
-  "Wrocław restaurant openings",
-  "Indie game launches",
-];
 
 function languageTag(lang: string): string {
   return (lang ?? "").toUpperCase();
@@ -74,10 +68,17 @@ function signalLevel(b: BeatRow): number {
 }
 
 export function DashboardPage() {
-  const { t } = useLingui();
+  const { t, i18n } = useLingui();
   const { data: user } = useAuth();
   const { data: beats, isLoading, error } = useQuery(getBeats);
   const navigate = useNavigate();
+
+  const SUGGESTED_BRIEFS = [
+    t`Climbing trips, weekend Europe`,
+    t`Polish kid-lit new releases`,
+    t`Wrocław restaurant openings`,
+    t`Indie game launches`,
+  ];
 
   const greetText = (now: Date): string => {
     const h = now.getHours();
@@ -118,12 +119,13 @@ export function DashboardPage() {
 
   const now = new Date();
   const greet = greetText(now);
-  const dayLabel = now.toLocaleDateString("en-US", {
+  const dateLocale = i18n.locale || "en";
+  const dayLabel = now.toLocaleDateString(dateLocale, {
     weekday: "short",
     month: "short",
     day: "numeric",
   });
-  const timeLabel = now.toLocaleTimeString("en-US", {
+  const timeLabel = now.toLocaleTimeString(dateLocale, {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -148,7 +150,7 @@ export function DashboardPage() {
 
   return (
     <AppShell>
-      <Masthead section={t`Today's edition`} subMiddle={dayLabel} />
+      <Masthead />
 
       <div className="dash">
         <div className="greet">
@@ -285,9 +287,9 @@ export function DashboardPage() {
 }
 
 function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
-  const { t } = useLingui();
+  const { t, i18n } = useLingui();
   const kind = statusKind(beat);
-  const cad = cadenceLabel(beat);
+  const cad = cadenceLabel(beat, i18n);
   const lvl = signalLevel(beat);
   const issues = beat.issueCount ?? 0;
 

@@ -1,4 +1,5 @@
 import { Hr, Link, Section, Text } from "@react-email/components";
+import { useEmailT } from "../i18n";
 
 interface Props {
   unsubscribeUrl: string;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function NewsletterFooter({ unsubscribeUrl, dashboardUrl, coverageNote }: Props) {
+  const t = useEmailT();
   return (
     <Section className="mt-8 pt-4">
       <Hr className="border-gray-200 my-4" />
@@ -15,19 +17,19 @@ export function NewsletterFooter({ unsubscribeUrl, dashboardUrl, coverageNote }:
       ) : null}
       <Text className="text-xs text-gray-500 m-0">
         <Link href={dashboardUrl} className="text-gray-500 underline">
-          Dashboard
+          {t("dashboard")}
         </Link>
         {" · "}
         <Link href={`${dashboardUrl}?action=pause`} className="text-gray-500 underline">
-          Pause
+          {t("pause")}
         </Link>
         {" · "}
         <Link href={unsubscribeUrl} className="text-gray-500 underline">
-          Unsubscribe
+          {t("unsubscribe")}
         </Link>
       </Text>
       <Text className="text-xs text-gray-400 m-0 mt-2">
-        Personal Newsroom · delivered by your agent
+        {t("deliveredBy")}
       </Text>
     </Section>
   );

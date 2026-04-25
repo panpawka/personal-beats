@@ -5,16 +5,20 @@ import type { OnAfterSignupHook, OnAfterEmailVerifiedHook } from 'wasp/server/au
 import { renderEmail } from '../emails/render';
 import { WelcomeEmail } from '../emails/templates/WelcomeEmail';
 
-const DASHBOARD_URL = 'https://feednode.app/dashboard';
+function dashboardUrl(): string {
+  const base = (process.env.WASP_WEB_CLIENT_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+  return `${base}/dashboard`;
+}
 
 async function sendWelcomeEmail(to: string): Promise<void> {
+  const url = dashboardUrl();
   const html = await renderEmail(
-    React.createElement(WelcomeEmail, { userEmail: to, dashboardUrl: DASHBOARD_URL })
+    React.createElement(WelcomeEmail, { userEmail: to, dashboardUrl: url })
   );
   await emailSender.send({
     to,
-    subject: 'Witaj w Feednode',
-    text: `Twoje konto jest gotowe. Otwórz panel: ${DASHBOARD_URL}`,
+    subject: 'Welcome to Personal Newsroom',
+    text: `Your account is ready. Open the dashboard: ${url}`,
     html,
   });
 }

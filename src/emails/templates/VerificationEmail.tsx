@@ -15,21 +15,21 @@ export type VerificationEmailProps = {
 export function VerificationEmail({ verificationLink }: VerificationEmailProps) {
   return (
     <EmailTemplateLayout
-      title="Zweryfikuj adres e-mail — Feednode"
-      previewText="Zweryfikuj adres e-mail, aby aktywować konto."
-      eyebrow="Weryfikacja konta">
-      <EmailH1>Zweryfikuj swój e-mail</EmailH1>
+      title="Verify your email — Personal Newsroom"
+      previewText="Verify your email to activate your account."
+      eyebrow="Account verification">
+      <EmailH1>Verify your email</EmailH1>
       <EmailLead>
-        Potwierdź adres e-mail, aby aktywować konto Feednode i zacząć odpowiadać
-        na opinie Google w sekundy.
+        Confirm your email address to activate your Personal Newsroom account
+        and start receiving your beats.
       </EmailLead>
-      <EmailButton href={verificationLink}>Zweryfikuj e-mail</EmailButton>
+      <EmailButton href={verificationLink}>Verify email</EmailButton>
       <EmailSmall>
-        Przycisk nie działa? Skopiuj i wklej link:{' '}
+        Button not working? Copy and paste this link:{' '}
         <EmailInlineLink href={verificationLink}>{verificationLink}</EmailInlineLink>
       </EmailSmall>
       <EmailSmall>
-        Link wygasa po 24 godzinach. Nie zakładałeś konta? Zignoruj tę wiadomość.
+        This link expires in 24 hours. Didn't sign up? Ignore this message.
       </EmailSmall>
     </EmailTemplateLayout>
   );

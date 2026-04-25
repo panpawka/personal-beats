@@ -28,11 +28,11 @@ export interface EmailTemplateLayoutProps {
 }
 
 /**
- * Shared email layout. Every Feednode transactional/marketing email wraps its
- * body content inside this component. Structure mirrors the design system:
+ * Shared email layout for transactional emails. Newsletter emails use a
+ * separate chain. Structure:
  *
- *   [brand header — amber mark + feednode wordmark + optional eyebrow/subtitle]
- *   [body content, sharp corners, 1px hairline borders, 600px container]
+ *   [brand header — mark + wordmark + optional eyebrow/subtitle]
+ *   [body content, 1px hairline borders, 600px container]
  *   [footer — legal line + Lemonode attribution + optional unsubscribe]
  */
 export function EmailTemplateLayout({
@@ -44,7 +44,7 @@ export function EmailTemplateLayout({
   children,
 }: EmailTemplateLayoutProps) {
   return (
-    <Html lang="pl">
+    <Html lang="en">
       <Head>
         <title>{title}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -141,7 +141,7 @@ function BrandHeader({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: strin
                 letterSpacing: '-0.01em',
                 color: COLOR.fg,
               }}>
-              feednode
+              personal newsroom
             </td>
             {eyebrow && (
               <td
@@ -195,7 +195,7 @@ function BrandMark() {
               color: '#111',
               letterSpacing: '-0.02em',
             }}>
-            f
+            p
           </td>
         </tr>
       </tbody>
@@ -218,7 +218,7 @@ function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
           color: COLOR.fgMuted,
           letterSpacing: '0.02em',
         }}>
-        © {year} Feednode · Lemonode sp. z o.o. · Warszawa
+        © {year} Personal Newsroom · Lemonode sp. z o.o. · Warszawa
       </Text>
       {unsubscribeUrl && (
         <>
@@ -237,7 +237,7 @@ function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
               color: COLOR.fgMuted,
             }}>
             <Link href={unsubscribeUrl} style={linkStyle}>
-              Wypisz się z tego typu wiadomości
+              Unsubscribe from this kind of message
             </Link>
           </Text>
         </>
