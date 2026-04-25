@@ -1,0 +1,868 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-04-25 11:28+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/pages/beat/ActivePanel.tsx:213
+msgid " Resume the beat or run it on demand to produce one."
+msgstr " Resume the beat or run it on demand to produce one."
+
+#: src/pages/beat/ActivePanel.tsx:212
+msgid " The first one will land on the schedule above."
+msgstr " The first one will land on the schedule above."
+
+#. placeholder {0}: formatShortDate(beat.createdAt)
+#: src/pages/beat/ActivePanel.tsx:111
+msgid "· est. {0}"
+msgstr "· est. {0}"
+
+#. placeholder {0}: beat.cadenceType === "ON_DEMAND" ? t`On demand` : cadence
+#: src/pages/beat/ActivePanel.tsx:106
+msgid "· Next run: {0}"
+msgstr "· Next run: {0}"
+
+#. placeholder {0}: beat?.title ? beat.title : t`Personal Newsroom`
+#: src/pages/IssueDetailPage.tsx:156
+msgid "{0} · Vol. I"
+msgstr "{0} · Vol. I"
+
+#. placeholder {0}: buckets.active.length
+#. placeholder {1}: buckets.planned.length + buckets.designing.length
+#. placeholder {2}: buckets.paused.length
+#: src/pages/DashboardPage.tsx:232
+msgid "{0} running · {1} planned · {2} paused"
+msgstr "{0} running · {1} planned · {2} paused"
+
+#: src/pages/DashboardPage.tsx:346
+msgid "{issues} issues · "
+msgstr "{issues} issues · "
+
+#: src/pages/beat/ActivePanel.tsx:292
+msgid "{sourceTotal} sources tracked"
+msgstr "{sourceTotal} sources tracked"
+
+#: src/pages/DashboardPage.tsx:277
+#: src/pages/DashboardPage.tsx:372
+msgid "+ Begin designing"
+msgstr "+ Begin designing"
+
+#: src/auth/SignupPage.tsx:11
+msgid "14 days free. No card. No commitment."
+msgstr "14 days free. No card. No commitment."
+
+#: src/pages/LandingPage.tsx:69
+msgid "A personal newsroom"
+msgstr "A personal newsroom"
+
+#: src/pages/LandingPage.tsx:71
+msgid "A personal newsroom, yours alone"
+msgstr "A personal newsroom, yours alone"
+
+#: src/pages/beat/ActivePanel.tsx:99
+msgid "Active"
+msgstr "Active"
+
+#: src/pages/DashboardPage.tsx:187
+msgid "Active beats"
+msgstr "Active beats"
+
+#: src/pages/IssueDetailPage.tsx:233
+msgid "Adjust this beat"
+msgstr "Adjust this beat"
+
+#: src/pages/NewBeatPage.tsx:73
+msgid "AI agent frameworks"
+msgstr "AI agent frameworks"
+
+#: src/pages/beat/ActivePanel.tsx:90
+msgid "All beats"
+msgstr "All beats"
+
+#: src/pages/LandingPage.tsx:120
+msgid "Already a reader → log in"
+msgstr "Already a reader → log in"
+
+#: src/auth/SignupPage.tsx:14
+msgid "Already have an account? <0>Sign in</0>"
+msgstr "Already have an account? <0>Sign in</0>"
+
+#: src/pages/NewBeatPage.tsx:85
+msgid "Always weather + dress code"
+msgstr "Always weather + dress code"
+
+#: src/pages/NewBeatPage.tsx:94
+msgid "Always with"
+msgstr "Always with"
+
+#. placeholder {0}: questions[0]
+#: src/pages/beat/DesignerPanel.tsx:286
+msgid "Answer: {0}"
+msgstr "Answer: {0}"
+
+#: src/pages/beat/ActivePanel.tsx:294
+msgid "awaiting first issue"
+msgstr "awaiting first issue"
+
+#: src/pages/beat/DesignerPanel.tsx:211
+msgid "awaiting spec"
+msgstr "awaiting spec"
+
+#: src/pages/IssueDetailPage.tsx:96
+msgid "Back"
+msgstr "Back"
+
+#: src/pages/IssueDetailPage.tsx:121
+msgid "Back to beat"
+msgstr "Back to beat"
+
+#: src/pages/beat/DesignerPanel.tsx:362
+#: src/pages/BeatDetailPage.tsx:67
+msgid "Back to beats"
+msgstr "Back to beats"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:46
+#: src/auth/components/CustomSignupForm.tsx:56
+msgid "Back to sign in"
+msgstr "Back to sign in"
+
+#: src/auth/LoginPage.tsx:11
+msgid "Back to your inbox of opinions and your agent's replies."
+msgstr "Back to your inbox of opinions and your agent's replies."
+
+#: src/layout/Rail.tsx:32
+msgid "Beat"
+msgstr "Beat"
+
+#: src/pages/LandingPage.tsx:92
+msgid "Beat brief"
+msgstr "Beat brief"
+
+#. placeholder {0}: copy ? copy.eyebrow.split(" · ")[1] : beat.status.toLowerCase()
+#: src/pages/beat/DesignerPanel.tsx:194
+msgid "Beat draft · {0}"
+msgstr "Beat draft · {0}"
+
+#: src/pages/BeatDetailPage.tsx:56
+msgid "Beat not found"
+msgstr "Beat not found"
+
+#: src/pages/LandingPage.tsx:119
+msgid "Beats run quietly. You review, revise, pause any time."
+msgstr "Beats run quietly. You review, revise, pause any time."
+
+#: src/pages/LandingPage.tsx:97
+msgid "Begin"
+msgstr "Begin"
+
+#: src/pages/LandingPage.tsx:99
+msgid "Begin <0>→</0>"
+msgstr "Begin <0>→</0>"
+
+#: src/pages/beat/DesignerPanel.tsx:161
+msgid "Brief completeness"
+msgstr "Brief completeness"
+
+#: src/pages/beat/DesignerPanel.tsx:215
+#: src/pages/NewBeatPage.tsx:91
+msgid "Cadence"
+msgstr "Cadence"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:44
+#: src/auth/components/CustomSignupForm.tsx:54
+msgid "Check your email"
+msgstr "Check your email"
+
+#: src/pages/NewBeatPage.tsx:87
+msgid "Cite 2+ primary sources"
+msgstr "Cite 2+ primary sources"
+
+#: src/pages/beat/ActivePanel.tsx:260
+msgid "Cite primary sources before commentary."
+msgstr "Cite primary sources before commentary."
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:63
+msgid "Click the button below to finish verification."
+msgstr "Click the button below to finish verification."
+
+#: src/layout/Rail.tsx:94
+msgid "click to sign out"
+msgstr "click to sign out"
+
+#: src/pages/NewBeatPage.tsx:75
+msgid "Climbing trips, weekend Europe"
+msgstr "Climbing trips, weekend Europe"
+
+#: src/pages/beat/DesignerPanel.tsx:388
+msgid "Connection interrupted — still listening for the designer."
+msgstr "Connection interrupted — still listening for the designer."
+
+#: src/pages/DashboardPage.tsx:165
+msgid "Couldn't load your beats. Try again in a moment."
+msgstr "Couldn't load your beats. Try again in a moment."
+
+#. placeholder {0}: beat.coverageAssessment
+#: src/pages/beat/ActivePanel.tsx:250
+msgid "Coverage looks {0} so far."
+msgstr "Coverage looks {0} so far."
+
+#: src/auth/components/CustomSignupForm.tsx:135
+msgid "Create account"
+msgstr "Create account"
+
+#: src/auth/SignupPage.tsx:10
+msgid "Create an account"
+msgstr "Create an account"
+
+#: src/auth/components/CustomSignupForm.tsx:135
+msgid "Creating account…"
+msgstr "Creating account…"
+
+#. placeholder {0}: beat.cronExpression
+#: src/pages/beat/DesignerPanel.tsx:220
+msgid "cron: {0}"
+msgstr "cron: {0}"
+
+#: src/pages/beat/ActivePanel.tsx:56
+#: src/pages/DashboardPage.tsx:297
+msgid "Deep · everything that matters"
+msgstr "Deep · everything that matters"
+
+#: src/pages/beat/ActivePanel.tsx:147
+msgid "Delete"
+msgstr "Delete"
+
+#: src/pages/beat/ActivePanel.tsx:144
+msgid "Delete beat"
+msgstr "Delete beat"
+
+#: src/pages/beat/ActivePanel.tsx:278
+msgid "Delivered to {userEmail}"
+msgstr "Delivered to {userEmail}"
+
+#: src/pages/IssueDetailPage.tsx:143
+msgid "Delivery pending — email bounced. You can still read the issue below."
+msgstr "Delivery pending — email bounced. You can still read the issue below."
+
+#: src/pages/beat/DesignerPanel.tsx:223
+#: src/pages/NewBeatPage.tsx:92
+msgid "Depth"
+msgstr "Depth"
+
+#: src/pages/beat/DesignerPanel.tsx:351
+msgid "Designer"
+msgstr "Designer"
+
+#: src/pages/beat/DesignerPanel.tsx:50
+msgid "Designer · getting started"
+msgstr "Designer · getting started"
+
+#: src/pages/beat/DesignerPanel.tsx:58
+msgid "Designer · one question"
+msgstr "Designer · one question"
+
+#: src/pages/beat/DesignerPanel.tsx:54
+msgid "Designer · working"
+msgstr "Designer · working"
+
+#: src/pages/beat/DesignerPanel.tsx:432
+msgid "Designer at work — reply field appears when you're needed."
+msgstr "Designer at work — reply field appears when you're needed."
+
+#: src/pages/DashboardPage.tsx:219
+msgid "Designer is asking a question."
+msgstr "Designer is asking a question."
+
+#: src/pages/DashboardPage.tsx:309
+msgid "Designing now"
+msgstr "Designing now"
+
+#: src/pages/beat/DesignerPanel.tsx:370
+msgid "Discard"
+msgstr "Discard"
+
+#: src/auth/LoginPage.tsx:15
+msgid "Don't have an account yet? <0>Create one</0>"
+msgstr "Don't have an account yet? <0>Create one</0>"
+
+#: src/pages/beat/DesignerPanel.tsx:55
+#: src/pages/DashboardPage.tsx:222
+msgid "Drafting the spec."
+msgstr "Drafting the spec."
+
+#: src/pages/beat/ActivePanel.tsx:185
+msgid "Editor working — first issue drops in a few minutes."
+msgstr "Editor working — first issue drops in a few minutes."
+
+#: src/pages/IssueDetailPage.tsx:174
+msgid "Editor's note"
+msgstr "Editor's note"
+
+#: src/auth/components/CustomLoginForm.tsx:55
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:65
+#: src/auth/components/CustomSignupForm.tsx:75
+msgid "Email"
+msgstr "Email"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:60
+msgid "Email verification"
+msgstr "Email verification"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:50
+msgid "Email verified"
+msgstr "Email verified"
+
+#: src/pages/DashboardPage.tsx:359
+msgid "Empty newsroom"
+msgstr "Empty newsroom"
+
+#: src/pages/LandingPage.tsx:118
+msgid "Est. MMXXVI · Vol. I"
+msgstr "Est. MMXXVI · Vol. I"
+
+#: src/pages/NewBeatPage.tsx:80
+msgid "Every morning, tight briefing"
+msgstr "Every morning, tight briefing"
+
+#: src/auth/AuthPageLayout.tsx:18
+msgid "feednode"
+msgstr "feednode"
+
+#: src/pages/beat/DesignerPanel.tsx:63
+msgid "Finding the right sources for this beat."
+msgstr "Finding the right sources for this beat."
+
+#: src/pages/DashboardPage.tsx:303
+msgid "First issue: {cad}"
+msgstr "First issue: {cad}"
+
+#: src/auth/LoginPage.tsx:22
+msgid "Forgot your password?"
+msgstr "Forgot your password?"
+
+#: src/pages/NewBeatPage.tsx:79
+msgid "Friday at 5pm, standard read"
+msgstr "Friday at 5pm, standard read"
+
+#: src/pages/beat/ActivePanel.tsx:160
+msgid "Generating…"
+msgstr "Generating…"
+
+#: src/pages/DashboardPage.tsx:85
+msgid "Good afternoon"
+msgstr "Good afternoon"
+
+#: src/pages/DashboardPage.tsx:86
+msgid "Good evening"
+msgstr "Good evening"
+
+#: src/pages/DashboardPage.tsx:84
+msgid "Good morning"
+msgstr "Good morning"
+
+#: src/layout/Rail.tsx:27
+msgid "Home"
+msgstr "Home"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:45
+msgid "If an account with that address exists, we sent a password reset link."
+msgstr "If an account with that address exists, we sent a password reset link."
+
+#: src/layout/Masthead.tsx:88
+msgid "Ink"
+msgstr "Ink"
+
+#: src/auth/components/CustomLoginForm.tsx:20
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:20
+#: src/auth/components/CustomSignupForm.tsx:21
+msgid "Invalid email format"
+msgstr "Invalid email format"
+
+#: src/pages/NewBeatPage.tsx:72
+msgid "Iran–Israel daily briefing"
+msgstr "Iran–Israel daily briefing"
+
+#: src/layout/Rail.tsx:37
+msgid "Issue"
+msgstr "Issue"
+
+#: src/pages/IssueDetailPage.tsx:85
+msgid "Issue not found"
+msgstr "Issue not found"
+
+#: src/pages/DashboardPage.tsx:198
+msgid "Issues this week"
+msgstr "Issues this week"
+
+#: src/layout/Masthead.tsx:50
+#: src/pages/beat/DesignerPanel.tsx:213
+#: src/pages/NewBeatPage.tsx:93
+msgid "Language"
+msgstr "Language"
+
+#: src/pages/beat/ActivePanel.tsx:256
+msgid "Lead with the most actionable item in the issue."
+msgstr "Lead with the most actionable item in the issue."
+
+#: src/pages/beat/ActivePanel.tsx:85
+msgid "Live"
+msgstr "Live"
+
+#: src/pages/LandingPage.tsx:45
+msgid "Loading"
+msgstr "Loading"
+
+#: src/pages/BeatDetailPage.tsx:47
+msgid "Loading beat"
+msgstr "Loading beat"
+
+#: src/pages/DashboardPage.tsx:181
+msgid "Loading beats"
+msgstr "Loading beats"
+
+#: src/pages/IssueDetailPage.tsx:76
+msgid "Loading issue"
+msgstr "Loading issue"
+
+#: src/layout/Masthead.tsx:127
+#: src/layout/Masthead.tsx:130
+#: src/layout/Rail.tsx:104
+#: src/layout/Rail.tsx:105
+msgid "Log in"
+msgstr "Log in"
+
+#: src/layout/Rail.tsx:111
+msgid "Login"
+msgstr "Login"
+
+#: src/pages/DashboardPage.tsx:221
+msgid "Looking for sources to follow."
+msgstr "Looking for sources to follow."
+
+#: src/auth/components/CustomPasswordResetForm.tsx:83
+#: src/auth/components/CustomSignupForm.tsx:100
+msgid "Min. 8 characters"
+msgstr "Min. 8 characters"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:40
+#: src/auth/components/CustomPasswordResetForm.tsx:41
+msgid "Missing verification token in the link"
+msgstr "Missing verification token in the link"
+
+#: src/layout/Rail.tsx:29
+msgid "New"
+msgstr "New"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:78
+msgid "New password"
+msgstr "New password"
+
+#: src/pages/beat/ActivePanel.tsx:210
+msgid "No issues delivered yet."
+msgstr "No issues delivered yet."
+
+#: src/pages/beat/DesignerPanel.tsx:228
+msgid "none yet"
+msgstr "none yet"
+
+#: src/pages/beat/ActivePanel.tsx:106
+#: src/pages/beat/DesignerPanel.tsx:218
+msgid "On demand"
+msgstr "On demand"
+
+#: src/pages/LandingPage.tsx:80
+msgid "One sentence is enough. We'll ask a couple of follow-ups, then deliver a paper shaped to your life — on your schedule, from sources you trust."
+msgstr "One sentence is enough. We'll ask a couple of follow-ups, then deliver a paper shaped to your life — on your schedule, from sources you trust."
+
+#: src/pages/NewBeatPage.tsx:81
+msgid "Only when something big is on"
+msgstr "Only when something big is on"
+
+#: src/pages/DashboardPage.tsx:349
+msgid "Open →"
+msgstr "Open →"
+
+#: src/layout/AppShell.tsx:41
+msgid "Open navigation"
+msgstr "Open navigation"
+
+#: src/pages/LandingPage.tsx:104
+msgid "or borrow a starter:"
+msgstr "or borrow a starter:"
+
+#: src/layout/Masthead.tsx:79
+msgid "Paper"
+msgstr "Paper"
+
+#: src/auth/components/CustomLoginForm.tsx:75
+#: src/auth/components/CustomSignupForm.tsx:95
+msgid "Password"
+msgstr "Password"
+
+#: src/auth/components/CustomLoginForm.tsx:21
+msgid "Password is required"
+msgstr "Password is required"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:21
+#: src/auth/components/CustomSignupForm.tsx:22
+msgid "Password must be at least 8 characters"
+msgstr "Password must be at least 8 characters"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:57
+msgid "Password updated"
+msgstr "Password updated"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:25
+#: src/auth/components/CustomSignupForm.tsx:26
+msgid "Passwords do not match"
+msgstr "Passwords do not match"
+
+#: src/pages/beat/ActivePanel.tsx:207
+msgid "Past issues"
+msgstr "Past issues"
+
+#: src/pages/beat/ActivePanel.tsx:251
+msgid "Patterns will appear here once a few issues ship."
+msgstr "Patterns will appear here once a few issues ship."
+
+#: src/pages/beat/ActivePanel.tsx:136
+msgid "Pause"
+msgstr "Pause"
+
+#: src/pages/beat/ActivePanel.tsx:85
+#: src/pages/beat/ActivePanel.tsx:101
+#: src/pages/DashboardPage.tsx:302
+msgid "Paused"
+msgstr "Paused"
+
+#: src/layout/Masthead.tsx:118
+msgid "Personal <0>Beats</0>"
+msgstr "Personal <0>Beats</0>"
+
+#: src/layout/Rail.tsx:58
+msgid "Personal Beats"
+msgstr "Personal Beats"
+
+#: src/layout/Rail.tsx:57
+msgid "Personal Beats home"
+msgstr "Personal Beats home"
+
+#: src/pages/IssueDetailPage.tsx:157
+msgid "Personal Newsroom"
+msgstr "Personal Newsroom"
+
+#: src/pages/DashboardPage.tsx:194
+msgid "Planned"
+msgstr "Planned"
+
+#: src/pages/DashboardPage.tsx:319
+msgid "Planned · {cad}"
+msgstr "Planned · {cad}"
+
+#: src/pages/NewBeatPage.tsx:74
+msgid "Polish cinema"
+msgstr "Polish cinema"
+
+#: src/pages/IssueDetailPage.tsx:131
+msgid "Print"
+msgstr "Print"
+
+#: src/pages/beat/ActivePanel.tsx:158
+msgid "Queuing…"
+msgstr "Queuing…"
+
+#: src/pages/beat/DesignerPanel.tsx:59
+msgid "Quick clarification before I file this beat."
+msgstr "Quick clarification before I file this beat."
+
+#: src/pages/DashboardPage.tsx:331
+msgid "Relevance {lvl}/5"
+msgstr "Relevance {lvl}/5"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:98
+msgid "Repeat new password"
+msgstr "Repeat new password"
+
+#: src/auth/components/CustomSignupForm.tsx:115
+msgid "Repeat password"
+msgstr "Repeat password"
+
+#: src/pages/beat/DesignerPanel.tsx:324
+msgid "Reply"
+msgstr "Reply"
+
+#: src/pages/beat/ActivePanel.tsx:125
+msgid "Resume"
+msgstr "Resume"
+
+#: src/pages/beat/DesignerPanel.tsx:51
+msgid "Reviewing your brief."
+msgstr "Reviewing your brief."
+
+#: src/pages/beat/DesignerPanel.tsx:225
+msgid "Rules"
+msgstr "Rules"
+
+#: src/pages/beat/DesignerPanel.tsx:62
+msgid "Scout · looking for sources"
+msgstr "Scout · looking for sources"
+
+#: src/pages/beat/DesignerPanel.tsx:431
+msgid "Scouting sources…"
+msgstr "Scouting sources…"
+
+#: src/pages/DashboardPage.tsx:225
+msgid "See progress"
+msgstr "See progress"
+
+#: src/pages/beat/ActivePanel.tsx:161
+msgid "Send me one now"
+msgstr "Send me one now"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:86
+msgid "Send reset link"
+msgstr "Send reset link"
+
+#: src/pages/beat/DesignerPanel.tsx:324
+msgid "Sending"
+msgstr "Sending"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:86
+msgid "Sending…"
+msgstr "Sending…"
+
+#: src/pages/beat/ActivePanel.tsx:198
+msgid "session ↗"
+msgstr "session ↗"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:52
+#: src/auth/components/CustomLoginForm.tsx:95
+#: src/auth/components/CustomPasswordResetForm.tsx:59
+#: src/auth/LoginPage.tsx:10
+msgid "Sign in"
+msgstr "Sign in"
+
+#: src/layout/Rail.tsx:95
+msgid "Sign out"
+msgstr "Sign out"
+
+#: src/layout/Rail.tsx:94
+msgid "signed in"
+msgstr "signed in"
+
+#: src/auth/components/CustomLoginForm.tsx:95
+msgid "Signing in…"
+msgstr "Signing in…"
+
+#: src/pages/NewBeatPage.tsx:96
+msgid "Skip"
+msgstr "Skip"
+
+#: src/pages/beat/ActivePanel.tsx:270
+msgid "Skip listicle-style filler — go straight to specifics."
+msgstr "Skip listicle-style filler — go straight to specifics."
+
+#: src/pages/NewBeatPage.tsx:86
+msgid "Skip nightlife and adult-only"
+msgstr "Skip nightlife and adult-only"
+
+#: src/pages/beat/ActivePanel.tsx:288
+msgid "Source list will fill in as issues ship."
+msgstr "Source list will fill in as issues ship."
+
+#: src/pages/beat/ActivePanel.tsx:284
+msgid "Sources I rely on"
+msgstr "Sources I rely on"
+
+#: src/pages/DashboardPage.tsx:202
+msgid "Sources read"
+msgstr "Sources read"
+
+#: src/pages/NewBeatPage.tsx:95
+msgid "Sourcing"
+msgstr "Sourcing"
+
+#: src/pages/beat/ActivePanel.tsx:55
+#: src/pages/DashboardPage.tsx:296
+msgid "Standard · 8–12 picks"
+msgstr "Standard · 8–12 picks"
+
+#: src/pages/IssueDetailPage.tsx:166
+msgid "stories"
+msgstr "stories"
+
+#: src/pages/IssueDetailPage.tsx:166
+msgid "story"
+msgstr "story"
+
+#: src/pages/DashboardPage.tsx:365
+msgid "Tell me one thing you wish someone was watching for you. The editor will read between the lines and ask if anything's unclear."
+msgstr "Tell me one thing you wish someone was watching for you. The editor will read between the lines and ask if anything's unclear."
+
+#: src/pages/LandingPage.tsx:89
+msgid "Tell me one thing you wish someone was watching for you…"
+msgstr "Tell me one thing you wish someone was watching for you…"
+
+#. placeholder {0}: beat.title
+#: src/pages/beat/ActivePanel.tsx:84
+msgid "The beat · {0}"
+msgstr "The beat · {0}"
+
+#: src/layout/Masthead.tsx:71
+msgid "Theme"
+msgstr "Theme"
+
+#: src/pages/DashboardPage.tsx:90
+#: src/pages/DashboardPage.tsx:92
+msgid "there"
+msgstr "there"
+
+#: src/pages/BeatDetailPage.tsx:59
+msgid "This beat doesn't exist or you don't have access."
+msgstr "This beat doesn't exist or you don't have access."
+
+#: src/pages/IssueDetailPage.tsx:88
+msgid "This issue doesn't exist or you don't have access."
+msgstr "This issue doesn't exist or you don't have access."
+
+#: src/pages/IssueDetailPage.tsx:181
+msgid "This issue had no publishable items."
+msgstr "This issue had no publishable items."
+
+#: src/pages/beat/ActivePanel.tsx:54
+#: src/pages/DashboardPage.tsx:295
+msgid "Tight · 3–5 picks"
+msgstr "Tight · 3–5 picks"
+
+#: src/pages/beat/DesignerPanel.tsx:316
+msgid "to send"
+msgstr "to send"
+
+#: src/layout/Rail.tsx:28
+msgid "Today"
+msgstr "Today"
+
+#: src/layout/Masthead.tsx:111
+#: src/pages/DashboardPage.tsx:151
+msgid "Today's edition"
+msgstr "Today's edition"
+
+#: src/pages/LandingPage.tsx:69
+msgid "Today's edition · Home"
+msgstr "Today's edition · Home"
+
+#: src/pages/beat/DesignerPanel.tsx:209
+msgid "Topic"
+msgstr "Topic"
+
+#. placeholder {0}: sourceTotal === 1 ? "" : "s"
+#: src/pages/beat/ActivePanel.tsx:287
+msgid "Tracking {sourceTotal} source{0}."
+msgstr "Tracking {sourceTotal} source{0}."
+
+#: src/pages/beat/DesignerPanel.tsx:287
+msgid "Type your answer…"
+msgstr "Type your answer…"
+
+#: src/pages/beat/DesignerPanel.tsx:188
+msgid "Untitled beat"
+msgstr "Untitled beat"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:118
+msgid "Update password"
+msgstr "Update password"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:118
+msgid "Updating…"
+msgstr "Updating…"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:78
+msgid "Verify email"
+msgstr "Verify email"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:63
+msgid "Verifying your email address…"
+msgstr "Verifying your email address…"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:78
+msgid "Verifying…"
+msgstr "Verifying…"
+
+#: src/pages/beat/DesignerPanel.tsx:412
+msgid "Waiting for the designer to respond…"
+msgstr "Waiting for the designer to respond…"
+
+#: src/pages/DashboardPage.tsx:257
+msgid "Want me to also <0>watch something else?</0>"
+msgstr "Want me to also <0>watch something else?</0>"
+
+#: src/auth/components/CustomSignupForm.tsx:55
+msgid "We sent an activation link to your address. Click it to finish signing up."
+msgstr "We sent an activation link to your address. Click it to finish signing up."
+
+#: src/pages/beat/ActivePanel.tsx:247
+msgid "What I've learned"
+msgstr "What I've learned"
+
+#: src/pages/LandingPage.tsx:73
+msgid "What should <0>we</0> be reading<1/>for <2>you</2>?"
+msgstr "What should <0>we</0> be reading<1/>for <2>you</2>?"
+
+#: src/pages/beat/DesignerPanel.tsx:245
+msgid "When the spec is locked, the Scout looks for sources and the beat becomes live. You'll get the first issue on the cadence above."
+msgstr "When the spec is locked, the Scout looks for sources and the beat becomes live. You'll get the first issue on the cadence above."
+
+#: src/pages/DashboardPage.tsx:215
+msgid "Working on it now"
+msgstr "Working on it now"
+
+#: src/pages/beat/DesignerPanel.tsx:352
+msgid "Working on your beat."
+msgstr "Working on your beat."
+
+#: src/layout/Rail.tsx:52
+msgid "Workspace navigation"
+msgstr "Workspace navigation"
+
+#: src/pages/NewBeatPage.tsx:71
+msgid "Wrocław weekends with the kids"
+msgstr "Wrocław weekends with the kids"
+
+#: src/pages/IssueDetailPage.tsx:103
+msgid "you"
+msgstr "you"
+
+#. placeholder {0}: String(issue.items.length ? 1 : 0).padStart(3, "0")
+#. placeholder {1}: beat?.title ?? t`your beat`
+#: src/pages/IssueDetailPage.tsx:226
+msgid "You are reading issue №{0} of {1}."
+msgstr "You are reading issue №{0} of {1}."
+
+#: src/auth/components/CustomPasswordResetForm.tsx:58
+msgid "You can now sign in with the new password."
+msgstr "You can now sign in with the new password."
+
+#: src/pages/DashboardPage.tsx:362
+msgid "You haven't filed a beat yet."
+msgstr "You haven't filed a beat yet."
+
+#: src/auth/components/CustomLoginForm.tsx:60
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:70
+#: src/auth/components/CustomSignupForm.tsx:80
+msgid "you@company.com"
+msgstr "you@company.com"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:51
+msgid "Your account is active. You can sign in now."
+msgstr "Your account is active. You can sign in now."
+
+#: src/pages/IssueDetailPage.tsx:228
+msgid "your beat"
+msgstr "your beat"
+
+#: src/pages/DashboardPage.tsx:230
+msgid "Your beats"
+msgstr "Your beats"

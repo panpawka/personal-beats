@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLingui } from '@lingui/react/macro';
 import { resetPassword } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
 import { Button } from '../../components/ui/button';
@@ -10,21 +11,22 @@ import { Input } from '../../components/ui/input';
 import { translateAuthError } from '../utils/errorMessages';
 import { AuthStatusCard } from './AuthStatusCard';
 
-const passwordResetSchema = z
-    .object({
-        newPassword: z.string().min(8, 'Hasło musi mieć co najmniej 8 znaków'),
-        confirmPassword: z.string(),
-    })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-        message: 'Hasła nie są identyczne',
-        path: ['confirmPassword'],
-    });
-
-type PasswordResetFormData = z.infer<typeof passwordResetSchema>;
-
 export function CustomPasswordResetForm() {
+    const { t } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const [isSuccess, setIsSuccess] = useState(false);
+
+    const passwordResetSchema = z
+        .object({
+            newPassword: z.string().min(8, t`Password must be at least 8 characters`),
+            confirmPassword: z.string(),
+        })
+        .refine((data) => data.newPassword === data.confirmPassword, {
+            message: t`Passwords do not match`,
+            path: ['confirmPassword'],
+        });
+
+    type PasswordResetFormData = z.infer<typeof passwordResetSchema>;
 
     const form = useForm<PasswordResetFormData>({
         resolver: zodResolver(passwordResetSchema),
@@ -36,7 +38,7 @@ export function CustomPasswordResetForm() {
 
         const token = new URLSearchParams(window.location.search).get('token');
         if (!token) {
-            setError('Brak tokenu weryfikacyjnego w linku');
+            setError(t`Missing verification token in the link`);
             return;
         }
 
@@ -52,9 +54,9 @@ export function CustomPasswordResetForm() {
         return (
             <AuthStatusCard
                 icon="success"
-                title="Hasło zostało zmienione"
-                description="Możesz teraz zalogować się nowym hasłem."
-                action={{ label: 'Zaloguj się', to: routes.LoginPageRoute.to }}
+                title={t`Password updated`}
+                description={t`You can now sign in with the new password.`}
+                action={{ label: t`Sign in`, to: routes.LoginPageRoute.to }}
             />
         );
     }
@@ -73,12 +75,12 @@ export function CustomPasswordResetForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="password">Nowe hasło</FieldLabel>
+                            <FieldLabel htmlFor="password">{t`New password`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="password"
                                 type="password"
-                                placeholder="Min. 8 znaków"
+                                placeholder={t`Min. 8 characters`}
                                 autoComplete="new-password"
                                 aria-invalid={fieldState.invalid}
                                 disabled={form.formState.isSubmitting}
@@ -93,7 +95,7 @@ export function CustomPasswordResetForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="confirm-password">Powtórz nowe hasło</FieldLabel>
+                            <FieldLabel htmlFor="confirm-password">{t`Repeat new password`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="confirm-password"
@@ -113,7 +115,7 @@ export function CustomPasswordResetForm() {
                     disabled={form.formState.isSubmitting}
                     className="w-full"
                 >
-                    {form.formState.isSubmitting ? 'Zmienianie…' : 'Zmień hasło'}
+                    {form.formState.isSubmitting ? t`Updating…` : t`Update password`}
                 </Button>
             </FieldGroup>
         </form>

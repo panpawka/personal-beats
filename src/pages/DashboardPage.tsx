@@ -17,21 +17,6 @@ function languageTag(lang: string): string {
   return (lang ?? "").toUpperCase();
 }
 
-function timeOfDayGreeting(now: Date): string {
-  const h = now.getHours();
-  if (h < 12) return "Good morning";
-  if (h < 18) return "Good afternoon";
-  return "Good evening";
-}
-
-function fullName(email: string | null | undefined): string {
-  if (!email) return "there";
-  const local = email.split("@")[0] ?? "";
-  if (!local) return "there";
-  const first = local.split(/[._+-]/)[0] ?? local;
-  return first.charAt(0).toUpperCase() + first.slice(1);
-}
-
 interface BeatRow {
   id: string;
   title: string;
@@ -74,14 +59,6 @@ function pitch(b: BeatRow): string {
   return br.length > 220 ? `${br.slice(0, 217)}…` : br;
 }
 
-function nextRunLabel(b: BeatRow): string {
-  if (b.status === "PAUSED") return "Paused";
-  if (b.status === "DRAFT") return `First issue: ${cadenceLabel(b)}`;
-  if (b.status === "DESIGNING" || b.status === "AWAITING_CLARIFICATION" || b.status === "SCOUTING")
-    return "Designing now";
-  return cadenceLabel(b);
-}
-
 function statusKind(b: BeatRow): "live" | "planned" | "paused" {
   if (b.status === "ACTIVE") return "live";
   if (b.status === "PAUSED") return "paused";
@@ -97,9 +74,25 @@ function signalLevel(b: BeatRow): number {
 }
 
 export function DashboardPage() {
+  const { t } = useLingui();
   const { data: user } = useAuth();
   const { data: beats, isLoading, error } = useQuery(getBeats);
   const navigate = useNavigate();
+
+  const greetText = (now: Date): string => {
+    const h = now.getHours();
+    if (h < 12) return t`Good morning`;
+    if (h < 18) return t`Good afternoon`;
+    return t`Good evening`;
+  };
+
+  const fullNameDisplay = (email: string | null | undefined): string => {
+    if (!email) return t`there`;
+    const local = email.split("@")[0] ?? "";
+    if (!local) return t`there`;
+    const first = local.split(/[._+-]/)[0] ?? local;
+    return first.charAt(0).toUpperCase() + first.slice(1);
+  };
 
   const safeBeats: BeatRow[] = Array.isArray(beats) ? (beats as BeatRow[]) : [];
   const buckets = bucket(safeBeats);
@@ -124,7 +117,7 @@ export function DashboardPage() {
     null;
 
   const now = new Date();
-  const greet = timeOfDayGreeting(now);
+  const greet = greetText(now);
   const dayLabel = now.toLocaleDateString("en-US", {
     weekday: "short",
     month: "short",
@@ -155,12 +148,12 @@ export function DashboardPage() {
 
   return (
     <AppShell>
-      <Masthead section="Today's edition" subMiddle={dayLabel} />
+      <Masthead section={t`Today's edition`} subMiddle={dayLabel} />
 
       <div className="dash">
         <div className="greet">
           <h2>
-            {greet}, <b>{fullName(email)}</b>.
+            {greet}, <b>{fullNameDisplay(email)}</b>.
           </h2>
           <span className="meta">
             {dayLabel} · {timeLabel}
@@ -169,7 +162,7 @@ export function DashboardPage() {
 
         {error ? (
           <div className="editorial-error">
-            Couldn't load your beats. Try again in a moment.
+            <Trans>Couldn't load your beats. Try again in a moment.</Trans>
           </div>
         ) : null}
 
@@ -185,28 +178,28 @@ export function DashboardPage() {
               padding: "40px 0",
             }}
           >
-            Loading beats
+            <Trans>Loading beats</Trans>
           </div>
         ) : (
           <>
             <div className="dash-stats">
               <div className="dash-stat">
-                <div className="k">Active beats</div>
+                <div className="k"><Trans>Active beats</Trans></div>
                 <div className="v">
                   {buckets.active.length}
                   <small>/{totalBeats || 0}</small>
                 </div>
               </div>
               <div className="dash-stat">
-                <div className="k">Planned</div>
+                <div className="k"><Trans>Planned</Trans></div>
                 <div className="v">{buckets.planned.length + buckets.designing.length}</div>
               </div>
               <div className="dash-stat">
-                <div className="k">Issues this week</div>
+                <div className="k"><Trans>Issues this week</Trans></div>
                 <div className="v">{issuesThisWeek}</div>
               </div>
               <div className="dash-stat">
-                <div className="k">Sources read</div>
+                <div className="k"><Trans>Sources read</Trans></div>
                 <div className="v">{sourcesRead}</div>
               </div>
             </div>
@@ -219,25 +212,28 @@ export function DashboardPage() {
               >
                 <div className="working-pulse" aria-hidden />
                 <div>
-                  <div className="lbl">Working on it now</div>
+                  <div className="lbl"><Trans>Working on it now</Trans></div>
                   <div className="h">{designingBeat.title}</div>
                   <div className="s">
                     {designingBeat.status === "AWAITING_CLARIFICATION"
-                      ? "Designer is asking a question."
+                      ? t`Designer is asking a question.`
                       : designingBeat.status === "SCOUTING"
-                        ? "Looking for sources to follow."
-                        : "Drafting the spec."}
+                        ? t`Looking for sources to follow.`
+                        : t`Drafting the spec.`}
                   </div>
                 </div>
-                <span className="pb-btn">See progress</span>
+                <span className="pb-btn"><Trans>See progress</Trans></span>
               </Link>
             ) : null}
 
             <div className="sec-h">
-              <div className="ttl">Your beats</div>
+              <div className="ttl"><Trans>Your beats</Trans></div>
               <div className="right">
-                {buckets.active.length} running · {buckets.planned.length + buckets.designing.length} planned ·{" "}
-                {buckets.paused.length} paused
+                <Trans>
+                  {buckets.active.length} running ·{" "}
+                  {buckets.planned.length + buckets.designing.length} planned ·{" "}
+                  {buckets.paused.length} paused
+                </Trans>
               </div>
             </div>
 
@@ -258,7 +254,7 @@ export function DashboardPage() {
             <div className="dash-add">
               <div>
                 <div className="t">
-                  Want me to also <b>watch something else?</b>
+                  <Trans>Want me to also <b>watch something else?</b></Trans>
                 </div>
                 <div className="chips">
                   {SUGGESTED_BRIEFS.map((c) => (
@@ -278,7 +274,7 @@ export function DashboardPage() {
                 className="pb-btn pb-btn-primary"
                 onClick={() => navigate("/beats/new")}
               >
-                + Begin designing
+                <Trans>+ Begin designing</Trans>
               </button>
             </div>
           </>
@@ -289,11 +285,30 @@ export function DashboardPage() {
 }
 
 function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
+  const { t } = useLingui();
   const kind = statusKind(beat);
   const cad = cadenceLabel(beat);
   const lvl = signalLevel(beat);
   const issues = beat.issueCount ?? 0;
-  const next = nextRunLabel(beat);
+
+  const depthText = (() => {
+    if (beat.depth === "BRIEF") return t`Tight · 3–5 picks`;
+    if (beat.depth === "STANDARD") return t`Standard · 8–12 picks`;
+    if (beat.depth === "DEEP") return t`Deep · everything that matters`;
+    return beat.depth;
+  })();
+
+  const nextText = (() => {
+    if (beat.status === "PAUSED") return t`Paused`;
+    if (beat.status === "DRAFT") return t`First issue: ${cad}`;
+    if (
+      beat.status === "DESIGNING" ||
+      beat.status === "AWAITING_CLARIFICATION" ||
+      beat.status === "SCOUTING"
+    )
+      return t`Designing now`;
+    return cad;
+  })();
 
   return (
     <Link to={`/beats/${beat.id}`} className={`beat-card${lead ? " lead" : ""}`}>
@@ -301,11 +316,11 @@ function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
         {kind === "live" ? (
           <span className="live">{cad}</span>
         ) : kind === "planned" ? (
-          <span className="planned">Planned · {cad}</span>
+          <span className="planned"><Trans>Planned · {cad}</Trans></span>
         ) : (
           <span className="paused">{cad}</span>
         )}
-        <span>{depthLabel(beat.depth)}</span>
+        <span>{depthText}</span>
         <span>{languageTag(beat.outputLanguage)}</span>
       </div>
 
@@ -313,7 +328,7 @@ function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
       <p>{pitch(beat)}</p>
 
       {kind !== "planned" || issues > 0 ? (
-        <div className="signal-bars" title={`Relevance ${lvl}/5`}>
+        <div className="signal-bars" title={t`Relevance ${lvl}/5`}>
           {[1, 2, 3, 4, 5].map((i) => (
             <span
               key={i}
@@ -328,10 +343,10 @@ function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
 
       <div className="beat-foot-row">
         <span>
-          {issues > 0 ? `${issues} issues · ` : ""}
-          {next}
+          {issues > 0 ? t`${issues} issues · ` : ""}
+          {nextText}
         </span>
-        <span className="arrow">Open →</span>
+        <span className="arrow"><Trans>Open →</Trans></span>
       </div>
     </Link>
   );
@@ -341,18 +356,20 @@ function EmptyDashboard({ onNew }: { onNew: () => void }) {
   return (
     <div style={{ padding: "60px 0" }}>
       <div className="eyebrow" style={{ marginBottom: 14 }}>
-        Empty newsroom
+        <Trans>Empty newsroom</Trans>
       </div>
       <h2 className="h-1" style={{ margin: 0, maxWidth: 620 }}>
-        You haven't filed a beat yet.
+        <Trans>You haven't filed a beat yet.</Trans>
       </h2>
       <p className="lede" style={{ marginTop: 14, maxWidth: 520 }}>
-        Tell me one thing you wish someone was watching for you. The editor
-        will read between the lines and ask if anything's unclear.
+        <Trans>
+          Tell me one thing you wish someone was watching for you. The editor
+          will read between the lines and ask if anything's unclear.
+        </Trans>
       </p>
       <div className="row" style={{ gap: 10, marginTop: 22 }}>
         <button type="button" className="pb-btn pb-btn-primary pb-btn-lg" onClick={onNew}>
-          + Begin designing
+          <Trans>+ Begin designing</Trans>
         </button>
       </div>
     </div>

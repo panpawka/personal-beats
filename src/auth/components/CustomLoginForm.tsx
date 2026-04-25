@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLingui } from '@lingui/react/macro';
 import { login } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
 import { Button } from '../../components/ui/button';
@@ -10,16 +11,17 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '../../components/ui/f
 import { Input } from '../../components/ui/input';
 import { translateAuthError } from '../utils/errorMessages';
 
-const loginSchema = z.object({
-    email: z.string().email('Nieprawidłowy format e-mail'),
-    password: z.string().min(1, 'Hasło jest wymagane'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-
 export function CustomLoginForm() {
+    const { t } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+
+    const loginSchema = z.object({
+        email: z.string().email(t`Invalid email format`),
+        password: z.string().min(1, t`Password is required`),
+    });
+
+    type LoginFormData = z.infer<typeof loginSchema>;
 
     const form = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
@@ -50,12 +52,12 @@ export function CustomLoginForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="email">E-mail</FieldLabel>
+                            <FieldLabel htmlFor="email">{t`Email`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="email"
                                 type="email"
-                                placeholder="ty@firma.pl"
+                                placeholder={t`you@company.com`}
                                 autoComplete="email"
                                 aria-invalid={fieldState.invalid}
                                 disabled={form.formState.isSubmitting}
@@ -70,7 +72,7 @@ export function CustomLoginForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="password">Hasło</FieldLabel>
+                            <FieldLabel htmlFor="password">{t`Password`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="password"
@@ -90,7 +92,7 @@ export function CustomLoginForm() {
                     disabled={form.formState.isSubmitting}
                     className="w-full"
                 >
-                    {form.formState.isSubmitting ? 'Logowanie…' : 'Zaloguj się'}
+                    {form.formState.isSubmitting ? t`Signing in…` : t`Sign in`}
                 </Button>
             </FieldGroup>
         </form>

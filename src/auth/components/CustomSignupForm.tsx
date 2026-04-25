@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLingui } from '@lingui/react/macro';
 import { signup } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
 import { Button } from '../../components/ui/button';
@@ -10,22 +11,23 @@ import { Input } from '../../components/ui/input';
 import { translateAuthError } from '../utils/errorMessages';
 import { AuthStatusCard } from './AuthStatusCard';
 
-const signupSchema = z
-    .object({
-        email: z.string().email('Nieprawidłowy format e-mail'),
-        password: z.string().min(8, 'Hasło musi mieć co najmniej 8 znaków'),
-        confirmPassword: z.string(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: 'Hasła nie są identyczne',
-        path: ['confirmPassword'],
-    });
-
-type SignupFormData = z.infer<typeof signupSchema>;
-
 export function CustomSignupForm() {
+    const { t } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const [needsConfirmation, setNeedsConfirmation] = useState(false);
+
+    const signupSchema = z
+        .object({
+            email: z.string().email(t`Invalid email format`),
+            password: z.string().min(8, t`Password must be at least 8 characters`),
+            confirmPassword: z.string(),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+            message: t`Passwords do not match`,
+            path: ['confirmPassword'],
+        });
+
+    type SignupFormData = z.infer<typeof signupSchema>;
 
     const form = useForm<SignupFormData>({
         resolver: zodResolver(signupSchema),
@@ -37,7 +39,7 @@ export function CustomSignupForm() {
         try {
             // Wasp's EmailSignupData type includes all inferred UserEmailSignupFields
             // (username, isAdmin), but the server re-derives them from email. Cast to
-            // bypass that constraint \u2014 see src/auth/userSignupFields.ts.
+            // bypass that constraint — see src/auth/userSignupFields.ts.
             await signup({ email: data.email, password: data.password } as any);
             setNeedsConfirmation(true);
         } catch (err: unknown) {
@@ -49,9 +51,9 @@ export function CustomSignupForm() {
         return (
             <AuthStatusCard
                 icon="mail"
-                title="Sprawdź skrzynkę e-mail"
-                description="Wysłaliśmy link aktywacyjny na podany adres. Kliknij go, aby dokończyć rejestrację."
-                action={{ label: 'Wróć do logowania', to: routes.LoginPageRoute.to }}
+                title={t`Check your email`}
+                description={t`We sent an activation link to your address. Click it to finish signing up.`}
+                action={{ label: t`Back to sign in`, to: routes.LoginPageRoute.to }}
             />
         );
     }
@@ -70,12 +72,12 @@ export function CustomSignupForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="email">E-mail</FieldLabel>
+                            <FieldLabel htmlFor="email">{t`Email`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="email"
                                 type="email"
-                                placeholder="ty@firma.pl"
+                                placeholder={t`you@company.com`}
                                 autoComplete="email"
                                 aria-invalid={fieldState.invalid}
                                 disabled={form.formState.isSubmitting}
@@ -90,12 +92,12 @@ export function CustomSignupForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="password">Hasło</FieldLabel>
+                            <FieldLabel htmlFor="password">{t`Password`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="password"
                                 type="password"
-                                placeholder="Min. 8 znaków"
+                                placeholder={t`Min. 8 characters`}
                                 autoComplete="new-password"
                                 aria-invalid={fieldState.invalid}
                                 disabled={form.formState.isSubmitting}
@@ -110,7 +112,7 @@ export function CustomSignupForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="confirm-password">Powtórz hasło</FieldLabel>
+                            <FieldLabel htmlFor="confirm-password">{t`Repeat password`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="confirm-password"
@@ -130,7 +132,7 @@ export function CustomSignupForm() {
                     disabled={form.formState.isSubmitting}
                     className="w-full"
                 >
-                    {form.formState.isSubmitting ? 'Tworzenie konta…' : 'Załóż konto'}
+                    {form.formState.isSubmitting ? t`Creating account…` : t`Create account`}
                 </Button>
             </FieldGroup>
         </form>

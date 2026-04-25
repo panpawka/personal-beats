@@ -91,7 +91,7 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
           onClick={() => {
             void logout();
           }}
-          title={t`${email ?? t`signed in`} · click to sign out`}
+          title={`${email ?? t`signed in`} · ${t`click to sign out`}`}
           aria-label={t`Sign out`}
         >
           {avatarInitial(email)}
@@ -101,13 +101,15 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
           to="/login"
           className="rail-tab"
           onClick={onClose}
-          title="Log in"
-          aria-label="Log in"
+          title={t`Log in`}
+          aria-label={t`Log in`}
         >
           <span className="glyph" aria-hidden>
             <Icon name="external" size={16} />
           </span>
-          <span className="lbl">Login</span>
+          <span className="lbl">
+            <Trans>Login</Trans>
+          </span>
         </Link>
       )}
     </aside>

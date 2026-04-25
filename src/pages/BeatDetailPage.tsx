@@ -44,7 +44,7 @@ export function BeatDetailPage() {
             textTransform: "uppercase",
           }}
         >
-          Loading beat
+          <Trans>Loading beat</Trans>
         </div>
       </AppShell>
     );
@@ -53,10 +53,10 @@ export function BeatDetailPage() {
   if (actions.beatError || !actions.beat) {
     return (
       <AppShell>
-        <Masthead showDate={false} title="Beat not found" />
+        <Masthead showDate={false} title={t`Beat not found`} />
         <div className="content">
           <div className="editorial-error">
-            This beat doesn't exist or you don't have access.
+            <Trans>This beat doesn't exist or you don't have access.</Trans>
           </div>
           <button
             type="button"
@@ -64,7 +64,7 @@ export function BeatDetailPage() {
             onClick={() => navigate("/dashboard")}
             style={{ marginTop: 18 }}
           >
-            Back to beats
+            <Trans>Back to beats</Trans>
           </button>
         </div>
       </AppShell>

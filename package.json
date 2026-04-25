@@ -8,7 +8,10 @@
   "scripts": {
     "email:dev": "email dev --dir src/emails/preview --port 3030",
     "email:check": "tsx --tsconfig scripts/tsconfig.json scripts/render-emails.tsx",
-    "email:send-test": "tsx --tsconfig scripts/tsconfig.json scripts/send-test-email.tsx"
+    "email:send-test": "tsx --tsconfig scripts/tsconfig.json scripts/send-test-email.tsx",
+    "i18n:extract": "lingui extract --clean",
+    "i18n:compile": "lingui compile",
+    "i18n:translate": "tsx --tsconfig scripts/tsconfig.json scripts/translate-po.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.86.1",

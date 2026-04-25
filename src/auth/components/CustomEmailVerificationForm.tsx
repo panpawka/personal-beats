@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { verifyEmail } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
 import { Button } from '../../components/ui/button';
@@ -6,6 +7,7 @@ import { translateAuthError } from '../utils/errorMessages';
 import { AuthStatusCard } from './AuthStatusCard';
 
 export function CustomEmailVerificationForm() {
+    const { t } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -35,7 +37,7 @@ export function CustomEmailVerificationForm() {
     async function handleClick() {
         const token = new URLSearchParams(window.location.search).get('token');
         if (!token) {
-            setError('Brak tokenu weryfikacyjnego w linku');
+            setError(t`Missing verification token in the link`);
             return;
         }
         await runVerification(token);
@@ -45,18 +47,20 @@ export function CustomEmailVerificationForm() {
         return (
             <AuthStatusCard
                 icon="success"
-                title="E-mail został zweryfikowany"
-                description="Twoje konto jest aktywne. Możesz się teraz zalogować."
-                action={{ label: 'Zaloguj się', to: routes.LoginPageRoute.to }}
+                title={t`Email verified`}
+                description={t`Your account is active. You can sign in now.`}
+                action={{ label: t`Sign in`, to: routes.LoginPageRoute.to }}
             />
         );
     }
 
     return (
         <div className="flex flex-col items-center gap-4 text-center">
-            <h2 className="text-xl font-semibold">Weryfikacja e-maila</h2>
+            <h2 className="text-xl font-semibold">
+                <Trans>Email verification</Trans>
+            </h2>
             <p className="text-sm text-muted-foreground text-balance">
-                {isLoading ? 'Weryfikujemy Twój adres e-mail…' : 'Kliknij przycisk poniżej, aby dokończyć weryfikację.'}
+                {isLoading ? t`Verifying your email address…` : t`Click the button below to finish verification.`}
             </p>
 
             {error && (
@@ -71,7 +75,7 @@ export function CustomEmailVerificationForm() {
                 size="lg"
                 className="w-full"
             >
-                {isLoading ? 'Weryfikowanie…' : 'Zweryfikuj e-mail'}
+                {isLoading ? t`Verifying…` : t`Verify email`}
             </Button>
         </div>
     );

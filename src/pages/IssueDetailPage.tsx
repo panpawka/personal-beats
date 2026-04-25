@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router";
 import { useQuery, getIssue, getBeat } from "wasp/client/operations";
 import { useAuth } from "wasp/client/auth";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 import { EditorialButton } from "../components/editorial/Button";
@@ -45,6 +46,7 @@ function userEmailFrom(user: unknown): string | null {
 }
 
 export function IssueDetailPage() {
+  const { t } = useLingui();
   const { beatId, issueId } = useParams<{ beatId: string; issueId: string }>();
   const navigate = useNavigate();
   const { data: user } = useAuth();
@@ -71,7 +73,7 @@ export function IssueDetailPage() {
             textTransform: "uppercase",
           }}
         >
-          Loading issue
+          <Trans>Loading issue</Trans>
         </div>
       </AppShell>
     );
@@ -80,10 +82,10 @@ export function IssueDetailPage() {
   if (error || !issue) {
     return (
       <AppShell>
-        <Masthead showDate={false} title="Issue not found" />
+        <Masthead showDate={false} title={t`Issue not found`} />
         <div className="content">
           <div className="editorial-error">
-            This issue doesn't exist or you don't have access.
+            <Trans>This issue doesn't exist or you don't have access.</Trans>
           </div>
           <Link
             to={beatId ? `/beats/${beatId}` : "/dashboard"}
@@ -91,14 +93,14 @@ export function IssueDetailPage() {
             style={{ marginTop: 18, display: "inline-flex" }}
           >
             <Icon name="arrow-left" size={13} />
-            <span>Back</span>
+            <span><Trans>Back</Trans></span>
           </Link>
         </div>
       </AppShell>
     );
   }
 
-  const toEmail = userEmailFrom(user) ?? "you";
+  const toEmail = userEmailFrom(user) ?? t`you`;
   const fromEmail = "hello@lemonode.pl";
   const issueDate = issue.issueDate ?? issue.publishedAt;
   const folioDate = formatEmailMetaDate(issueDate);
@@ -116,7 +118,7 @@ export function IssueDetailPage() {
               onClick={() => navigate(beatId ? `/beats/${beatId}` : "/dashboard")}
             >
               <Icon name="arrow-left" size={13} />
-              <span>Back to beat</span>
+              <span><Trans>Back to beat</Trans></span>
             </EditorialButton>
             <EditorialButton
               variant="ghost"
@@ -126,7 +128,7 @@ export function IssueDetailPage() {
               }}
             >
               <Icon name="external" size={13} />
-              <span>Print</span>
+              <span><Trans>Print</Trans></span>
             </EditorialButton>
           </>
         }
@@ -138,7 +140,7 @@ export function IssueDetailPage() {
             className="editorial-error"
             style={{ maxWidth: 640, margin: "0 auto 18px" }}
           >
-            Delivery pending — email bounced. You can still read the issue below.
+            <Trans>Delivery pending — email bounced. You can still read the issue below.</Trans>
           </div>
         ) : null}
         <article className="email-window">
@@ -151,7 +153,9 @@ export function IssueDetailPage() {
 
           <header className="email-masthead">
             <div className="est">
-              {beat?.title ? beat.title : "Personal Newsroom"} · Vol. I
+              <Trans>
+                {beat?.title ? beat.title : t`Personal Newsroom`} · Vol. I
+              </Trans>
             </div>
             <h1>{issue.subject}</h1>
             {issue.dek ? <p className="deck">{issue.dek}</p> : null}
@@ -159,7 +163,7 @@ export function IssueDetailPage() {
               <span>{folioDate}</span>
               <span>
                 {issue.items.length}{" "}
-                {issue.items.length === 1 ? "story" : "stories"}
+                {issue.items.length === 1 ? t`story` : t`stories`}
               </span>
             </div>
           </header>
@@ -167,14 +171,14 @@ export function IssueDetailPage() {
           <div className="email-body">
             {issue.coverageNote ? (
               <div className="email-tldr">
-                <span className="label">Editor's note</span>
+                <span className="label"><Trans>Editor's note</Trans></span>
                 {issue.coverageNote}
               </div>
             ) : null}
 
             {issue.items.length === 0 ? (
               <p className="pb-body" style={{ color: "var(--ink-3)" }}>
-                This issue had no publishable items.
+                <Trans>This issue had no publishable items.</Trans>
               </p>
             ) : (
               issue.items.map((item, i) => {
@@ -219,12 +223,14 @@ export function IssueDetailPage() {
 
           <footer className="email-foot">
             <div>
-              You are reading issue №{String(issue.items.length ? 1 : 0).padStart(3, "0")} of{" "}
-              {beat?.title ?? "your beat"}.
+              <Trans>
+                You are reading issue №{String(issue.items.length ? 1 : 0).padStart(3, "0")} of{" "}
+                {beat?.title ?? t`your beat`}.
+              </Trans>
             </div>
             <div style={{ marginTop: 6 }}>
               <Link to={beatId ? `/beats/${beatId}` : "/dashboard"}>
-                Adjust this beat
+                <Trans>Adjust this beat</Trans>
               </Link>
             </div>
           </footer>

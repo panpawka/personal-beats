@@ -1,31 +1,12 @@
 import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router";
 import { createBeat } from "wasp/client/operations";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 
 const DEFAULT_CRON = "0 7 * * *";
 const DEFAULT_CADENCE: "TIME_BASED" | "ON_DEMAND" = "TIME_BASED";
-
-const STARTERS = [
-  "Wrocław weekends with the kids",
-  "Iran–Israel daily briefing",
-  "AI agent frameworks",
-  "Polish cinema",
-  "Climbing trips, weekend Europe",
-];
-
-const SUGG_CADENCE = [
-  "Friday at 5pm, standard read",
-  "Every morning, tight briefing",
-  "Only when something big is on",
-];
-
-const SUGG_FLAGS = [
-  "Always weather + dress code",
-  "Skip nightlife and adult-only",
-  "Cite 2+ primary sources",
-];
 
 interface Rules {
   cadence?: string;
@@ -36,15 +17,6 @@ interface Rules {
   skip?: string;
 }
 
-const RULE_LABELS: Record<keyof Rules, string> = {
-  cadence: "Cadence",
-  depth: "Depth",
-  language: "Language",
-  weather: "Always with",
-  sources: "Sourcing",
-  skip: "Skip",
-};
-
 interface Turn {
   who: "me" | "ed";
   text: string;
@@ -52,45 +24,78 @@ interface Turn {
   ask?: string;
 }
 
-function parseRules(text: string): Rules {
-  const t = text.toLowerCase();
+type TFn = (strings: TemplateStringsArray, ...values: unknown[]) => string;
+
+function parseRules(text: string, t: TFn): Rules {
+  const lower = text.toLowerCase();
   const r: Rules = {};
-  if (/(every )?morning|daily|each day|every day/.test(t)) r.cadence = "Every morning · 7 am";
-  else if (/friday|fri\b|weekend/.test(t)) r.cadence = "Every Friday · 5 pm";
-  else if (/monday|weekly/.test(t)) r.cadence = "Every Monday · 8 am";
-  else if (/only.*(when|if).*(big|important|breaking|happens)/.test(t))
-    r.cadence = "Only when something breaks";
-  const tm = t.match(/at (\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
+  if (/(every )?morning|daily|each day|every day/.test(lower)) r.cadence = t`Every morning · 7 am`;
+  else if (/friday|fri\b|weekend/.test(lower)) r.cadence = t`Every Friday · 5 pm`;
+  else if (/monday|weekly/.test(lower)) r.cadence = t`Every Monday · 8 am`;
+  else if (/only.*(when|if).*(big|important|breaking|happens)/.test(lower))
+    r.cadence = t`Only when something breaks`;
+  const tm = lower.match(/at (\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
   if (tm && r.cadence) {
     const hr = tm[1];
     const mn = tm[2] ?? "00";
     const ap = tm[3] ?? (parseInt(hr, 10) < 8 ? "pm" : "am");
     r.cadence = r.cadence.replace(/·.*$/, `· ${hr}:${mn} ${ap}`);
   }
-  if (/deep|thorough|long|full|in.?depth|planner/.test(t)) r.depth = "Deep · everything that matters";
-  else if (/short|tight|brief|essential|quick/.test(t)) r.depth = "Tight · 3–5 picks";
-  else if (/standard|regular|normal/.test(t)) r.depth = "Standard · 8–12 picks";
-  if (/english.?friendly|in english|english/.test(t)) r.language = "English (Polish translated)";
-  if (/weather|dress|rain|outdoor|kids|stroller/.test(t))
-    r.weather = "Always lead with weather + dress code";
-  if (/primary source|original source|source.?first|cite/.test(t))
-    r.sources = "Primary sources first, opinion labelled";
-  if (/skip nightlife|no nightlife|kid.?friendly|no adult/.test(t))
-    r.skip = "Skip nightlife, adult-only";
+  if (/deep|thorough|long|full|in.?depth|planner/.test(lower)) r.depth = t`Deep · everything that matters`;
+  else if (/short|tight|brief|essential|quick/.test(lower)) r.depth = t`Tight · 3–5 picks`;
+  else if (/standard|regular|normal/.test(lower)) r.depth = t`Standard · 8–12 picks`;
+  if (/english.?friendly|in english|english/.test(lower)) r.language = t`English (Polish translated)`;
+  if (/weather|dress|rain|outdoor|kids|stroller/.test(lower))
+    r.weather = t`Always lead with weather + dress code`;
+  if (/primary source|original source|source.?first|cite/.test(lower))
+    r.sources = t`Primary sources first, opinion labelled`;
+  if (/skip nightlife|no nightlife|kid.?friendly|no adult/.test(lower))
+    r.skip = t`Skip nightlife, adult-only`;
   return r;
 }
 
-function deriveTitle(brief: string, rules: Rules): string {
-  const t = brief.trim();
-  if (!t) return "Untitled beat";
+function deriveTitle(brief: string, _rules: Rules, t: TFn): string {
+  const trimmedBrief = brief.trim();
+  if (!trimmedBrief) return t`Untitled beat`;
   // first sentence, capitalised
-  const first = t.split(/[.!?\n]/)[0].trim();
+  const first = trimmedBrief.split(/[.!?\n]/)[0].trim();
   const trimmed = first.length > 80 ? first.slice(0, 77) + "…" : first;
   return trimmed.replace(/^./, (c) => c.toUpperCase());
 }
 
 export function NewBeatPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
+
+  const STARTERS = [
+    t`Wrocław weekends with the kids`,
+    t`Iran–Israel daily briefing`,
+    t`AI agent frameworks`,
+    t`Polish cinema`,
+    t`Climbing trips, weekend Europe`,
+  ];
+
+  const SUGG_CADENCE = [
+    t`Friday at 5pm, standard read`,
+    t`Every morning, tight briefing`,
+    t`Only when something big is on`,
+  ];
+
+  const SUGG_FLAGS = [
+    t`Always weather + dress code`,
+    t`Skip nightlife and adult-only`,
+    t`Cite 2+ primary sources`,
+  ];
+
+  const RULE_LABELS: Record<keyof Rules, string> = {
+    cadence: t`Cadence`,
+    depth: t`Depth`,
+    language: t`Language`,
+    weather: t`Always with`,
+    sources: t`Sourcing`,
+    skip: t`Skip`,
+  };
+
   const [seed, setSeed] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [rules, setRules] = useState<Rules>({});
@@ -121,16 +126,16 @@ export function NewBeatPage() {
   function agentReply(rulesNow: Rules, askedNow: string[]): Omit<Turn, "who"> | null {
     if (!askedNow.includes("cadence_depth")) {
       return {
-        text: "Got it. Two things I'd love your call on — when should I send, and how much do you want each time? Say it however feels natural.",
+        text: t`Got it. Two things I'd love your call on — when should I send, and how much do you want each time? Say it however feels natural.`,
         sugg: SUGG_CADENCE,
         ask: "cadence_depth",
       };
     }
     if (!askedNow.includes("flags")) {
-      const cad = rulesNow.cadence ?? "your schedule";
-      const dep = (rulesNow.depth ?? "a standard read").toLowerCase();
+      const cad = rulesNow.cadence ?? t`your schedule`;
+      const dep = (rulesNow.depth ?? t`a standard read`).toLowerCase();
       return {
-        text: `${cad}, ${dep}. Last thing — should I always lead with weather and what to wear? And anything you'd like me to always skip?`,
+        text: t`${cad}, ${dep}. Last thing — should I always lead with weather and what to wear? And anything you'd like me to always skip?`,
         sugg: SUGG_FLAGS,
         ask: "flags",
       };
@@ -143,17 +148,17 @@ export function NewBeatPage() {
     if (turns.length > 0) return;
     const first = seed.trim();
     if (!first) return;
-    const r = parseRules(first);
+    const r = parseRules(first, t);
     setRules(r);
     setTurns([{ who: "me", text: first }]);
-    const t = window.setTimeout(() => {
+    const timeoutId = window.setTimeout(() => {
       const a = agentReply(r, []);
       if (a) {
         setTurns((prev) => [...prev, { who: "ed", text: a.text, sugg: a.sugg, ask: a.ask }]);
         if (a.ask) setAsked((k) => [...k, a.ask!]);
       }
     }, 450);
-    return () => window.clearTimeout(t);
+    return () => window.clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seed]);
 
@@ -176,19 +181,19 @@ export function NewBeatPage() {
       setSeed(trimmed);
       return;
     }
-    const merged: Rules = { ...rules, ...parseRules(trimmed) };
+    const merged: Rules = { ...rules, ...parseRules(trimmed, t) };
     setRules(merged);
-    setTurns((t) => [...t, { who: "me", text: trimmed }]);
+    setTurns((prev) => [...prev, { who: "me", text: trimmed }]);
     setComposer("");
     window.setTimeout(() => {
       const a = agentReply(merged, asked);
       if (a) {
-        setTurns((t) => [...t, { who: "ed", text: a.text, sugg: a.sugg, ask: a.ask }]);
+        setTurns((prev) => [...prev, { who: "ed", text: a.text, sugg: a.sugg, ask: a.ask }]);
         if (a.ask) setAsked((k) => [...k, a.ask!]);
       } else {
-        setTurns((t) => [
-          ...t,
-          { who: "ed", text: "Done. Your beat is ready — I'll start reading and send the first issue on schedule." },
+        setTurns((prev) => [
+          ...prev,
+          { who: "ed", text: t`Done. Your beat is ready — I'll start reading and send the first issue on schedule.` },
         ]);
         setDone(true);
       }
@@ -204,9 +209,9 @@ export function NewBeatPage() {
 
   async function fileBeat() {
     setError(null);
-    const brief = (seed || turns.find((t) => t.who === "me")?.text || "").trim();
+    const brief = (seed || turns.find((tn) => tn.who === "me")?.text || "").trim();
     if (brief.length < 4) {
-      setError("Tell me a bit more about the beat first.");
+      setError(t`Tell me a bit more about the beat first.`);
       return;
     }
     setSubmitting(true);
@@ -228,30 +233,32 @@ export function NewBeatPage() {
     ([, v]) => Boolean(v),
   );
   const showInlineRules = turns.length >= 2 && !done && filled.length > 0;
-  const briefTitle = deriveTitle(seed || turns.find((t) => t.who === "me")?.text || "", rules);
+  const briefTitle = deriveTitle(seed || turns.find((tn) => tn.who === "me")?.text || "", rules, t);
 
   // Empty state — show starter chips if no seed yet
   const isEmpty = turns.length === 0;
 
   return (
     <AppShell>
-      <Masthead section="Designing a new beat" />
+      <Masthead section={t`Designing a new beat`} />
       <div className="design">
         <div className="design-head">
-          <div className="lbl">The editor · conversation</div>
+          <div className="lbl"><Trans>The editor · conversation</Trans></div>
           <h1>
-            Tell me <em>what</em> you'd like me to read for you.
+            <Trans>Tell me <em>what</em> you'd like me to read for you.</Trans>
           </h1>
           <p className="sub">
-            Talk to me normally — I'll read between the lines and ask if I need
-            to. As we go, I'll jot the rules I've understood as pencil notes; at
-            the end, I'll read the whole brief back.
+            <Trans>
+              Talk to me normally — I'll read between the lines and ask if I need
+              to. As we go, I'll jot the rules I've understood as pencil notes; at
+              the end, I'll read the whole brief back.
+            </Trans>
           </p>
         </div>
 
         {isEmpty ? (
           <div className="hero-chips" style={{ justifyContent: "flex-start", marginTop: 0, marginBottom: 28 }}>
-            <span className="label">or borrow a starter:</span>
+            <span className="label"><Trans>or borrow a starter:</Trans></span>
             {STARTERS.map((s) => (
               <button
                 key={s}
@@ -266,18 +273,18 @@ export function NewBeatPage() {
         ) : null}
 
         <div className="turns">
-          {turns.map((t, i) => (
+          {turns.map((turn, i) => (
             <Fragment key={i}>
-              <div className={`turn ${t.who}`}>
+              <div className={`turn ${turn.who}`}>
                 <div className="who" aria-hidden>
-                  {t.who === "me" ? "M" : "P"}
+                  {turn.who === "me" ? "M" : "P"}
                 </div>
-                <div className="bub">{t.text}</div>
+                <div className="bub">{turn.text}</div>
               </div>
-              {t.who === "ed" && t.sugg && i === turns.length - 1 && !done ? (
+              {turn.who === "ed" && turn.sugg && i === turns.length - 1 && !done ? (
                 <div className="suggests">
-                  <span className="label">or pick one —</span>
-                  {t.sugg.map((s) => (
+                  <span className="label"><Trans>or pick one —</Trans></span>
+                  {turn.sugg.map((s) => (
                     <button
                       key={s}
                       type="button"
@@ -294,7 +301,7 @@ export function NewBeatPage() {
 
           {showInlineRules ? (
             <div className="rules-inline">
-              <span className="label">Pencil notes —</span>
+              <span className="label"><Trans>Pencil notes —</Trans></span>
               {filled.map(([k, v]) => (
                 <div key={k} className="rule-chip">
                   <span className="k">{RULE_LABELS[k]}:</span>
@@ -314,8 +321,8 @@ export function NewBeatPage() {
               rows={1}
               placeholder={
                 isEmpty
-                  ? "Tell me however you'd say it out loud…"
-                  : "Reply with whatever feels natural…"
+                  ? t`Tell me however you'd say it out loud…`
+                  : t`Reply with whatever feels natural…`
               }
               value={composer}
               onChange={(e) => setComposer(e.target.value)}
@@ -327,7 +334,7 @@ export function NewBeatPage() {
               onClick={() => send(composer)}
               disabled={!composer.trim()}
             >
-              Send <span aria-hidden>↵</span>
+              <Trans>Send</Trans> <span aria-hidden>↵</span>
             </button>
           </div>
         ) : null}
@@ -335,45 +342,45 @@ export function NewBeatPage() {
         {done ? (
           <div className="brief-card">
             <div className="brief-head">
-              <span className="lbl">✦ Your brief, filed</span>
-              <span className="vol">Draft · Vol. I</span>
+              <span className="lbl"><Trans>✦ Your brief, filed</Trans></span>
+              <span className="vol"><Trans>Draft · Vol. I</Trans></span>
             </div>
             <div className="brief-body">
               <h3>{briefTitle}</h3>
               <div className="brief-rows">
                 <div className="brief-row">
-                  <div className="k">Topic</div>
+                  <div className="k"><Trans>Topic</Trans></div>
                   <div className="v">{seed || briefTitle}</div>
                 </div>
                 <div className="brief-row">
-                  <div className="k">Cadence</div>
-                  <div className="v">{rules.cadence ?? "Daily · 7 am"}</div>
+                  <div className="k"><Trans>Cadence</Trans></div>
+                  <div className="v">{rules.cadence ?? t`Daily · 7 am`}</div>
                 </div>
                 <div className="brief-row">
-                  <div className="k">Depth</div>
-                  <div className="v">{rules.depth ?? "Standard · 8–12 picks"}</div>
+                  <div className="k"><Trans>Depth</Trans></div>
+                  <div className="v">{rules.depth ?? t`Standard · 8–12 picks`}</div>
                 </div>
                 {rules.language ? (
                   <div className="brief-row">
-                    <div className="k">Language</div>
+                    <div className="k"><Trans>Language</Trans></div>
                     <div className="v">{rules.language}</div>
                   </div>
                 ) : null}
                 {rules.weather ? (
                   <div className="brief-row">
-                    <div className="k">Always with</div>
+                    <div className="k"><Trans>Always with</Trans></div>
                     <div className="v">{rules.weather}</div>
                   </div>
                 ) : null}
                 {rules.skip ? (
                   <div className="brief-row">
-                    <div className="k">Skip</div>
+                    <div className="k"><Trans>Skip</Trans></div>
                     <div className="v">{rules.skip}</div>
                   </div>
                 ) : null}
                 {rules.sources ? (
                   <div className="brief-row">
-                    <div className="k">Sourcing</div>
+                    <div className="k"><Trans>Sourcing</Trans></div>
                     <div className="v">{rules.sources}</div>
                   </div>
                 ) : null}
@@ -386,7 +393,9 @@ export function NewBeatPage() {
             </div>
             <div className="brief-foot">
               <span className="spacer-msg">
-                First issue arrives {(rules.cadence ?? "soon").replace(/^Every /, "")}
+                <Trans>
+                  First issue arrives {(rules.cadence ?? t`soon`).replace(/^Every /, "")}
+                </Trans>
               </span>
               <button
                 type="button"
@@ -396,7 +405,7 @@ export function NewBeatPage() {
                 }}
                 disabled={submitting}
               >
-                Keep refining
+                <Trans>Keep refining</Trans>
               </button>
               <button
                 type="button"
@@ -404,7 +413,7 @@ export function NewBeatPage() {
                 onClick={() => void fileBeat()}
                 disabled={submitting}
               >
-                {submitting ? "Filing…" : "File this beat →"}
+                {submitting ? t`Filing…` : t`File this beat →`}
               </button>
             </div>
           </div>

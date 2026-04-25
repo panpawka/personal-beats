@@ -1,5 +1,6 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../../layout/AppShell";
 import { Masthead } from "../../layout/Masthead";
 import { EditorialButton } from "../../components/editorial/Button";
@@ -42,24 +43,27 @@ interface ChatItem {
   occurredAt?: Date | string;
 }
 
-const STATUS_COPY: Record<string, { eyebrow: string; title: string }> = {
-  DRAFT: {
-    eyebrow: "Designer · getting started",
-    title: "Reviewing your brief.",
-  },
-  DESIGNING: {
-    eyebrow: "Designer · working",
-    title: "Drafting the spec.",
-  },
-  AWAITING_CLARIFICATION: {
-    eyebrow: "Designer · one question",
-    title: "Quick clarification before I file this beat.",
-  },
-  SCOUTING: {
-    eyebrow: "Scout · looking for sources",
-    title: "Finding the right sources for this beat.",
-  },
-};
+function useStatusCopy(): Record<string, { eyebrow: string; title: string }> {
+  const { t } = useLingui();
+  return {
+    DRAFT: {
+      eyebrow: t`Designer · getting started`,
+      title: t`Reviewing your brief.`,
+    },
+    DESIGNING: {
+      eyebrow: t`Designer · working`,
+      title: t`Drafting the spec.`,
+    },
+    AWAITING_CLARIFICATION: {
+      eyebrow: t`Designer · one question`,
+      title: t`Quick clarification before I file this beat.`,
+    },
+    SCOUTING: {
+      eyebrow: t`Scout · looking for sources`,
+      title: t`Finding the right sources for this beat.`,
+    },
+  };
+}
 
 function shortType(type: string): string {
   return type.replace(/^designer\./, "").replace(/^scout\./, "").replace(/_/g, " ");
@@ -68,13 +72,14 @@ function shortType(type: string): string {
 function itemsFromEvents(
   beat: DesignerPanelProps["beat"],
   events: TranscriptEvent[] | undefined,
+  t: (literals: TemplateStringsArray, ...placeholders: any[]) => string,
 ): ChatItem[] {
   const rows: ChatItem[] = [];
   rows.push({
     id: "seed",
     role: "user",
     body: beat.brief,
-    meta: "Your brief",
+    meta: t`Your brief`,
   });
   if (!events) return rows;
   for (const e of events) {
@@ -82,7 +87,7 @@ function itemsFromEvents(
     if (e.type === "designer.thinking") {
       const msg = String(p.message ?? "").trim();
       if (!msg) continue;
-      rows.push({ id: e.id, role: "assistant", body: msg, meta: "Designer", occurredAt: e.occurredAt });
+      rows.push({ id: e.id, role: "assistant", body: msg, meta: t`Designer`, occurredAt: e.occurredAt });
     } else if (e.type === "designer.needs_clarification") {
       const qs = Array.isArray(p.questions) ? (p.questions as string[]) : [];
       const reason = String(p.reasoning ?? "").trim();
@@ -92,8 +97,8 @@ function itemsFromEvents(
       rows.push({
         id: e.id,
         role: "assistant",
-        body: body || "I have a follow-up question.",
-        meta: "Designer · needs clarification",
+        body: body || t`I have a follow-up question.`,
+        meta: t`Designer · needs clarification`,
         occurredAt: e.occurredAt,
       });
     } else if (e.type === "designer.finalized") {
@@ -101,28 +106,28 @@ function itemsFromEvents(
       rows.push({
         id: e.id,
         role: "assistant",
-        body: summary || "Spec finalized.",
-        meta: "Designer · finalized",
+        body: summary || t`Spec finalized.`,
+        meta: t`Designer · finalized`,
         occurredAt: e.occurredAt,
       });
     } else if (e.type === "scout.progress") {
       const msg = String(p.message ?? p.note ?? "").trim();
       if (!msg) continue;
-      rows.push({ id: e.id, role: "assistant", body: msg, meta: "Scout", occurredAt: e.occurredAt });
+      rows.push({ id: e.id, role: "assistant", body: msg, meta: t`Scout`, occurredAt: e.occurredAt });
     } else if (e.type === "scout.complete") {
       rows.push({
         id: e.id,
         role: "assistant",
-        body: `Found ${p.sourceCount ?? "?"} sources (${p.coverage ?? "—"}). ${p.note ?? ""}`.trim(),
-        meta: "Scout · complete",
+        body: t`Found ${p.sourceCount ?? "?"} sources (${p.coverage ?? "—"}). ${p.note ?? ""}`.trim(),
+        meta: t`Scout · complete`,
         occurredAt: e.occurredAt,
       });
     } else if (e.type === "beat.failed") {
       rows.push({
         id: e.id,
         role: "assistant",
-        body: String(p.error ?? "Something went wrong."),
-        meta: "Designer · failed",
+        body: String(p.error ?? t`Something went wrong.`),
+        meta: t`Designer · failed`,
         occurredAt: e.occurredAt,
       });
     } else {
@@ -153,7 +158,7 @@ function Completeness({ beat, events }: { beat: DesignerPanelProps["beat"]; even
   if (events?.length) pct = Math.min(pct + Math.min(events.length, 5) * 2, 95);
   return (
     <div className="confidence">
-      <span className="eyebrow-mono">Brief completeness</span>
+      <span className="eyebrow-mono"><Trans>Brief completeness</Trans></span>
       <div className="confidence-bar">
         <div style={{ width: `${pct}%` }} />
       </div>
@@ -169,6 +174,8 @@ function SpecCard({
   beat: DesignerPanelProps["beat"];
   events: TranscriptEvent[] | undefined;
 }) {
+  const { t } = useLingui();
+  const STATUS_COPY = useStatusCopy();
   const defaults: string[] = (() => {
     try {
       const parsed = JSON.parse(beat.defaultsApplied || "[]");
@@ -178,13 +185,14 @@ function SpecCard({
     }
   })();
   const copy = STATUS_COPY[beat.status];
-  const title = beat.title?.trim() ? beat.title : "Untitled beat";
+  const title = beat.title?.trim() ? beat.title : t`Untitled beat`;
   const topicMuted = !beat.summary;
+  const phase = copy ? copy.eyebrow.split(" · ")[1] : beat.status.toLowerCase();
   return (
     <div className="spec-card">
       <div className="spec-card-h">
         <span className="eyebrow-mono">
-          Beat draft · {copy ? copy.eyebrow.split(" · ")[1] : beat.status.toLowerCase()}
+          <Trans>Beat draft · {phase}</Trans>
         </span>
         <span className="ui-xs">{beat.status}</span>
       </div>
@@ -199,26 +207,26 @@ function SpecCard({
         {title}
       </div>
       <div className="spec-table">
-        <div className="k">Topic</div>
+        <div className="k"><Trans>Topic</Trans></div>
         <div className={`v${beat.summary ? "" : " muted"}`}>
-          {beat.summary ?? "awaiting spec"}
+          {beat.summary ?? t`awaiting spec`}
         </div>
-        <div className="k">Language</div>
+        <div className="k"><Trans>Language</Trans></div>
         <div className="v">{beat.outputLanguage?.toUpperCase() ?? "—"}</div>
-        <div className="k">Cadence</div>
+        <div className="k"><Trans>Cadence</Trans></div>
         <div className="v">
           {beat.cadenceType === "ON_DEMAND"
-            ? "On demand"
+            ? t`On demand`
             : beat.cronExpression
-              ? `cron: ${beat.cronExpression}`
+              ? t`cron: ${beat.cronExpression}`
               : "—"}
         </div>
-        <div className="k">Depth</div>
+        <div className="k"><Trans>Depth</Trans></div>
         <div className="v">{beat.depth}</div>
-        <div className="k">Rules</div>
+        <div className="k"><Trans>Rules</Trans></div>
         <div className={`v${defaults.length === 0 ? " muted" : ""}`}>
           {defaults.length === 0
-            ? "none yet"
+            ? t`none yet`
             : defaults.map((d) => (
                 <span className="tag" key={d}>
                   {d}
@@ -235,8 +243,10 @@ function SpecCard({
           marginTop: 14,
         }}
       >
-        When the spec is locked, the Scout looks for sources and the beat becomes
-        live. You'll get the first issue on the cadence above.
+        <Trans>
+          When the spec is locked, the Scout looks for sources and the beat becomes
+          live. You'll get the first issue on the cadence above.
+        </Trans>
       </p>
     </div>
   );
@@ -255,6 +265,7 @@ function ClarifyComposer({
   questions: string[];
   reasoning: string;
 }) {
+  const { t } = useLingui();
   const [reply, setReply] = useState("");
 
   async function submit() {
@@ -273,8 +284,8 @@ function ClarifyComposer({
   }
 
   const placeholder = questions[0]
-    ? `Answer: ${questions[0]}`
-    : "Type your answer…";
+    ? t`Answer: ${questions[0]}`
+    : t`Type your answer…`;
 
   return (
     <div className="chat-composer">
@@ -303,7 +314,7 @@ function ClarifyComposer({
         <div className="composer-foot">
           <div className="composer-hints">
             <span className="kbd">⌘↵</span>
-            <span>to send</span>
+            <span><Trans>to send</Trans></span>
           </div>
           <EditorialButton
             variant="primary"
@@ -311,7 +322,7 @@ function ClarifyComposer({
             onClick={submit}
           >
             <Icon name="send" size={13} />
-            <span>{clarifyPending ? "Sending" : "Reply"}</span>
+            <span>{clarifyPending ? <Trans>Sending</Trans> : <Trans>Reply</Trans>}</span>
           </EditorialButton>
         </div>
       </div>
@@ -332,12 +343,14 @@ export function DesignerPanel({
   deletePending,
 }: DesignerPanelProps) {
   const navigate = useNavigate();
+  const { t } = useLingui();
+  const STATUS_COPY = useStatusCopy();
   void navigate;
-  const items = useMemo(() => itemsFromEvents(beat, events), [beat, events]);
+  const items = useMemo(() => itemsFromEvents(beat, events, t), [beat, events, t]);
   const awaiting = beat.status === "AWAITING_CLARIFICATION" && !!latestClarification;
   const copy = STATUS_COPY[beat.status] ?? {
-    eyebrow: "Designer",
-    title: "Working on your beat.",
+    eyebrow: t`Designer`,
+    title: t`Working on your beat.`,
   };
 
   return (
@@ -347,7 +360,7 @@ export function DesignerPanel({
         right={
           <>
             <EditorialButton variant="ghost" onClick={onCancel}>
-              Back to beats
+              <Trans>Back to beats</Trans>
             </EditorialButton>
             <EditorialButton
               variant="ghost"
@@ -355,7 +368,7 @@ export function DesignerPanel({
               disabled={deletePending}
             >
               <Icon name="trash" size={13} />
-              <span>Discard</span>
+              <span><Trans>Discard</Trans></span>
             </EditorialButton>
           </>
         }
@@ -373,7 +386,7 @@ export function DesignerPanel({
 
             {agentEventsError ? (
               <div className="editorial-error">
-                Connection interrupted — still listening for the designer.
+                <Trans>Connection interrupted — still listening for the designer.</Trans>
               </div>
             ) : null}
 
@@ -397,7 +410,7 @@ export function DesignerPanel({
             ))}
 
             {!events || events.length === 0 ? (
-              <div className="chat-meta pb-typing">Waiting for the designer to respond…</div>
+              <div className="chat-meta pb-typing"><Trans>Waiting for the designer to respond…</Trans></div>
             ) : null}
           </div>
 
@@ -416,8 +429,8 @@ export function DesignerPanel({
                 style={{ color: "var(--ink-3)", textAlign: "center", padding: "6px 0" }}
               >
                 {beat.status === "SCOUTING"
-                  ? "Scouting sources…"
-                  : "Designer at work — reply field appears when you're needed."}
+                  ? t`Scouting sources…`
+                  : t`Designer at work — reply field appears when you're needed.`}
               </div>
             </div>
           )}

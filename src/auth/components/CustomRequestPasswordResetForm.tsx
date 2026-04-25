@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useLingui } from '@lingui/react/macro';
 import { requestPasswordReset } from 'wasp/client/auth';
 import { routes } from 'wasp/client/router';
 import { Button } from '../../components/ui/button';
@@ -10,15 +11,16 @@ import { Input } from '../../components/ui/input';
 import { translateAuthError } from '../utils/errorMessages';
 import { AuthStatusCard } from './AuthStatusCard';
 
-const resetRequestSchema = z.object({
-    email: z.string().email('Nieprawidłowy format e-mail'),
-});
-
-type ResetRequestFormData = z.infer<typeof resetRequestSchema>;
-
 export function CustomRequestPasswordResetForm() {
+    const { t } = useLingui();
     const [error, setError] = useState<string | null>(null);
     const [needsConfirmation, setNeedsConfirmation] = useState(false);
+
+    const resetRequestSchema = z.object({
+        email: z.string().email(t`Invalid email format`),
+    });
+
+    type ResetRequestFormData = z.infer<typeof resetRequestSchema>;
 
     const form = useForm<ResetRequestFormData>({
         resolver: zodResolver(resetRequestSchema),
@@ -39,9 +41,9 @@ export function CustomRequestPasswordResetForm() {
         return (
             <AuthStatusCard
                 icon="mail"
-                title="Sprawdź skrzynkę e-mail"
-                description="Jeżeli konto z tym adresem istnieje, wysłaliśmy link do zresetowania hasła."
-                action={{ label: 'Wróć do logowania', to: routes.LoginPageRoute.to }}
+                title={t`Check your email`}
+                description={t`If an account with that address exists, we sent a password reset link.`}
+                action={{ label: t`Back to sign in`, to: routes.LoginPageRoute.to }}
             />
         );
     }
@@ -60,12 +62,12 @@ export function CustomRequestPasswordResetForm() {
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor="email">E-mail</FieldLabel>
+                            <FieldLabel htmlFor="email">{t`Email`}</FieldLabel>
                             <Input
                                 {...field}
                                 id="email"
                                 type="email"
-                                placeholder="ty@firma.pl"
+                                placeholder={t`you@company.com`}
                                 autoComplete="email"
                                 aria-invalid={fieldState.invalid}
                                 disabled={form.formState.isSubmitting}
@@ -81,7 +83,7 @@ export function CustomRequestPasswordResetForm() {
                     disabled={form.formState.isSubmitting}
                     className="w-full"
                 >
-                    {form.formState.isSubmitting ? 'Wysyłanie…' : 'Wyślij link resetujący'}
+                    {form.formState.isSubmitting ? t`Sending…` : t`Send reset link`}
                 </Button>
             </FieldGroup>
         </form>

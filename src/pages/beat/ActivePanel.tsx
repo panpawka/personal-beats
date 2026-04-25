@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router";
+import { Trans, useLingui, Plural } from "@lingui/react/macro";
 import { AppShell } from "../../layout/AppShell";
 import { Masthead } from "../../layout/Masthead";
 import { EditorialButton } from "../../components/editorial/Button";
@@ -46,14 +47,14 @@ interface ActivePanelProps {
   deletePending: boolean;
 }
 
-const DEPTH_LABEL: Record<string, string> = {
-  BRIEF: "Tight · 3–5 picks",
-  STANDARD: "Standard · 8–12 picks",
-  DEEP: "Deep · everything that matters",
-};
-
 export function ActivePanel(props: ActivePanelProps) {
   const navigate = useNavigate();
+  const { t } = useLingui();
+  const DEPTH_LABEL: Record<string, string> = {
+    BRIEF: t`Tight · 3–5 picks`,
+    STANDARD: t`Standard · 8–12 picks`,
+    DEEP: t`Deep · everything that matters`,
+  };
   const {
     beat,
     issues,
@@ -76,17 +77,19 @@ export function ActivePanel(props: ActivePanelProps) {
   const depth = DEPTH_LABEL[beat.depth] ?? beat.depth;
   const lang = (beat.outputLanguage ?? "").toUpperCase();
   const sourceTotal = beat.sourceCount ?? 0;
+  const nextRun = beat.cadenceType === "ON_DEMAND" ? t`On demand` : cadence;
+  const createdAtLabel = formatShortDate(beat.createdAt);
 
   return (
     <AppShell>
       <Masthead
-        section={`The beat · ${beat.title}`}
-        subMiddle={isActive ? "Live" : isPaused ? "Paused" : beat.status.toLowerCase()}
+        section={t`The beat · ${beat.title}`}
+        subMiddle={isActive ? t`Live` : isPaused ? t`Paused` : beat.status.toLowerCase()}
         right={
           <>
             <EditorialButton variant="ghost" onClick={() => navigate("/dashboard")}>
               <Icon name="arrow-left" size={13} />
-              <span>All beats</span>
+              <span><Trans>All beats</Trans></span>
             </EditorialButton>
           </>
         }
@@ -95,16 +98,20 @@ export function ActivePanel(props: ActivePanelProps) {
       <header className="b-hero">
         <div className="meta">
           {isActive ? (
-            <span className="live">Active</span>
+            <span className="live"><Trans>Active</Trans></span>
           ) : isPaused ? (
-            <span>Paused</span>
+            <span><Trans>Paused</Trans></span>
           ) : (
             <span>{beat.status}</span>
           )}
-          <span>· Next run: {beat.cadenceType === "ON_DEMAND" ? "On demand" : cadence}</span>
+          <span>
+            <Trans>· Next run: {nextRun}</Trans>
+          </span>
           <span>· {depth}</span>
           <span>· {lang}</span>
-          <span>· est. {formatShortDate(beat.createdAt)}</span>
+          <span>
+            <Trans>· est. {createdAtLabel}</Trans>
+          </span>
         </div>
         <h1>{beat.title}</h1>
         <p className="pitch">{beat.summary ?? beat.brief}</p>
@@ -117,7 +124,7 @@ export function ActivePanel(props: ActivePanelProps) {
               disabled={pausePending}
             >
               <Icon name="play" size={13} />
-              <span>Resume</span>
+              <span><Trans>Resume</Trans></span>
             </button>
           ) : null}
           {isActive ? (
@@ -128,7 +135,7 @@ export function ActivePanel(props: ActivePanelProps) {
               disabled={pausePending}
             >
               <Icon name="pause" size={13} />
-              <span>Pause</span>
+              <span><Trans>Pause</Trans></span>
             </button>
           ) : null}
           <button
@@ -136,10 +143,10 @@ export function ActivePanel(props: ActivePanelProps) {
             className="pb-btn"
             onClick={onDelete}
             disabled={deletePending}
-            aria-label="Delete beat"
+            aria-label={t`Delete beat`}
           >
             <Icon name="trash" size={13} />
-            <span>Delete</span>
+            <span><Trans>Delete</Trans></span>
           </button>
           <button
             type="button"
@@ -150,10 +157,10 @@ export function ActivePanel(props: ActivePanelProps) {
             <Icon name="play" size={13} />
             <span>
               {triggerPending
-                ? "Queuing…"
+                ? t`Queuing…`
                 : isGenerating
-                  ? "Generating…"
-                  : "Send me one now"}
+                  ? t`Generating…`
+                  : t`Send me one now`}
             </span>
           </button>
         </div>
@@ -177,7 +184,7 @@ export function ActivePanel(props: ActivePanelProps) {
             }}
           >
             <span className="dot live" />
-            <span>Editor working — first issue drops in a few minutes.</span>
+            <span><Trans>Editor working — first issue drops in a few minutes.</Trans></span>
             {sessionLinkId ? (
               <a
                 href={`https://platform.claude.com/sessions/${sessionLinkId}`}
@@ -190,7 +197,7 @@ export function ActivePanel(props: ActivePanelProps) {
                   color: "var(--ink-3)",
                 }}
               >
-                session ↗
+                <Trans>session ↗</Trans>
               </a>
             ) : null}
           </div>
@@ -199,13 +206,13 @@ export function ActivePanel(props: ActivePanelProps) {
 
       <div className="twocol">
         <div>
-          <h3>Past issues</h3>
+          <h3><Trans>Past issues</Trans></h3>
           {!issues || issues.length === 0 ? (
             <div style={{ padding: "26px 0", color: "var(--ink-3)" }} className="pb-body">
-              No issues delivered yet.
+              <Trans>No issues delivered yet.</Trans>
               {isActive
-                ? " The first one will land on the schedule above."
-                : " Resume the beat or run it on demand to produce one."}
+                ? <Trans> The first one will land on the schedule above.</Trans>
+                : <Trans> Resume the beat or run it on demand to produce one.</Trans>}
             </div>
           ) : (
             <div>
@@ -239,20 +246,20 @@ export function ActivePanel(props: ActivePanelProps) {
 
         <div>
           <div className="side-block">
-            <h4>What I've learned</h4>
+            <h4><Trans>What I've learned</Trans></h4>
             <p className="sub">
               {beat.coverageAssessment
-                ? `Coverage looks ${beat.coverageAssessment} so far.`
-                : "Patterns will appear here once a few issues ship."}
+                ? t`Coverage looks ${beat.coverageAssessment} so far.`
+                : t`Patterns will appear here once a few issues ship.`}
             </p>
             <div className="learned">
               <div className="row">
                 <span className="sign plus">+</span>
-                <span>Lead with the most actionable item in the issue.</span>
+                <span><Trans>Lead with the most actionable item in the issue.</Trans></span>
               </div>
               <div className="row">
                 <span className="sign plus">+</span>
-                <span>Cite primary sources before commentary.</span>
+                <span><Trans>Cite primary sources before commentary.</Trans></span>
               </div>
               {beat.coverageNote ? (
                 <div className="row">
@@ -262,7 +269,7 @@ export function ActivePanel(props: ActivePanelProps) {
               ) : null}
               <div className="row">
                 <span className="sign minus">−</span>
-                <span>Skip listicle-style filler — go straight to specifics.</span>
+                <span><Trans>Skip listicle-style filler — go straight to specifics.</Trans></span>
               </div>
             </div>
             {userEmail ? (
@@ -270,23 +277,35 @@ export function ActivePanel(props: ActivePanelProps) {
                 className="sub"
                 style={{ marginTop: 14, fontFamily: "var(--mono)", letterSpacing: "0.06em", textTransform: "uppercase" }}
               >
-                Delivered to {userEmail}
+                <Trans>Delivered to {userEmail}</Trans>
               </p>
             ) : null}
           </div>
 
           <div className="side-block">
-            <h4>Sources I rely on</h4>
+            <h4><Trans>Sources I rely on</Trans></h4>
             <p className="sub">
-              {sourceTotal > 0
-                ? `Tracking ${sourceTotal} source${sourceTotal === 1 ? "" : "s"}.`
-                : "Source list will fill in as issues ship."}
+              {sourceTotal > 0 ? (
+                <Plural
+                  value={sourceTotal}
+                  one="Tracking # source."
+                  other="Tracking # sources."
+                />
+              ) : (
+                <Trans>Source list will fill in as issues ship.</Trans>
+              )}
             </p>
             <div className="src-list">
               {sourceTotal > 0 ? (
-                <span className="src">{sourceTotal} sources tracked</span>
+                <span className="src">
+                  <Plural
+                    value={sourceTotal}
+                    one="# source tracked"
+                    other="# sources tracked"
+                  />
+                </span>
               ) : (
-                <span className="src">awaiting first issue</span>
+                <span className="src"><Trans>awaiting first issue</Trans></span>
               )}
             </div>
           </div>

@@ -1,0 +1,868 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-04-25 11:28+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pl\n"
+
+#: src/pages/beat/ActivePanel.tsx:213
+msgid " Resume the beat or run it on demand to produce one."
+msgstr " Wznów beat lub uruchom go na żądanie, aby go wygenerować."
+
+#: src/pages/beat/ActivePanel.tsx:212
+msgid " The first one will land on the schedule above."
+msgstr " Pierwsze wydanie pojawi się zgodnie z powyższym harmonogramem."
+
+#. placeholder {0}: formatShortDate(beat.createdAt)
+#: src/pages/beat/ActivePanel.tsx:111
+msgid "· est. {0}"
+msgstr "· szac. {0}"
+
+#. placeholder {0}: beat.cadenceType === "ON_DEMAND" ? t`On demand` : cadence
+#: src/pages/beat/ActivePanel.tsx:106
+msgid "· Next run: {0}"
+msgstr "· Następne uruchomienie: {0}"
+
+#. placeholder {0}: beat?.title ? beat.title : t`Personal Newsroom`
+#: src/pages/IssueDetailPage.tsx:156
+msgid "{0} · Vol. I"
+msgstr "{0} · Tom I"
+
+#. placeholder {0}: buckets.active.length
+#. placeholder {1}: buckets.planned.length + buckets.designing.length
+#. placeholder {2}: buckets.paused.length
+#: src/pages/DashboardPage.tsx:232
+msgid "{0} running · {1} planned · {2} paused"
+msgstr "{0} aktywnych · {1} zaplanowanych · {2} wstrzymanych"
+
+#: src/pages/DashboardPage.tsx:346
+msgid "{issues} issues · "
+msgstr "{issues} wydań · "
+
+#: src/pages/beat/ActivePanel.tsx:292
+msgid "{sourceTotal} sources tracked"
+msgstr "{sourceTotal} śledzonych źródeł"
+
+#: src/pages/DashboardPage.tsx:277
+#: src/pages/DashboardPage.tsx:372
+msgid "+ Begin designing"
+msgstr "+ Rozpocznij projektowanie"
+
+#: src/auth/SignupPage.tsx:11
+msgid "14 days free. No card. No commitment."
+msgstr "14 dni za darmo. Bez karty. Bez zobowiązań."
+
+#: src/pages/LandingPage.tsx:69
+msgid "A personal newsroom"
+msgstr "Osobista redakcja"
+
+#: src/pages/LandingPage.tsx:71
+msgid "A personal newsroom, yours alone"
+msgstr "Osobista redakcja, tylko dla Ciebie"
+
+#: src/pages/beat/ActivePanel.tsx:99
+msgid "Active"
+msgstr "Aktywny"
+
+#: src/pages/DashboardPage.tsx:187
+msgid "Active beats"
+msgstr "Aktywne beaty"
+
+#: src/pages/IssueDetailPage.tsx:233
+msgid "Adjust this beat"
+msgstr "Dostosuj ten beat"
+
+#: src/pages/NewBeatPage.tsx:73
+msgid "AI agent frameworks"
+msgstr "Frameworki agentów AI"
+
+#: src/pages/beat/ActivePanel.tsx:90
+msgid "All beats"
+msgstr "Wszystkie beaty"
+
+#: src/pages/LandingPage.tsx:120
+msgid "Already a reader → log in"
+msgstr "Już czytasz → zaloguj się"
+
+#: src/auth/SignupPage.tsx:14
+msgid "Already have an account? <0>Sign in</0>"
+msgstr "Masz już konto? <0>Zaloguj się</0>"
+
+#: src/pages/NewBeatPage.tsx:85
+msgid "Always weather + dress code"
+msgstr "Zawsze pogoda i dress code"
+
+#: src/pages/NewBeatPage.tsx:94
+msgid "Always with"
+msgstr "Zawsze z"
+
+#. placeholder {0}: questions[0]
+#: src/pages/beat/DesignerPanel.tsx:286
+msgid "Answer: {0}"
+msgstr "Odpowiedź: {0}"
+
+#: src/pages/beat/ActivePanel.tsx:294
+msgid "awaiting first issue"
+msgstr "oczekuje na pierwsze wydanie"
+
+#: src/pages/beat/DesignerPanel.tsx:211
+msgid "awaiting spec"
+msgstr "oczekuje na specyfikację"
+
+#: src/pages/IssueDetailPage.tsx:96
+msgid "Back"
+msgstr "Wstecz"
+
+#: src/pages/IssueDetailPage.tsx:121
+msgid "Back to beat"
+msgstr "Wróć do beatu"
+
+#: src/pages/beat/DesignerPanel.tsx:362
+#: src/pages/BeatDetailPage.tsx:67
+msgid "Back to beats"
+msgstr "Wróć do beatów"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:46
+#: src/auth/components/CustomSignupForm.tsx:56
+msgid "Back to sign in"
+msgstr "Wróć do logowania"
+
+#: src/auth/LoginPage.tsx:11
+msgid "Back to your inbox of opinions and your agent's replies."
+msgstr "Wróć do swojej skrzynki z opiniami i odpowiedziami agenta."
+
+#: src/layout/Rail.tsx:32
+msgid "Beat"
+msgstr "Beat"
+
+#: src/pages/LandingPage.tsx:92
+msgid "Beat brief"
+msgstr "Opis beatu"
+
+#. placeholder {0}: copy ? copy.eyebrow.split(" · ")[1] : beat.status.toLowerCase()
+#: src/pages/beat/DesignerPanel.tsx:194
+msgid "Beat draft · {0}"
+msgstr "Szkic beatu · {0}"
+
+#: src/pages/BeatDetailPage.tsx:56
+msgid "Beat not found"
+msgstr "Nie znaleziono beatu"
+
+#: src/pages/LandingPage.tsx:119
+msgid "Beats run quietly. You review, revise, pause any time."
+msgstr "Beaty działają w tle. Możesz przeglądać, edytować i wstrzymywać je w dowolnym momencie."
+
+#: src/pages/LandingPage.tsx:97
+msgid "Begin"
+msgstr "Rozpocznij"
+
+#: src/pages/LandingPage.tsx:99
+msgid "Begin <0>→</0>"
+msgstr "Rozpocznij <0>→</0>"
+
+#: src/pages/beat/DesignerPanel.tsx:161
+msgid "Brief completeness"
+msgstr "Kompletność opisu"
+
+#: src/pages/beat/DesignerPanel.tsx:215
+#: src/pages/NewBeatPage.tsx:91
+msgid "Cadence"
+msgstr "Harmonogram"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:44
+#: src/auth/components/CustomSignupForm.tsx:54
+msgid "Check your email"
+msgstr "Sprawdź swoją pocztę"
+
+#: src/pages/NewBeatPage.tsx:87
+msgid "Cite 2+ primary sources"
+msgstr "Cytuj co najmniej 2 pierwotne źródła"
+
+#: src/pages/beat/ActivePanel.tsx:260
+msgid "Cite primary sources before commentary."
+msgstr "Cytuj pierwotne źródła przed komentarzem."
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:63
+msgid "Click the button below to finish verification."
+msgstr "Kliknij poniższy przycisk, aby zakończyć weryfikację."
+
+#: src/layout/Rail.tsx:94
+msgid "click to sign out"
+msgstr "kliknij, aby się wylogować"
+
+#: src/pages/NewBeatPage.tsx:75
+msgid "Climbing trips, weekend Europe"
+msgstr "Wyprawy wspinaczkowe, weekendy w Europie"
+
+#: src/pages/beat/DesignerPanel.tsx:388
+msgid "Connection interrupted — still listening for the designer."
+msgstr "Połączenie przerwane — nadal oczekuje na designera."
+
+#: src/pages/DashboardPage.tsx:165
+msgid "Couldn't load your beats. Try again in a moment."
+msgstr "Nie udało się załadować twoich beatów. Spróbuj ponownie za chwilę."
+
+#. placeholder {0}: beat.coverageAssessment
+#: src/pages/beat/ActivePanel.tsx:250
+msgid "Coverage looks {0} so far."
+msgstr "Pokrycie tematyczne wygląda {0} jak dotąd."
+
+#: src/auth/components/CustomSignupForm.tsx:135
+msgid "Create account"
+msgstr "Utwórz konto"
+
+#: src/auth/SignupPage.tsx:10
+msgid "Create an account"
+msgstr "Utwórz konto"
+
+#: src/auth/components/CustomSignupForm.tsx:135
+msgid "Creating account…"
+msgstr "Tworzenie konta…"
+
+#. placeholder {0}: beat.cronExpression
+#: src/pages/beat/DesignerPanel.tsx:220
+msgid "cron: {0}"
+msgstr "cron: {0}"
+
+#: src/pages/beat/ActivePanel.tsx:56
+#: src/pages/DashboardPage.tsx:297
+msgid "Deep · everything that matters"
+msgstr "Deep · wszystko, co istotne"
+
+#: src/pages/beat/ActivePanel.tsx:147
+msgid "Delete"
+msgstr "Usuń"
+
+#: src/pages/beat/ActivePanel.tsx:144
+msgid "Delete beat"
+msgstr "Usuń beat"
+
+#: src/pages/beat/ActivePanel.tsx:278
+msgid "Delivered to {userEmail}"
+msgstr "Dostarczone do {userEmail}"
+
+#: src/pages/IssueDetailPage.tsx:143
+msgid "Delivery pending — email bounced. You can still read the issue below."
+msgstr "Dostarczenie oczekuje — wiadomość odrzucona. Możesz przeczytać wydanie poniżej."
+
+#: src/pages/beat/DesignerPanel.tsx:223
+#: src/pages/NewBeatPage.tsx:92
+msgid "Depth"
+msgstr "Głębokość"
+
+#: src/pages/beat/DesignerPanel.tsx:351
+msgid "Designer"
+msgstr "Designer"
+
+#: src/pages/beat/DesignerPanel.tsx:50
+msgid "Designer · getting started"
+msgstr "Designer · pierwsze kroki"
+
+#: src/pages/beat/DesignerPanel.tsx:58
+msgid "Designer · one question"
+msgstr "Designer · jedno pytanie"
+
+#: src/pages/beat/DesignerPanel.tsx:54
+msgid "Designer · working"
+msgstr "Designer · w trakcie pracy"
+
+#: src/pages/beat/DesignerPanel.tsx:432
+msgid "Designer at work — reply field appears when you're needed."
+msgstr "Designer pracuje — pole odpowiedzi pojawi się, gdy będziesz potrzebny."
+
+#: src/pages/DashboardPage.tsx:219
+msgid "Designer is asking a question."
+msgstr "Designer zadaje pytanie."
+
+#: src/pages/DashboardPage.tsx:309
+msgid "Designing now"
+msgstr "Projektowanie w toku"
+
+#: src/pages/beat/DesignerPanel.tsx:370
+msgid "Discard"
+msgstr "Odrzuć"
+
+#: src/auth/LoginPage.tsx:15
+msgid "Don't have an account yet? <0>Create one</0>"
+msgstr "Nie masz jeszcze konta? <0>Utwórz je</0>"
+
+#: src/pages/beat/DesignerPanel.tsx:55
+#: src/pages/DashboardPage.tsx:222
+msgid "Drafting the spec."
+msgstr "Opracowywanie specyfikacji."
+
+#: src/pages/beat/ActivePanel.tsx:185
+msgid "Editor working — first issue drops in a few minutes."
+msgstr "Redaktor pracuje — pierwsze wydanie pojawi się za kilka minut."
+
+#: src/pages/IssueDetailPage.tsx:174
+msgid "Editor's note"
+msgstr "Nota redaktora"
+
+#: src/auth/components/CustomLoginForm.tsx:55
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:65
+#: src/auth/components/CustomSignupForm.tsx:75
+msgid "Email"
+msgstr "E-mail"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:60
+msgid "Email verification"
+msgstr "Weryfikacja e-maila"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:50
+msgid "Email verified"
+msgstr "E-mail zweryfikowany"
+
+#: src/pages/DashboardPage.tsx:359
+msgid "Empty newsroom"
+msgstr "Pusta redakcja"
+
+#: src/pages/LandingPage.tsx:118
+msgid "Est. MMXXVI · Vol. I"
+msgstr "Est. MMXXVI · Vol. I"
+
+#: src/pages/NewBeatPage.tsx:80
+msgid "Every morning, tight briefing"
+msgstr "Każdego ranka, zwięzły briefing"
+
+#: src/auth/AuthPageLayout.tsx:18
+msgid "feednode"
+msgstr "feednode"
+
+#: src/pages/beat/DesignerPanel.tsx:63
+msgid "Finding the right sources for this beat."
+msgstr "Wyszukiwanie odpowiednich źródeł dla tego beatu."
+
+#: src/pages/DashboardPage.tsx:303
+msgid "First issue: {cad}"
+msgstr "Pierwsze wydanie: {cad}"
+
+#: src/auth/LoginPage.tsx:22
+msgid "Forgot your password?"
+msgstr "Nie pamiętasz hasła?"
+
+#: src/pages/NewBeatPage.tsx:79
+msgid "Friday at 5pm, standard read"
+msgstr "W piątek o 17:00, standardowa lektura"
+
+#: src/pages/beat/ActivePanel.tsx:160
+msgid "Generating…"
+msgstr "Generowanie…"
+
+#: src/pages/DashboardPage.tsx:85
+msgid "Good afternoon"
+msgstr "Dobry dzień"
+
+#: src/pages/DashboardPage.tsx:86
+msgid "Good evening"
+msgstr "Dobry wieczór"
+
+#: src/pages/DashboardPage.tsx:84
+msgid "Good morning"
+msgstr "Dzień dobry"
+
+#: src/layout/Rail.tsx:27
+msgid "Home"
+msgstr "Strona główna"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:45
+msgid "If an account with that address exists, we sent a password reset link."
+msgstr "Jeśli konto z tym adresem istnieje, wysłaliśmy link do resetowania hasła."
+
+#: src/layout/Masthead.tsx:88
+msgid "Ink"
+msgstr "Ink"
+
+#: src/auth/components/CustomLoginForm.tsx:20
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:20
+#: src/auth/components/CustomSignupForm.tsx:21
+msgid "Invalid email format"
+msgstr "Nieprawidłowy format adresu e-mail"
+
+#: src/pages/NewBeatPage.tsx:72
+msgid "Iran–Israel daily briefing"
+msgstr "Codzienne podsumowanie: Iran–Izrael"
+
+#: src/layout/Rail.tsx:37
+msgid "Issue"
+msgstr "Wydanie"
+
+#: src/pages/IssueDetailPage.tsx:85
+msgid "Issue not found"
+msgstr "Nie znaleziono wydania"
+
+#: src/pages/DashboardPage.tsx:198
+msgid "Issues this week"
+msgstr "Wydania w tym tygodniu"
+
+#: src/layout/Masthead.tsx:50
+#: src/pages/beat/DesignerPanel.tsx:213
+#: src/pages/NewBeatPage.tsx:93
+msgid "Language"
+msgstr "Język"
+
+#: src/pages/beat/ActivePanel.tsx:256
+msgid "Lead with the most actionable item in the issue."
+msgstr "Zacznij od najbardziej praktycznej informacji w wydaniu."
+
+#: src/pages/beat/ActivePanel.tsx:85
+msgid "Live"
+msgstr "Na żywo"
+
+#: src/pages/LandingPage.tsx:45
+msgid "Loading"
+msgstr "Ładowanie"
+
+#: src/pages/BeatDetailPage.tsx:47
+msgid "Loading beat"
+msgstr "Ładowanie wątku"
+
+#: src/pages/DashboardPage.tsx:181
+msgid "Loading beats"
+msgstr "Ładowanie wątków"
+
+#: src/pages/IssueDetailPage.tsx:76
+msgid "Loading issue"
+msgstr "Ładowanie wydania"
+
+#: src/layout/Masthead.tsx:127
+#: src/layout/Masthead.tsx:130
+#: src/layout/Rail.tsx:104
+#: src/layout/Rail.tsx:105
+msgid "Log in"
+msgstr "Zaloguj się"
+
+#: src/layout/Rail.tsx:111
+msgid "Login"
+msgstr "Logowanie"
+
+#: src/pages/DashboardPage.tsx:221
+msgid "Looking for sources to follow."
+msgstr "Wyszukiwanie źródeł do obserwowania."
+
+#: src/auth/components/CustomPasswordResetForm.tsx:83
+#: src/auth/components/CustomSignupForm.tsx:100
+msgid "Min. 8 characters"
+msgstr "Min. 8 znaków"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:40
+#: src/auth/components/CustomPasswordResetForm.tsx:41
+msgid "Missing verification token in the link"
+msgstr "Brak tokenu weryfikacyjnego w łączu"
+
+#: src/layout/Rail.tsx:29
+msgid "New"
+msgstr "Nowy"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:78
+msgid "New password"
+msgstr "Nowe hasło"
+
+#: src/pages/beat/ActivePanel.tsx:210
+msgid "No issues delivered yet."
+msgstr "Nie dostarczono jeszcze żadnych wydań."
+
+#: src/pages/beat/DesignerPanel.tsx:228
+msgid "none yet"
+msgstr "brak"
+
+#: src/pages/beat/ActivePanel.tsx:106
+#: src/pages/beat/DesignerPanel.tsx:218
+msgid "On demand"
+msgstr "Na żądanie"
+
+#: src/pages/LandingPage.tsx:80
+msgid "One sentence is enough. We'll ask a couple of follow-ups, then deliver a paper shaped to your life — on your schedule, from sources you trust."
+msgstr "Jedno zdanie wystarczy. Zadamy kilka pytań uzupełniających, a następnie dostarczymy gazetę skrojoną pod Twoje życie — według Twojego harmonogramu, ze źródeł, którym ufasz."
+
+#: src/pages/NewBeatPage.tsx:81
+msgid "Only when something big is on"
+msgstr "Tylko przy ważnych wydarzeniach"
+
+#: src/pages/DashboardPage.tsx:349
+msgid "Open →"
+msgstr "Otwórz →"
+
+#: src/layout/AppShell.tsx:41
+msgid "Open navigation"
+msgstr "Otwórz nawigację"
+
+#: src/pages/LandingPage.tsx:104
+msgid "or borrow a starter:"
+msgstr "lub skorzystaj z gotowego szablonu:"
+
+#: src/layout/Masthead.tsx:79
+msgid "Paper"
+msgstr "Paper"
+
+#: src/auth/components/CustomLoginForm.tsx:75
+#: src/auth/components/CustomSignupForm.tsx:95
+msgid "Password"
+msgstr "Hasło"
+
+#: src/auth/components/CustomLoginForm.tsx:21
+msgid "Password is required"
+msgstr "Hasło jest wymagane"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:21
+#: src/auth/components/CustomSignupForm.tsx:22
+msgid "Password must be at least 8 characters"
+msgstr "Hasło musi mieć co najmniej 8 znaków"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:57
+msgid "Password updated"
+msgstr "Hasło zaktualizowane"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:25
+#: src/auth/components/CustomSignupForm.tsx:26
+msgid "Passwords do not match"
+msgstr "Hasła nie są zgodne"
+
+#: src/pages/beat/ActivePanel.tsx:207
+msgid "Past issues"
+msgstr "Poprzednie wydania"
+
+#: src/pages/beat/ActivePanel.tsx:251
+msgid "Patterns will appear here once a few issues ship."
+msgstr "Wzorce pojawią się tutaj po wysłaniu kilku wydań."
+
+#: src/pages/beat/ActivePanel.tsx:136
+msgid "Pause"
+msgstr "Wstrzymaj"
+
+#: src/pages/beat/ActivePanel.tsx:85
+#: src/pages/beat/ActivePanel.tsx:101
+#: src/pages/DashboardPage.tsx:302
+msgid "Paused"
+msgstr "Wstrzymano"
+
+#: src/layout/Masthead.tsx:118
+msgid "Personal <0>Beats</0>"
+msgstr "Personal <0>Beats</0>"
+
+#: src/layout/Rail.tsx:58
+msgid "Personal Beats"
+msgstr "Personal Beats"
+
+#: src/layout/Rail.tsx:57
+msgid "Personal Beats home"
+msgstr "Strona główna Personal Beats"
+
+#: src/pages/IssueDetailPage.tsx:157
+msgid "Personal Newsroom"
+msgstr "Personal Newsroom"
+
+#: src/pages/DashboardPage.tsx:194
+msgid "Planned"
+msgstr "Zaplanowano"
+
+#: src/pages/DashboardPage.tsx:319
+msgid "Planned · {cad}"
+msgstr "Zaplanowano · {cad}"
+
+#: src/pages/NewBeatPage.tsx:74
+msgid "Polish cinema"
+msgstr "Polskie kino"
+
+#: src/pages/IssueDetailPage.tsx:131
+msgid "Print"
+msgstr "Drukuj"
+
+#: src/pages/beat/ActivePanel.tsx:158
+msgid "Queuing…"
+msgstr "Kolejkowanie…"
+
+#: src/pages/beat/DesignerPanel.tsx:59
+msgid "Quick clarification before I file this beat."
+msgstr "Krótkie wyjaśnienie przed zapisaniem tego beatu."
+
+#: src/pages/DashboardPage.tsx:331
+msgid "Relevance {lvl}/5"
+msgstr "Trafność {lvl}/5"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:98
+msgid "Repeat new password"
+msgstr "Powtórz nowe hasło"
+
+#: src/auth/components/CustomSignupForm.tsx:115
+msgid "Repeat password"
+msgstr "Powtórz hasło"
+
+#: src/pages/beat/DesignerPanel.tsx:324
+msgid "Reply"
+msgstr "Odpowiedz"
+
+#: src/pages/beat/ActivePanel.tsx:125
+msgid "Resume"
+msgstr "Wznów"
+
+#: src/pages/beat/DesignerPanel.tsx:51
+msgid "Reviewing your brief."
+msgstr "Analizuję Twój brief."
+
+#: src/pages/beat/DesignerPanel.tsx:225
+msgid "Rules"
+msgstr "Zasady"
+
+#: src/pages/beat/DesignerPanel.tsx:62
+msgid "Scout · looking for sources"
+msgstr "Scout · poszukiwanie źródeł"
+
+#: src/pages/beat/DesignerPanel.tsx:431
+msgid "Scouting sources…"
+msgstr "Wyszukiwanie źródeł…"
+
+#: src/pages/DashboardPage.tsx:225
+msgid "See progress"
+msgstr "Zobacz postęp"
+
+#: src/pages/beat/ActivePanel.tsx:161
+msgid "Send me one now"
+msgstr "Wyślij mi jedno teraz"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:86
+msgid "Send reset link"
+msgstr "Wyślij link do resetowania"
+
+#: src/pages/beat/DesignerPanel.tsx:324
+msgid "Sending"
+msgstr "Wysyłanie"
+
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:86
+msgid "Sending…"
+msgstr "Wysyłanie…"
+
+#: src/pages/beat/ActivePanel.tsx:198
+msgid "session ↗"
+msgstr "sesja ↗"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:52
+#: src/auth/components/CustomLoginForm.tsx:95
+#: src/auth/components/CustomPasswordResetForm.tsx:59
+#: src/auth/LoginPage.tsx:10
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#: src/layout/Rail.tsx:95
+msgid "Sign out"
+msgstr "Wyloguj się"
+
+#: src/layout/Rail.tsx:94
+msgid "signed in"
+msgstr "zalogowano"
+
+#: src/auth/components/CustomLoginForm.tsx:95
+msgid "Signing in…"
+msgstr "Logowanie…"
+
+#: src/pages/NewBeatPage.tsx:96
+msgid "Skip"
+msgstr "Pomiń"
+
+#: src/pages/beat/ActivePanel.tsx:270
+msgid "Skip listicle-style filler — go straight to specifics."
+msgstr "Pomijaj wypełniacze w stylu list — przejdź od razu do konkretów."
+
+#: src/pages/NewBeatPage.tsx:86
+msgid "Skip nightlife and adult-only"
+msgstr "Pomiń życie nocne i treści tylko dla dorosłych"
+
+#: src/pages/beat/ActivePanel.tsx:288
+msgid "Source list will fill in as issues ship."
+msgstr "Lista źródeł wypełni się wraz z kolejnymi wydaniami."
+
+#: src/pages/beat/ActivePanel.tsx:284
+msgid "Sources I rely on"
+msgstr "Źródła, na których polegam"
+
+#: src/pages/DashboardPage.tsx:202
+msgid "Sources read"
+msgstr "Przeczytane źródła"
+
+#: src/pages/NewBeatPage.tsx:95
+msgid "Sourcing"
+msgstr "Pozyskiwanie źródeł"
+
+#: src/pages/beat/ActivePanel.tsx:55
+#: src/pages/DashboardPage.tsx:296
+msgid "Standard · 8–12 picks"
+msgstr "Standardowy · 8–12 wyborów"
+
+#: src/pages/IssueDetailPage.tsx:166
+msgid "stories"
+msgstr "artykuły"
+
+#: src/pages/IssueDetailPage.tsx:166
+msgid "story"
+msgstr "artykuł"
+
+#: src/pages/DashboardPage.tsx:365
+msgid "Tell me one thing you wish someone was watching for you. The editor will read between the lines and ask if anything's unclear."
+msgstr "Powiedz mi, czego chciałbyś, żeby ktoś pilnował za Ciebie. Redaktor przeczyta między wierszami i zapyta, jeśli coś jest niejasne."
+
+#: src/pages/LandingPage.tsx:89
+msgid "Tell me one thing you wish someone was watching for you…"
+msgstr "Powiedz mi, czego chciałbyś, żeby ktoś pilnował za Ciebie…"
+
+#. placeholder {0}: beat.title
+#: src/pages/beat/ActivePanel.tsx:84
+msgid "The beat · {0}"
+msgstr "Beat · {0}"
+
+#: src/layout/Masthead.tsx:71
+msgid "Theme"
+msgstr "Temat"
+
+#: src/pages/DashboardPage.tsx:90
+#: src/pages/DashboardPage.tsx:92
+msgid "there"
+msgstr "tam"
+
+#: src/pages/BeatDetailPage.tsx:59
+msgid "This beat doesn't exist or you don't have access."
+msgstr "Ten beat nie istnieje lub nie masz do niego dostępu."
+
+#: src/pages/IssueDetailPage.tsx:88
+msgid "This issue doesn't exist or you don't have access."
+msgstr "To wydanie nie istnieje lub nie masz do niego dostępu."
+
+#: src/pages/IssueDetailPage.tsx:181
+msgid "This issue had no publishable items."
+msgstr "To wydanie nie zawierało żadnych materiałów do opublikowania."
+
+#: src/pages/beat/ActivePanel.tsx:54
+#: src/pages/DashboardPage.tsx:295
+msgid "Tight · 3–5 picks"
+msgstr "Skrócony · 3–5 wyborów"
+
+#: src/pages/beat/DesignerPanel.tsx:316
+msgid "to send"
+msgstr "do wysłania"
+
+#: src/layout/Rail.tsx:28
+msgid "Today"
+msgstr "Dziś"
+
+#: src/layout/Masthead.tsx:111
+#: src/pages/DashboardPage.tsx:151
+msgid "Today's edition"
+msgstr "Dzisiejsze wydanie"
+
+#: src/pages/LandingPage.tsx:69
+msgid "Today's edition · Home"
+msgstr "Dzisiejsze wydanie · Strona główna"
+
+#: src/pages/beat/DesignerPanel.tsx:209
+msgid "Topic"
+msgstr "Temat"
+
+#. placeholder {0}: sourceTotal === 1 ? "" : "s"
+#: src/pages/beat/ActivePanel.tsx:287
+msgid "Tracking {sourceTotal} source{0}."
+msgstr "Śledzę {sourceTotal} źródło{0}."
+
+#: src/pages/beat/DesignerPanel.tsx:287
+msgid "Type your answer…"
+msgstr "Wpisz odpowiedź…"
+
+#: src/pages/beat/DesignerPanel.tsx:188
+msgid "Untitled beat"
+msgstr "Beat bez nazwy"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:118
+msgid "Update password"
+msgstr "Zmień hasło"
+
+#: src/auth/components/CustomPasswordResetForm.tsx:118
+msgid "Updating…"
+msgstr "Aktualizowanie…"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:78
+msgid "Verify email"
+msgstr "Zweryfikuj e-mail"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:63
+msgid "Verifying your email address…"
+msgstr "Weryfikowanie adresu e-mail…"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:78
+msgid "Verifying…"
+msgstr "Weryfikowanie…"
+
+#: src/pages/beat/DesignerPanel.tsx:412
+msgid "Waiting for the designer to respond…"
+msgstr "Oczekiwanie na odpowiedź projektanta…"
+
+#: src/pages/DashboardPage.tsx:257
+msgid "Want me to also <0>watch something else?</0>"
+msgstr "Chcesz, żebym <0>obserwował coś jeszcze?</0>"
+
+#: src/auth/components/CustomSignupForm.tsx:55
+msgid "We sent an activation link to your address. Click it to finish signing up."
+msgstr "Wysłaliśmy link aktywacyjny na Twój adres. Kliknij go, aby dokończyć rejestrację."
+
+#: src/pages/beat/ActivePanel.tsx:247
+msgid "What I've learned"
+msgstr "Czego się nauczyłem"
+
+#: src/pages/LandingPage.tsx:73
+msgid "What should <0>we</0> be reading<1/>for <2>you</2>?"
+msgstr "Co <0>powinniśmy</0> czytać<1/>dla <2>Ciebie</2>?"
+
+#: src/pages/beat/DesignerPanel.tsx:245
+msgid "When the spec is locked, the Scout looks for sources and the beat becomes live. You'll get the first issue on the cadence above."
+msgstr "Gdy specyfikacja zostanie zatwierdzona, Scout wyszuka źródła i beat stanie się aktywny. Pierwsze wydanie otrzymasz zgodnie z harmonogramem powyżej."
+
+#: src/pages/DashboardPage.tsx:215
+msgid "Working on it now"
+msgstr "Pracuję nad tym teraz"
+
+#: src/pages/beat/DesignerPanel.tsx:352
+msgid "Working on your beat."
+msgstr "Pracuję nad Twoim beatem."
+
+#: src/layout/Rail.tsx:52
+msgid "Workspace navigation"
+msgstr "Nawigacja w obszarze roboczym"
+
+#: src/pages/NewBeatPage.tsx:71
+msgid "Wrocław weekends with the kids"
+msgstr "Weekendy we Wrocławiu z dziećmi"
+
+#: src/pages/IssueDetailPage.tsx:103
+msgid "you"
+msgstr "Ty"
+
+#. placeholder {0}: String(issue.items.length ? 1 : 0).padStart(3, "0")
+#. placeholder {1}: beat?.title ?? t`your beat`
+#: src/pages/IssueDetailPage.tsx:226
+msgid "You are reading issue №{0} of {1}."
+msgstr "Czytasz wydanie nr {0} z {1}."
+
+#: src/auth/components/CustomPasswordResetForm.tsx:58
+msgid "You can now sign in with the new password."
+msgstr "Możesz teraz zalogować się przy użyciu nowego hasła."
+
+#: src/pages/DashboardPage.tsx:362
+msgid "You haven't filed a beat yet."
+msgstr "Nie masz jeszcze żadnego beatu."
+
+#: src/auth/components/CustomLoginForm.tsx:60
+#: src/auth/components/CustomRequestPasswordResetForm.tsx:70
+#: src/auth/components/CustomSignupForm.tsx:80
+msgid "you@company.com"
+msgstr "ty@firma.pl"
+
+#: src/auth/components/CustomEmailVerificationForm.tsx:51
+msgid "Your account is active. You can sign in now."
+msgstr "Twoje konto jest aktywne. Możesz się teraz zalogować."
+
+#: src/pages/IssueDetailPage.tsx:228
+msgid "your beat"
+msgstr "twój beat"
+
+#: src/pages/DashboardPage.tsx:230
+msgid "Your beats"
+msgstr "Twoje beaty"
