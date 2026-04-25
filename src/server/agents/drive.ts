@@ -20,11 +20,15 @@
 import type { Beat } from "wasp/entities";
 import { prisma } from "wasp/server";
 import {
+  archiveSession,
   createMemoryStore,
   createSession,
   listSessionEvents,
   sendSessionEvents,
+  streamSessionEvents,
+  type AgentRef,
   type ListedEvent,
+  type MemoryStoreResource,
 } from "./client.js";
 import {
   FinalizeBeatSpecSchema,
@@ -56,26 +60,29 @@ function env(name: string): string {
   if (!v) throw new Error(`${name} not set`);
   return v;
 }
+function envInt(name: string): number {
+  const n = Number.parseInt(env(name), 10);
+  if (!Number.isFinite(n)) throw new Error(`${name} is not a valid integer`);
+  return n;
+}
+
 const ENVIRONMENT_ID = () => env("ENVIRONMENT_ID");
 const GLOBAL_PATTERNS_STORE_ID = () => env("GLOBAL_PATTERNS_STORE_ID");
 const BEAT_DESIGNER_AGENT_ID = () => env("BEAT_DESIGNER_AGENT_ID");
+const BEAT_DESIGNER_VERSION = () => envInt("BEAT_DESIGNER_VERSION");
 const SOURCES_SCOUT_AGENT_ID = () => env("SOURCES_SCOUT_AGENT_ID");
+const SOURCES_SCOUT_VERSION = () => envInt("SOURCES_SCOUT_VERSION");
 const EDITOR_AGENT_ID = () => env("EDITOR_AGENT_ID");
+const EDITOR_VERSION = () => envInt("EDITOR_VERSION");
 
 // -------- Tick bounds --------
 
-const MAX_POLLS_PER_TICK = 100;
-const POLL_INTERVAL_MS = 3_000;
 const MAX_TICK_MS = 20 * 60 * 1000;
 const LIST_LIMIT = 100;
 // Fail-safe: after this many consecutive reenqueues without ingesting any
 // fresh events, mark the phase failed and clear state. Prevents zombie
 // sessions from pinning the UI in a "running" state forever.
 const MAX_REENQUEUES = 8;
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 // -------- Entry point --------
 
@@ -117,38 +124,45 @@ export async function runPhaseTick(args: RunPhaseArgs): Promise<DriveVerdict> {
       if (persisted) return persisted;
     }
 
-    await drainPendingMessages(session.id);
-
-    if (args.kickoff) {
-      await sendKickoff(withStores, session.id, args);
-      await emitSynthetic(withStores.id, args.phase, session.id, "phase.started", {
-        kickoff: true,
-      });
-    }
-
-    // Event-poll loop — bounded by MAX_POLLS_PER_TICK / MAX_TICK_MS.
+    // Stream-first ordering (skill Pattern 7): open the SSE stream BEFORE
+    // any send, so events triggered by drain/kickoff are guaranteed to land
+    // on this consumer rather than buffer/drop.
+    const stream = await streamSessionEvents(session.id);
     const startedAt = Date.now();
-    const toolsById = new Map<string, TrackedTool>();
-    let madeProgress = false;
+    const tickAbort = setTimeout(
+      () => stream.controller.abort(),
+      MAX_TICK_MS,
+    );
 
-    for (let i = 0; i < MAX_POLLS_PER_TICK; i++) {
-      if (Date.now() - startedAt > MAX_TICK_MS) {
-        return reenqueueOrFail(args.beatId, args.phase, madeProgress);
+    try {
+      await drainPendingMessages(session.id);
+
+      if (args.kickoff) {
+        await sendKickoff(withStores, session.id, args);
+        await emitSynthetic(
+          withStores.id,
+          args.phase,
+          session.id,
+          "phase.started",
+          { kickoff: true },
+        );
       }
 
-      const events = await listSessionEvents(session.id, { limit: LIST_LIMIT });
+      const toolsById = new Map<string, TrackedTool>();
+      const seen = new Set<string>();
+      let madeProgress = false;
 
-      // Walk in returned order (CMA returns oldest-first within a page). Skip
-      // anything at-or-before our stored cursor — fetched again only because
-      // the API lacks a server-side cursor parameter.
+      // Pattern 1: drain server-side history first (covers any events emitted
+      // between the cursor and stream-open), then dedupe live stream against
+      // it via `seen`.
+      const history = await listSessionEvents(session.id, { limit: LIST_LIMIT });
       const fresh = await filterPastCursor(
         await loadBeat(args.beatId),
-        events,
+        history,
       );
-
       if (fresh.length > 0) madeProgress = true;
-
       for (const ev of fresh) {
+        if (ev.id) seen.add(ev.id);
         const verdict = await processEvent(
           args.beatId,
           args.phase,
@@ -159,11 +173,46 @@ export async function runPhaseTick(args: RunPhaseArgs): Promise<DriveVerdict> {
         if (verdict) return verdict;
       }
 
-      await sleep(POLL_INTERVAL_MS);
-    }
+      // Tail the live stream until terminal verdict, MAX_TICK_MS abort, or
+      // server closes.
+      try {
+        for await (const ev of stream) {
+          const id = (ev as { id?: string }).id;
+          if (id && seen.has(id)) continue;
+          if (id) seen.add(id);
+          madeProgress = true;
+          const verdict = await processEvent(
+            args.beatId,
+            args.phase,
+            session.id,
+            ev,
+            toolsById,
+          );
+          if (verdict) return verdict;
+        }
+      } catch (err) {
+        // Abort fires when MAX_TICK_MS elapses; any other stream error means
+        // the connection dropped. Both reduce to "this tick is over, hand off
+        // to the next one" — the next tick re-opens with the same Pattern 1
+        // history-backfill safety net.
+        if (Date.now() - startedAt > MAX_TICK_MS - 1000) {
+          return reenqueueOrFail(args.beatId, args.phase, madeProgress);
+        }
+        throw err;
+      }
 
-    // Hit poll cap without a terminal signal — hand off to a fresh tick.
-    return reenqueueOrFail(args.beatId, args.phase, madeProgress);
+      // Stream closed cleanly without a terminal verdict — re-enqueue.
+      return reenqueueOrFail(args.beatId, args.phase, madeProgress);
+    } finally {
+      clearTimeout(tickAbort);
+      // Iterator-return cleanup: SDK aborts on `for await` early-exit, but be
+      // explicit in case we left through a different code path.
+      try {
+        stream.controller.abort();
+      } catch {
+        // already aborted
+      }
+    }
   } catch (err) {
     const error = errorMessage(err);
     await markFailed(args.beatId, args.phase, error);
@@ -295,10 +344,11 @@ async function ensureSession(
   }
 
   // Fresh kickoff: provision a new CMA session with phase-appropriate
-  // resource mounts.
+  // resource mounts. Pin agent to a specific version so a freshly-published
+  // agent revision can't break in-flight sessions mid-run.
   const resources = resourcesForPhase(beat, args.phase);
   const session = await createSession({
-    agent: agentIdForPhase(args.phase),
+    agent: agentRefForPhase(args.phase),
     environment_id: ENVIRONMENT_ID(),
     title: `${args.phase.toLowerCase()} ${beat.slug}`,
     resources,
@@ -317,19 +367,31 @@ async function ensureSession(
   return session;
 }
 
-function agentIdForPhase(phase: AgentPhase): string {
+function agentRefForPhase(phase: AgentPhase): AgentRef {
   switch (phase) {
     case "DESIGNER":
     case "RELEVANCE":
-      return BEAT_DESIGNER_AGENT_ID();
+      return {
+        type: "agent",
+        id: BEAT_DESIGNER_AGENT_ID(),
+        version: BEAT_DESIGNER_VERSION(),
+      };
     case "SCOUT":
-      return SOURCES_SCOUT_AGENT_ID();
+      return {
+        type: "agent",
+        id: SOURCES_SCOUT_AGENT_ID(),
+        version: SOURCES_SCOUT_VERSION(),
+      };
     case "EDITOR":
-      return EDITOR_AGENT_ID();
+      return {
+        type: "agent",
+        id: EDITOR_AGENT_ID(),
+        version: EDITOR_VERSION(),
+      };
   }
 }
 
-function resourcesForPhase(beat: Beat, phase: AgentPhase): unknown[] {
+function resourcesForPhase(beat: Beat, phase: AgentPhase): MemoryStoreResource[] {
   const spec = beat.specMemoryStoreId;
   const history = beat.historyMemoryStoreId;
   if (!spec || !history) {
@@ -463,12 +525,17 @@ function kickoffPayload(
         },
       };
     case "SCOUT":
-      return { action: "scout_sources", beat_slug: beat.slug };
+      return {
+        action: "scout_sources",
+        beat_slug: beat.slug,
+        output_language: beat.outputLanguage,
+      };
     case "EDITOR":
       return {
         action: "generate_issue",
         beat_slug: beat.slug,
         as_of: new Date().toISOString(),
+        output_language: beat.outputLanguage,
       };
     case "RELEVANCE":
       return {
@@ -507,7 +574,6 @@ type TrackedTool = {
   id: string;
   name: string;
   input: unknown;
-  session_thread_id?: string;
 };
 
 async function filterPastCursor(
@@ -551,6 +617,36 @@ async function processEvent(
     return null;
   }
 
+  if (type === "agent.thinking") {
+    // Progress signal only (no content per SDK type). Persist as a phase-tagged
+    // thinking pulse the UI can render as a "still working" beat.
+    const uiType =
+      phase === "DESIGNER"
+        ? "designer.thinking_pulse"
+        : phase === "SCOUT"
+          ? "scout.thinking_pulse"
+          : phase === "EDITOR"
+            ? "editor.thinking_pulse"
+            : "relevance.thinking_pulse";
+    await persistEvent(beatId, phase, sessionId, ev, uiType, {});
+    return null;
+  }
+
+  if (type === "span.model_request_end") {
+    // Token-usage telemetry for cost tracking. One event per model call;
+    // sum these per beat for billing/cap decisions.
+    const usage = (ev as { model_usage?: Record<string, unknown> }).model_usage;
+    await persistEvent(beatId, phase, sessionId, ev, "span.model_request_end", {
+      input_tokens: usage?.input_tokens ?? 0,
+      output_tokens: usage?.output_tokens ?? 0,
+      cache_read_input_tokens: usage?.cache_read_input_tokens ?? 0,
+      cache_creation_input_tokens: usage?.cache_creation_input_tokens ?? 0,
+      speed: usage?.speed ?? null,
+      isError: Boolean((ev as { is_error?: unknown }).is_error),
+    });
+    return null;
+  }
+
   if (type === "agent.custom_tool_use") {
     const id = String((ev as { id?: unknown }).id ?? "");
     const name = String((ev as { name?: unknown }).name ?? "");
@@ -559,8 +655,6 @@ async function processEvent(
         id,
         name,
         input: (ev as { input?: unknown }).input,
-        session_thread_id: (ev as { session_thread_id?: string })
-          .session_thread_id,
       });
     }
     await persistEvent(beatId, phase, sessionId, ev, type, {
@@ -628,6 +722,15 @@ async function handleIdle(
 
   if (stopType === "end_turn") {
     return verdictForEndOfTurn(beatId, phase);
+  }
+
+  if (stopType === "retries_exhausted") {
+    // Terminal failure: the agent loop exhausted its internal retry budget
+    // (model overload, repeated tool failures). Don't re-enqueue — that just
+    // re-attaches to the same dead session.
+    const err = "session retries exhausted";
+    await markFailed(beatId, phase, err);
+    return { state: "failed", error: err };
   }
 
   if (stopType !== "requires_action") {
@@ -908,16 +1011,13 @@ async function emitSynthetic(
 async function replyTool(
   sessionId: string,
   eventId: string,
-  tool: TrackedTool,
+  _tool: TrackedTool,
   payload: unknown,
 ): Promise<void> {
   await sendSessionEvents(sessionId, [
     {
       type: "user.custom_tool_result",
       custom_tool_use_id: eventId,
-      ...(tool.session_thread_id
-        ? { session_thread_id: tool.session_thread_id }
-        : {}),
       content: [{ type: "text", text: JSON.stringify(payload) }],
     },
   ]);
@@ -925,15 +1025,22 @@ async function replyTool(
 
 async function markFailed(
   beatId: string,
-  _phase: AgentPhase,
-  _error: string,
+  phase: AgentPhase,
+  error: string,
 ): Promise<void> {
-  await prisma.beat
+  console.error(`[drive] beat=${beatId} phase=${phase} failed: ${error}`);
+  const beat = await prisma.beat
     .update({
       where: { id: beatId },
       data: { status: "FAILED" },
+      select: { currentSessionId: true },
     })
-    .catch(() => void 0);
+    .catch(() => null);
+  // Archive the dead CMA session so they don't accumulate. Best-effort: a
+  // session may already be terminated/archived; swallow the resulting 4xx.
+  if (beat?.currentSessionId) {
+    await archiveSession(beat.currentSessionId).catch(() => void 0);
+  }
 }
 
 async function loadBeat(beatId: string): Promise<Beat> {

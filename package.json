@@ -14,7 +14,7 @@
     "i18n:translate": "tsx --tsconfig scripts/tsconfig.json scripts/translate-po.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.86.1",
+    "@anthropic-ai/sdk": "^0.91.1",
     "@hookform/resolvers": "^5.1.1",
     "@lingui/core": "^5.9.5",
     "@lingui/react": "^5.9.5",

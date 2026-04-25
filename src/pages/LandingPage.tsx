@@ -56,7 +56,7 @@ export function LandingPage() {
         // ignore
       }
     }
-    navigate("/signup");
+    navigate(user ? "/beats/new" : "/signup");
   }
 
   function onSubmit(e: FormEvent) {

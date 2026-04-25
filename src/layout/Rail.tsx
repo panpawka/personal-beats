@@ -22,14 +22,6 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
     { id: "home", label: t`Home`, glyph: "◇", to: "/", match: (p) => p === "/" },
     { id: "today", label: t`Today`, glyph: "◧", to: "/dashboard", match: (p) => p.startsWith("/dashboard") },
     { id: "new", label: t`New`, glyph: "✎", to: "/beats/new", match: (p) => p === "/beats/new" },
-    {
-      id: "beat",
-      label: t`Beat`,
-      glyph: "▤",
-      to: "/dashboard",
-      match: (p) => p.startsWith("/beats/") && p !== "/beats/new" && !p.includes("/issues/"),
-    },
-    { id: "issue", label: t`Issue`, glyph: "✉", to: "/dashboard", match: (p) => p.includes("/issues/") },
   ];
 
   const goHome = () => {

@@ -150,6 +150,11 @@ query getBeat {
   entities: [Beat]
 }
 
+query getBeatSourceDomains {
+  fn: import { getBeatSourceDomains } from "@src/server/queries",
+  entities: [Beat, IssueItem]
+}
+
 query getIssuesForBeat {
   fn: import { getIssuesForBeat } from "@src/server/queries",
   entities: [Beat, Issue]

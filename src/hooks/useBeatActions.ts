@@ -4,6 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import {
   useQuery,
   getBeat,
+  getBeatSourceDomains,
   getIssuesForBeat,
   getIssueSessionStatus,
   getAgentEvents,
@@ -77,6 +78,12 @@ export function useBeatActions(beatId: string | undefined) {
     { enabled: !!beatId },
   );
 
+  const { data: sourceDomains, refetch: refetchSourceDomains } = useQuery(
+    getBeatSourceDomains,
+    { beatId: beatId! },
+    { enabled: !!beatId },
+  );
+
   const { data: sessionStatus, refetch: refetchSessionStatus } = useQuery(
     getIssueSessionStatus,
     { beatId: beatId! },
@@ -115,6 +122,7 @@ export function useBeatActions(beatId: string | undefined) {
     refetchBeat();
     refetchIssues();
     refetchSessionStatus();
+    refetchSourceDomains();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [events?.length, shouldPoll]);
 
@@ -202,6 +210,7 @@ export function useBeatActions(beatId: string | undefined) {
     beatLoading,
     beatError,
     issues,
+    sourceDomains,
     sessionStatus,
     sessionLinkId,
     events,

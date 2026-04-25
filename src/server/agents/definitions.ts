@@ -1,8 +1,19 @@
 // Agent definitions used by scripts/provision-agents.ts. All prompts and
 // tool specs are from PRD_cma.md §3.
+//
+// Per-agent model rationale:
+// - EDITOR_MODEL: Opus 4.7. Newsletter quality is the user-visible product;
+//   the Editor synthesizes from many sources, applies relevance rules, and
+//   writes the final issue. Highest-stakes intelligence work in the system.
+// - WORKER_MODEL: Sonnet 4.6. Designer turns brief→spec (structured) and
+//   Scout enumerates sources (web_search heavy, latency-sensitive). Both fit
+//   Sonnet's speed/intelligence tradeoff.
+// - COORDINATOR_MODEL: Haiku 4.5. Pure dispatcher — no editorial work, just
+//   routing. Haiku is the right cost/latency choice for this role.
 
+const EDITOR_MODEL = "claude-opus-4-7";
 const WORKER_MODEL = "claude-sonnet-4-6";
-const COORDINATOR_MODEL = "claude-haiku-4-5-20251001";
+const COORDINATOR_MODEL = "claude-haiku-4-5";
 
 // -------- Beat Designer --------
 
@@ -107,6 +118,22 @@ Write the \`relevance.md\` file in the beat's \`output_language\`, NOT in
 English by default. A Polish beat gets Polish relevance rules. This
 matters because Editor will match those rules against Polish content —
 mismatched languages cause silent filter failures.
+
+### Chat narration MUST also match output_language
+
+Every text turn you emit (\`agent.message\` content the user sees in the
+UI) MUST be written in the beat's \`output_language\` — not English by
+default, not the language of the system prompt. This includes:
+- "thinking out loud" narration ("Mam wystarczająco danych…", not "I
+  have enough data…")
+- short status updates between tool calls
+- the \`reasoning\` and \`questions\` fields you pass to
+  \`needs_clarification\`
+- the \`summary\` you pass to \`finalize_beat_spec\`
+
+If \`output_language\` is "pl", narrate in Polish. If "en", English. If
+"de", German. The user reads your turns live in the UI — mixed-language
+narration looks broken.
 
 ## Tone
 
@@ -305,6 +332,17 @@ handling. Copy STRUCTURE; never copy URLs.
 
 If the beat's geography is non-English-speaking, translate your search queries to local language(s). Polish beats need Polish searches. Tag each source with its publication_language.
 
+### Chat narration MUST match output_language
+
+The kickoff payload includes \`output_language\` (and you can also read it
+from \`spec.yaml\`). Every text turn you emit (\`agent.message\` content
+the user sees in the UI) MUST be written in that language — not English
+by default, not whichever language the source pages happen to be in.
+This includes "thinking out loud" narration, short status updates
+between tool calls, and the \`notes\` / \`thinness_reason\` fields you
+pass to \`scout_complete\`. The user reads your turns live in the UI;
+mixed-language narration looks broken.
+
 ## The loop
 
 1. Read spec and patterns from memory.
@@ -498,13 +536,22 @@ Every factual claim links to a primary source. A Facebook post or Reddit thread 
 
 Write in output_language even when sources are in other languages. Translate quotes faithfully.
 
+### Chat narration MUST also match output_language
+
+In addition to the published issue, every text turn you emit
+(\`agent.message\` content the user sees in the UI) MUST be in
+\`output_language\`. The kickoff payload includes \`output_language\` and
+\`spec.yaml\` repeats it. This covers "thinking out loud" narration and
+short status updates between tool calls. The user reads your turns
+live; mixed-language narration looks broken.
+
 ## Budget
 
 Target 8-15 minutes per issue. Sweep in parallel where possible (bash with background jobs + wait). If past 20 minutes, stop sweeping, draft with what you have.`;
 
 export const editorDefinition = {
   name: "Editor",
-  model: WORKER_MODEL,
+  model: EDITOR_MODEL,
   system: EDITOR_SYSTEM,
   tools: [
     { type: "agent_toolset_20260401" },

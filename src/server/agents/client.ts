@@ -1,10 +1,23 @@
 /**
- * Thin wrapper around @anthropic-ai/sdk beta sessions. Replaces the old
- * hand-rolled HTTP + SSE parser. All session/event IO goes through the SDK;
- * memory-store CRUD stays on the raw REST API because the SDK surface is
- * less stable there and the calls are infrequent.
+ * Thin wrapper around @anthropic-ai/sdk beta CMA. All session, event, and
+ * memory-store IO goes through the typed SDK. The raw HTTP fallback (`cma()`)
+ * remains only for `/v1/agents` and `/v1/environments`, which scripts/
+ * provision-agents.ts and scripts/reprovision-*.ts call with arbitrary JSON
+ * bodies — those endpoints have typed bindings in the SDK too, but the
+ * scripts predate the migration and pass raw shapes.
  */
 import Anthropic from "@anthropic-ai/sdk";
+import type { Stream } from "@anthropic-ai/sdk/core/streaming";
+import type {
+  BetaManagedAgentsMemoryStoreResourceParam,
+  BetaManagedAgentsSession,
+  SessionCreateParams,
+} from "@anthropic-ai/sdk/resources/beta/sessions/sessions";
+import type {
+  BetaManagedAgentsEventParams,
+  BetaManagedAgentsSessionEvent,
+  BetaManagedAgentsStreamSessionEvents,
+} from "@anthropic-ai/sdk/resources/beta/sessions/events";
 
 const CMA_BASE = "https://api.anthropic.com";
 const BETA_HEADER = "managed-agents-2026-04-01";
@@ -28,53 +41,80 @@ export function sdk(): Anthropic {
 
 // -------- Session + events (via SDK) --------
 
+export type SessionResource = NonNullable<SessionCreateParams["resources"]>[number];
+export type MemoryStoreResource = BetaManagedAgentsMemoryStoreResourceParam;
+
+// `agent` accepts string shorthand (latest version) or pinned object form.
+// Pinning is preferred so in-flight sessions don't pick up a freshly-published
+// agent version mid-run.
+export type AgentRef = string | { type: "agent"; id: string; version: number };
+
 export async function createSession(body: {
-  agent: string;
+  agent: AgentRef;
   environment_id: string;
   title?: string;
-  resources?: unknown[];
+  resources?: SessionResource[];
 }): Promise<{ id: string }> {
-  // SDK types may lag behind the beta; cast through unknown for forward-compat.
-  const res = await (sdk().beta.sessions as unknown as {
-    create: (b: unknown) => Promise<{ id: string }>;
-  }).create(body);
-  return { id: res.id };
+  const session: BetaManagedAgentsSession = await sdk().beta.sessions.create({
+    agent: body.agent,
+    environment_id: body.environment_id,
+    title: body.title,
+    resources: body.resources,
+  });
+  return { id: session.id };
+}
+
+export async function archiveSession(sessionId: string): Promise<void> {
+  await sdk().beta.sessions.archive(sessionId);
 }
 
 export async function sendSessionEvents(
   sessionId: string,
-  events: unknown[],
+  events: BetaManagedAgentsEventParams[],
 ): Promise<void> {
-  await (sdk().beta.sessions as unknown as {
-    events: { send: (id: string, b: { events: unknown[] }) => Promise<unknown> };
-  }).events.send(sessionId, { events });
+  await sdk().beta.sessions.events.send(sessionId, { events });
 }
 
-export type ListedEvent = {
-  id?: string;
-  type: string;
-  // Pass-through for the rest of the CMA event shape. The driver destructures
-  // the specific fields it cares about (content, name, input, stop_reason).
-  [k: string]: unknown;
-};
+// Re-export the SDK's typed event union under a shorter local alias so the
+// driver doesn't have to import the verbose name everywhere.
+export type ListedEvent = BetaManagedAgentsSessionEvent;
 
 export async function listSessionEvents(
   sessionId: string,
   opts: { limit?: number } = {},
 ): Promise<ListedEvent[]> {
-  const api = sdk().beta.sessions as unknown as {
-    events: {
-      list: (
-        id: string,
-        opts?: { limit?: number },
-      ) => Promise<{ data: ListedEvent[] }>;
-    };
-  };
-  const page = await api.events.list(sessionId, { limit: opts.limit ?? 100 });
+  const page = await sdk().beta.sessions.events.list(sessionId, {
+    limit: opts.limit ?? 100,
+  });
   return page.data;
 }
 
-// -------- Memory stores (raw REST — SDK coverage is uneven here) --------
+export async function streamSessionEvents(
+  sessionId: string,
+): Promise<Stream<BetaManagedAgentsStreamSessionEvents>> {
+  return await sdk().beta.sessions.events.stream(sessionId);
+}
+
+// -------- Memory stores (via SDK) --------
+
+export async function createMemoryStore(
+  name: string,
+  description: string,
+): Promise<{ id: string }> {
+  const store = await sdk().beta.memoryStores.create({ name, description });
+  return { id: store.id };
+}
+
+export async function deleteMemoryStore(storeId: string): Promise<void> {
+  await sdk().beta.memoryStores.delete(storeId);
+}
+
+// -------- Raw HTTP — agents + environments only --------
+//
+// These two endpoints are still called by version-controlled provisioning
+// scripts (scripts/provision-agents.ts, scripts/reprovision-*.ts) that pass
+// arbitrary JSON shapes. The SDK has typed bindings for both; migrating those
+// scripts is out of scope for the brief-chat review.
 
 function headers(): Record<string, string> {
   return {
@@ -105,34 +145,6 @@ async function cma<T>(
   return text ? (JSON.parse(text) as T) : (undefined as T);
 }
 
-export async function createMemoryStore(
-  name: string,
-  description: string,
-): Promise<{ id: string }> {
-  return await cma<{ id: string }>("POST", "/v1/memory_stores", {
-    name,
-    description,
-  });
-}
-
-export async function createMemory(
-  storeId: string,
-  path: string,
-  content: string,
-): Promise<{ id: string; content_sha256: string }> {
-  return await cma<{ id: string; content_sha256: string }>(
-    "POST",
-    `/v1/memory_stores/${storeId}/memories`,
-    { path, content },
-  );
-}
-
-export async function deleteMemoryStore(storeId: string): Promise<void> {
-  await cma("DELETE", `/v1/memory_stores/${storeId}`);
-}
-
-// Unused after the refactor — kept to support tooling scripts that reference
-// the bulk agent/env creation paths. Safe to delete if no callers remain.
 export async function createAgent(
   body: Record<string, unknown>,
 ): Promise<{ id: string; version: number }> {

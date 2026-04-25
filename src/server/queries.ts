@@ -3,6 +3,7 @@ import { HttpError } from "wasp/server";
 import type {
   GetBeats,
   GetBeat,
+  GetBeatSourceDomains,
   GetIssuesForBeat,
   GetIssue,
   GetIssueSessionStatus,
@@ -52,6 +53,49 @@ export const getBeat: GetBeat<{ beatId: string }, Beat> = async (
     throw new HttpError(404);
   }
   return beat;
+};
+
+function addDomain(set: Set<string>, url: string | null | undefined) {
+  if (!url) return;
+  try {
+    const u = new URL(url);
+    let host = u.hostname.toLowerCase();
+    if (host.startsWith("www.")) host = host.slice(4);
+    if (host) set.add(host);
+  } catch {
+    // skip invalid url
+  }
+}
+
+export const getBeatSourceDomains: GetBeatSourceDomains<
+  { beatId: string },
+  string[]
+> = async ({ beatId }, context) => {
+  if (!context.user) throw new HttpError(401);
+  const beat = await context.entities.Beat.findUnique({
+    where: { id: beatId },
+    select: { userId: true },
+  });
+  if (!beat || beat.userId !== context.user.id) throw new HttpError(404);
+
+  const items = await context.entities.IssueItem.findMany({
+    where: { issue: { beatId } },
+    select: { primarySourceUrl: true, secondarySourceUrls: true },
+  });
+
+  const domains = new Set<string>();
+  for (const it of items) {
+    addDomain(domains, it.primarySourceUrl);
+    try {
+      const arr = JSON.parse(it.secondarySourceUrls ?? "[]");
+      if (Array.isArray(arr)) {
+        for (const u of arr) addDomain(domains, String(u));
+      }
+    } catch {
+      // ignore malformed secondary urls
+    }
+  }
+  return Array.from(domains).sort();
 };
 
 export const getIssuesForBeat: GetIssuesForBeat<

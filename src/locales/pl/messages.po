@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/beat/ActivePanel.tsx:202
+#: src/pages/beat/ActivePanel.tsx:356
 msgid " Resume the beat or run it on demand to produce one."
 msgstr " Wznów beat lub uruchom go na żądanie, aby go wygenerować."
 
-#: src/pages/beat/ActivePanel.tsx:201
+#: src/pages/beat/ActivePanel.tsx:355
 msgid " The first one will land on the schedule above."
 msgstr " Pierwsze wydanie pojawi się zgodnie z powyższym harmonogramem."
 
-#: src/pages/beat/ActivePanel.tsx:100
+#: src/pages/beat/ActivePanel.tsx:231
 msgid "· est. {createdAtLabel}"
 msgstr "· zał. {createdAtLabel}"
 
-#: src/pages/beat/ActivePanel.tsx:95
+#: src/pages/beat/ActivePanel.tsx:225
 msgid "· Next run: {nextRun}"
 msgstr "· Następne wydanie: {nextRun}"
 
@@ -50,11 +50,11 @@ msgstr "{0} aktywnych · {1} zaplanowanych · {2} wstrzymanych"
 msgid "{issues} issues · "
 msgstr "{issues} wydań · "
 
-#: src/pages/beat/ActivePanel.tsx:288
+#: src/pages/beat/ActivePanel.tsx:442
 msgid "{sourceTotal, plural, one {# source tracked} other {# sources tracked}}"
 msgstr "{sourceTotal, plural, one {# śledzone źródło} other {# śledzone źródła}}"
 
-#: src/pages/beat/ActivePanel.tsx:276
+#: src/pages/beat/ActivePanel.tsx:430
 msgid "{sourceTotal, plural, one {Tracking # source.} other {Tracking # sources.}}"
 msgstr "{sourceTotal, plural, one {Śledzę # źródło.} other {Śledzę # źródła.}}"
 
@@ -67,7 +67,7 @@ msgstr "© MMXXVI · Lemonode sp. z o.o."
 msgid "+ Begin designing"
 msgstr "+ Rozpocznij projektowanie"
 
-#: src/pages/NewBeatPage.tsx:367
+#: src/pages/NewBeatPage.tsx:374
 msgid "✦ Your brief, filed"
 msgstr "✦ Twój brief, złożony"
 
@@ -88,7 +88,7 @@ msgstr "Osobista redakcja, tylko dla Ciebie"
 msgid "A user with this email already exists"
 msgstr "Użytkownik z tym adresem e-mail już istnieje"
 
-#: src/pages/beat/ActivePanel.tsx:88
+#: src/pages/beat/ActivePanel.tsx:215
 msgid "Active"
 msgstr "Aktywny"
 
@@ -101,7 +101,7 @@ msgid "Adjust this beat"
 msgstr "Dostosuj ten beat"
 
 #: src/pages/LandingPage.tsx:17
-#: src/pages/NewBeatPage.tsx:107
+#: src/pages/NewBeatPage.tsx:109
 msgid "AI agent frameworks"
 msgstr "Frameworki agentów AI"
 
@@ -119,23 +119,19 @@ msgid "Already have an account? <0>Sign in</0>"
 msgstr "Masz już konto? <0>Zaloguj się</0>"
 
 #. placeholder {0}: questions[0]
-#: src/pages/beat/DesignerPanel.tsx:283
+#: src/pages/beat/ActivePanel.tsx:105
 msgid "Answer: {0}"
 msgstr "Odpowiedź: {0}"
 
-#: src/pages/beat/ActivePanel.tsx:295
+#: src/pages/beat/ActivePanel.tsx:449
 msgid "awaiting first issue"
 msgstr "oczekuje na pierwsze wydanie"
-
-#: src/pages/beat/DesignerPanel.tsx:208
-msgid "awaiting spec"
-msgstr "oczekuje na specyfikację"
 
 #: src/pages/IssueDetailPage.tsx:94
 msgid "Back"
 msgstr "Wstecz"
 
-#: src/pages/BeatDetailPage.tsx:67
+#: src/pages/BeatDetailPage.tsx:59
 msgid "Back to beats"
 msgstr "Wróć do beatów"
 
@@ -156,10 +152,6 @@ msgstr "Beat"
 msgid "Beat brief"
 msgstr "Opis beatu"
 
-#: src/pages/beat/DesignerPanel.tsx:191
-msgid "Beat draft · {phase}"
-msgstr "Szkic beats · {phase}"
-
 #: src/pages/LandingPage.tsx:119
 msgid "Beats run quietly. You review, revise, pause any time."
 msgstr "Beaty działają w tle. Możesz przeglądać, edytować i wstrzymywać je w dowolnym momencie."
@@ -172,13 +164,8 @@ msgstr "Rozpocznij"
 msgid "Begin <0>→</0>"
 msgstr "Rozpocznij <0>→</0>"
 
-#: src/pages/beat/DesignerPanel.tsx:157
-msgid "Brief completeness"
-msgstr "Kompletność opisu"
-
-#: src/pages/beat/DesignerPanel.tsx:212
-#: src/pages/NewBeatPage.tsx:250
-#: src/pages/NewBeatPage.tsx:378
+#: src/pages/NewBeatPage.tsx:260
+#: src/pages/NewBeatPage.tsx:385
 msgid "Cadence"
 msgstr "Harmonogram"
 
@@ -191,7 +178,7 @@ msgstr "Sprawdź swoją pocztę"
 msgid "Choose a password you only use here — minimum 8 characters."
 msgstr "Wybierz hasło używane tylko tutaj — minimum 8 znaków."
 
-#: src/pages/beat/ActivePanel.tsx:249
+#: src/pages/beat/ActivePanel.tsx:403
 msgid "Cite primary sources before commentary."
 msgstr "Cytuj pierwotne źródła przed komentarzem."
 
@@ -201,7 +188,7 @@ msgstr "Kliknij poniższy przycisk, aby zakończyć weryfikację."
 
 #: src/pages/DashboardPage.tsx:78
 #: src/pages/LandingPage.tsx:19
-#: src/pages/NewBeatPage.tsx:109
+#: src/pages/NewBeatPage.tsx:111
 msgid "Climbing trips, weekend Europe"
 msgstr "Wyprawy wspinaczkowe, weekendy w Europie"
 
@@ -214,7 +201,7 @@ msgstr "Weryfikujemy <0>Cię</0>."
 msgid "Connection error. Check your internet connection."
 msgstr "Błąd połączenia. Sprawdź połączenie z internetem."
 
-#: src/pages/beat/DesignerPanel.tsx:363
+#: src/pages/beat/ActivePanel.tsx:294
 msgid "Connection interrupted — still listening for the designer."
 msgstr "Połączenie przerwane — nadal oczekuje na designera."
 
@@ -227,7 +214,7 @@ msgid "Couldn't load your beats. Try again in a moment."
 msgstr "Nie udało się załadować twoich beatów. Spróbuj ponownie za chwilę."
 
 #. placeholder {0}: beat.coverageAssessment
-#: src/pages/beat/ActivePanel.tsx:239
+#: src/pages/beat/ActivePanel.tsx:393
 msgid "Coverage looks {0} so far."
 msgstr "Pokrycie tematyczne wygląda {0} jak dotąd."
 
@@ -239,12 +226,15 @@ msgstr "Utwórz konto →"
 msgid "Creating account…"
 msgstr "Tworzenie konta…"
 
-#. placeholder {0}: beat.cronExpression
-#: src/pages/beat/DesignerPanel.tsx:217
-msgid "cron: {0}"
-msgstr "cron: {0}"
+#: src/pages/NewBeatPage.tsx:83
+msgid "Czech"
+msgstr "Czeski"
 
-#: src/pages/NewBeatPage.tsx:379
+#: src/pages/NewBeatPage.tsx:70
+msgid "Daily · {time}"
+msgstr "Codziennie · {time}"
+
+#: src/pages/NewBeatPage.tsx:386
 msgid "Daily · 07:00"
 msgstr "Codziennie · 07:00"
 
@@ -252,16 +242,17 @@ msgstr "Codziennie · 07:00"
 msgid "Daily {time}{tz}"
 msgstr "Codziennie {time}{tz}"
 
-#: src/pages/beat/ActivePanel.tsx:54
+#: src/pages/beat/ActivePanel.tsx:168
 #: src/pages/DashboardPage.tsx:310
+#: src/pages/NewBeatPage.tsx:37
 msgid "Deep · everything that matters"
 msgstr "Deep · wszystko, co istotne"
 
-#: src/pages/beat/ActivePanel.tsx:136
+#: src/pages/beat/ActivePanel.tsx:267
 msgid "Delete"
 msgstr "Usuń"
 
-#: src/pages/beat/ActivePanel.tsx:133
+#: src/pages/beat/ActivePanel.tsx:264
 msgid "Delete beat"
 msgstr "Usuń beat"
 
@@ -269,7 +260,7 @@ msgstr "Usuń beat"
 msgid "Delete this beat? This cannot be undone."
 msgstr "Usunąć ten beat? Tej operacji nie można cofnąć."
 
-#: src/pages/beat/ActivePanel.tsx:267
+#: src/pages/beat/ActivePanel.tsx:421
 msgid "Delivered to {userEmail}"
 msgstr "Dostarczone do {userEmail}"
 
@@ -277,31 +268,10 @@ msgstr "Dostarczone do {userEmail}"
 msgid "Delivery pending — email bounced. You can still read the issue below."
 msgstr "Dostarczenie oczekuje — wiadomość odrzucona. Możesz przeczytać wydanie poniżej."
 
-#: src/pages/beat/DesignerPanel.tsx:220
-#: src/pages/NewBeatPage.tsx:251
-#: src/pages/NewBeatPage.tsx:382
+#: src/pages/NewBeatPage.tsx:261
+#: src/pages/NewBeatPage.tsx:389
 msgid "Depth"
 msgstr "Głębokość"
-
-#: src/pages/beat/DesignerPanel.tsx:343
-msgid "Designer"
-msgstr "Designer"
-
-#: src/pages/beat/DesignerPanel.tsx:46
-msgid "Designer · getting started"
-msgstr "Designer · pierwsze kroki"
-
-#: src/pages/beat/DesignerPanel.tsx:54
-msgid "Designer · one question"
-msgstr "Designer · jedno pytanie"
-
-#: src/pages/beat/DesignerPanel.tsx:50
-msgid "Designer · working"
-msgstr "Designer · w trakcie pracy"
-
-#: src/pages/beat/DesignerPanel.tsx:407
-msgid "Designer at work — reply field appears when you're needed."
-msgstr "Designer pracuje — pole odpowiedzi pojawi się, gdy będziesz potrzebny."
 
 #: src/pages/DashboardPage.tsx:232
 msgid "Designer is asking a question."
@@ -315,20 +285,27 @@ msgstr "Projektowanie w toku"
 msgid "Don't have an account yet? <0>Create one</0>"
 msgstr "Nie masz jeszcze konta? <0>Utwórz je</0>"
 
-#: src/pages/NewBeatPage.tsx:368
+#: src/pages/NewBeatPage.tsx:375
 msgid "Draft · Vol. I"
 msgstr "Szkic · Vol. I"
 
-#: src/pages/beat/DesignerPanel.tsx:51
 #: src/pages/DashboardPage.tsx:235
 msgid "Drafting the spec."
 msgstr "Opracowywanie specyfikacji."
+
+#: src/pages/beat/ActivePanel.tsx:63
+msgid "Drafting the spec…"
+msgstr "Przygotowywanie specyfikacji…"
 
 #: src/auth/email-and-pass/RequestPasswordResetPage.tsx:16
 msgid "Drop your email and we'll mail a reset link — check your inbox in a moment."
 msgstr "Podaj swój adres e-mail, a wyślemy link do resetowania hasła — sprawdź skrzynkę za chwilę."
 
-#: src/pages/beat/ActivePanel.tsx:174
+#: src/pages/NewBeatPage.tsx:81
+msgid "Dutch"
+msgstr "Niderlandzki"
+
+#: src/pages/beat/ActivePanel.tsx:316
 msgid "Editor working — first issue drops in a few minutes."
 msgstr "Redaktor pracuje — pierwsze wydanie pojawi się za kilka minut."
 
@@ -358,6 +335,10 @@ msgstr "E-mail zweryfikowany"
 msgid "Empty newsroom"
 msgstr "Pusta redakcja"
 
+#: src/pages/NewBeatPage.tsx:75
+msgid "English"
+msgstr "Angielski"
+
 #: src/pages/LandingPage.tsx:118
 msgid "Est. MMXXVI · Vol. I"
 msgstr "Est. MMXXVI · Vol. I"
@@ -367,19 +348,23 @@ msgstr "Est. MMXXVI · Vol. I"
 msgid "Every {0}m"
 msgstr "Co {0}m"
 
-#: src/pages/NewBeatPage.tsx:426
+#: src/pages/beat/ActivePanel.tsx:219
+msgid "Failed"
+msgstr "Nieudane"
+
+#: src/pages/NewBeatPage.tsx:427
 msgid "File this beat →"
 msgstr "Złóż ten beat →"
 
-#: src/pages/NewBeatPage.tsx:426
+#: src/pages/NewBeatPage.tsx:427
 msgid "Filing…"
 msgstr "Składanie…"
 
-#: src/pages/beat/DesignerPanel.tsx:59
-msgid "Finding the right sources for this beat."
-msgstr "Wyszukiwanie odpowiednich źródeł dla tego beatu."
+#: src/pages/beat/ActivePanel.tsx:67
+msgid "Finding sources…"
+msgstr "Wyszukiwanie źródeł…"
 
-#: src/pages/NewBeatPage.tsx:410
+#: src/pages/NewBeatPage.tsx:411
 msgid "First issue arrives on schedule."
 msgstr "Pierwszy numer dotrze zgodnie z harmonogramem."
 
@@ -396,9 +381,17 @@ msgstr "Nie pamiętasz hasła?"
 msgid "Found a personal newsroom"
 msgstr "Znaleziono Personal Newsroom"
 
-#: src/pages/beat/ActivePanel.tsx:149
+#: src/pages/NewBeatPage.tsx:78
+msgid "French"
+msgstr "Francuski"
+
+#: src/pages/beat/ActivePanel.tsx:281
 msgid "Generating…"
 msgstr "Generowanie…"
+
+#: src/pages/NewBeatPage.tsx:77
+msgid "German"
+msgstr "Niemiecki"
 
 #: src/pages/DashboardPage.tsx:87
 msgid "Good afternoon"
@@ -441,7 +434,7 @@ msgid "Invalid or expired token"
 msgstr "Token nieważny lub wygasły"
 
 #: src/pages/LandingPage.tsx:16
-#: src/pages/NewBeatPage.tsx:106
+#: src/pages/NewBeatPage.tsx:108
 msgid "Iran–Israel daily briefing"
 msgstr "Codzienne podsumowanie: Iran–Izrael"
 
@@ -453,18 +446,21 @@ msgstr "Wydanie"
 msgid "Issues this week"
 msgstr "Wydania w tym tygodniu"
 
-#: src/pages/NewBeatPage.tsx:418
+#: src/pages/NewBeatPage.tsx:80
+msgid "Italian"
+msgstr "Włoski"
+
+#: src/pages/NewBeatPage.tsx:419
 msgid "Keep refining"
 msgstr "Dopracuj dalej"
 
 #: src/layout/Masthead.tsx:41
-#: src/pages/beat/DesignerPanel.tsx:210
-#: src/pages/NewBeatPage.tsx:252
-#: src/pages/NewBeatPage.tsx:386
+#: src/pages/NewBeatPage.tsx:262
+#: src/pages/NewBeatPage.tsx:393
 msgid "Language"
 msgstr "Język"
 
-#: src/pages/beat/ActivePanel.tsx:245
+#: src/pages/beat/ActivePanel.tsx:399
 msgid "Lead with the most actionable item in the issue."
 msgstr "Zacznij od najbardziej praktycznej informacji w wydaniu."
 
@@ -472,7 +468,7 @@ msgstr "Zacznij od najbardziej praktycznej informacji w wydaniu."
 msgid "Loading"
 msgstr "Ładowanie"
 
-#: src/pages/BeatDetailPage.tsx:47
+#: src/pages/BeatDetailPage.tsx:39
 msgid "Loading beat"
 msgstr "Ładowanie wątku"
 
@@ -526,19 +522,19 @@ msgstr "Nowy"
 msgid "New password"
 msgstr "Nowe hasło"
 
-#: src/pages/beat/ActivePanel.tsx:199
+#: src/pages/beat/ActivePanel.tsx:353
 msgid "No issues delivered yet."
 msgstr "Nie dostarczono jeszcze żadnych wydań."
 
-#: src/pages/beat/DesignerPanel.tsx:225
-msgid "none yet"
-msgstr "brak"
-
-#: src/pages/beat/ActivePanel.tsx:78
-#: src/pages/beat/DesignerPanel.tsx:215
+#: src/pages/beat/ActivePanel.tsx:204
+#: src/pages/NewBeatPage.tsx:53
 #: src/shared/cadence.ts:24
 msgid "On demand"
 msgstr "Na żądanie"
+
+#: src/pages/beat/ActivePanel.tsx:65
+msgid "One question for you"
+msgstr "Jedno pytanie do Ciebie"
 
 #: src/pages/LandingPage.tsx:80
 msgid "One sentence is enough. We'll ask a couple of follow-ups, then deliver a paper shaped to your life — on your schedule, from sources you trust."
@@ -553,7 +549,7 @@ msgid "Open navigation"
 msgstr "Otwórz nawigację"
 
 #: src/pages/LandingPage.tsx:104
-#: src/pages/NewBeatPage.tsx:281
+#: src/pages/NewBeatPage.tsx:288
 msgid "or borrow a starter:"
 msgstr "lub skorzystaj z gotowego szablonu:"
 
@@ -585,24 +581,24 @@ msgstr "Hasło zaktualizowane"
 msgid "Passwords do not match"
 msgstr "Hasła nie są zgodne"
 
-#: src/pages/beat/ActivePanel.tsx:196
+#: src/pages/beat/ActivePanel.tsx:350
 msgid "Past issues"
 msgstr "Poprzednie wydania"
 
-#: src/pages/beat/ActivePanel.tsx:240
+#: src/pages/beat/ActivePanel.tsx:394
 msgid "Patterns will appear here once a few issues ship."
 msgstr "Wzorce pojawią się tutaj po wysłaniu kilku wydań."
 
-#: src/pages/beat/ActivePanel.tsx:125
+#: src/pages/beat/ActivePanel.tsx:256
 msgid "Pause"
 msgstr "Wstrzymaj"
 
-#: src/pages/beat/ActivePanel.tsx:90
+#: src/pages/beat/ActivePanel.tsx:217
 #: src/pages/DashboardPage.tsx:315
 msgid "Paused"
 msgstr "Wstrzymano"
 
-#: src/pages/NewBeatPage.tsx:319
+#: src/pages/NewBeatPage.tsx:326
 msgid "Pencil notes —"
 msgstr "Notatki ołówkiem —"
 
@@ -631,8 +627,12 @@ msgstr "Zaplanowano"
 msgid "Planned · {cad}"
 msgstr "Zaplanowano · {cad}"
 
+#: src/pages/NewBeatPage.tsx:76
+msgid "Polish"
+msgstr "Polski"
+
 #: src/pages/LandingPage.tsx:18
-#: src/pages/NewBeatPage.tsx:108
+#: src/pages/NewBeatPage.tsx:110
 msgid "Polish cinema"
 msgstr "Polskie kino"
 
@@ -640,13 +640,17 @@ msgstr "Polskie kino"
 msgid "Polish kid-lit new releases"
 msgstr "Nowości polskiej literatury dziecięcej"
 
-#: src/pages/beat/ActivePanel.tsx:147
+#: src/pages/NewBeatPage.tsx:82
+msgid "Portuguese"
+msgstr "Portugalski"
+
+#: src/pages/beat/ActivePanel.tsx:279
 msgid "Queuing…"
 msgstr "Kolejkowanie…"
 
-#: src/pages/beat/DesignerPanel.tsx:55
-msgid "Quick clarification before I file this beat."
-msgstr "Krótkie wyjaśnienie przed zapisaniem tego beatu."
+#: src/pages/beat/ActivePanel.tsx:61
+msgid "Reading your brief…"
+msgstr "Czytanie Twojego briefu…"
 
 #: src/pages/DashboardPage.tsx:344
 msgid "Relevance {lvl}/5"
@@ -665,11 +669,11 @@ msgstr "Powtórz nowe hasło"
 msgid "Repeat password"
 msgstr "Powtórz hasło"
 
-#: src/pages/beat/DesignerPanel.tsx:321
+#: src/pages/beat/ActivePanel.tsx:155
 msgid "Reply"
 msgstr "Odpowiedz"
 
-#: src/pages/NewBeatPage.tsx:346
+#: src/pages/NewBeatPage.tsx:353
 msgid "Reply with whatever feels natural…"
 msgstr "Odpisz, jak ci wygodnie…"
 
@@ -677,40 +681,19 @@ msgstr "Odpisz, jak ci wygodnie…"
 msgid "Reset password"
 msgstr "Resetuj hasło"
 
-#: src/pages/beat/ActivePanel.tsx:114
+#: src/pages/beat/ActivePanel.tsx:245
 msgid "Resume"
 msgstr "Wznów"
-
-#: src/pages/beat/DesignerPanel.tsx:47
-msgid "Reviewing your brief."
-msgstr "Analizuję Twój brief."
-
-#: src/pages/NewBeatPage.tsx:256
-msgid "Rule"
-msgstr "Reguła"
-
-#: src/pages/beat/DesignerPanel.tsx:222
-#: src/pages/NewBeatPage.tsx:397
-msgid "Rules"
-msgstr "Zasady"
-
-#: src/pages/beat/DesignerPanel.tsx:58
-msgid "Scout · looking for sources"
-msgstr "Scout · poszukiwanie źródeł"
-
-#: src/pages/beat/DesignerPanel.tsx:406
-msgid "Scouting sources…"
-msgstr "Wyszukiwanie źródeł…"
 
 #: src/pages/DashboardPage.tsx:238
 msgid "See progress"
 msgstr "Zobacz postęp"
 
-#: src/pages/NewBeatPage.tsx:359
+#: src/pages/NewBeatPage.tsx:366
 msgid "Send"
 msgstr "Wyślij"
 
-#: src/pages/beat/ActivePanel.tsx:150
+#: src/pages/beat/ActivePanel.tsx:282
 msgid "Send me one now"
 msgstr "Wyślij mi jedno teraz"
 
@@ -718,7 +701,7 @@ msgstr "Wyślij mi jedno teraz"
 msgid "Send reset link →"
 msgstr "Wyślij link resetujący →"
 
-#: src/pages/beat/DesignerPanel.tsx:321
+#: src/pages/beat/ActivePanel.tsx:155
 msgid "Sending"
 msgstr "Wysyłanie"
 
@@ -726,7 +709,7 @@ msgstr "Wysyłanie"
 msgid "Sending…"
 msgstr "Wysyłanie…"
 
-#: src/pages/beat/ActivePanel.tsx:187
+#: src/pages/beat/ActivePanel.tsx:331
 msgid "session ↗"
 msgstr "sesja ↗"
 
@@ -749,15 +732,19 @@ msgstr "sygnał {safe}/5"
 msgid "Signing in…"
 msgstr "Logowanie…"
 
-#: src/pages/beat/ActivePanel.tsx:259
+#: src/pages/beat/ActivePanel.tsx:413
 msgid "Skip listicle-style filler — go straight to specifics."
 msgstr "Pomijaj wypełniacze w stylu list — przejdź od razu do konkretów."
 
-#: src/pages/beat/ActivePanel.tsx:282
+#: src/pages/NewBeatPage.tsx:84
+msgid "Slovak"
+msgstr "Słowacki"
+
+#: src/pages/beat/ActivePanel.tsx:436
 msgid "Source list will fill in as issues ship."
 msgstr "Lista źródeł wypełni się wraz z kolejnymi wydaniami."
 
-#: src/pages/beat/ActivePanel.tsx:273
+#: src/pages/beat/ActivePanel.tsx:427
 msgid "Sources I rely on"
 msgstr "Źródła, na których polegam"
 
@@ -765,9 +752,14 @@ msgstr "Źródła, na których polegam"
 msgid "Sources read"
 msgstr "Przeczytane źródła"
 
-#: src/pages/beat/ActivePanel.tsx:53
+#: src/pages/NewBeatPage.tsx:79
+msgid "Spanish"
+msgstr "Hiszpański"
+
+#: src/pages/beat/ActivePanel.tsx:167
 #: src/pages/DashboardPage.tsx:309
-#: src/pages/NewBeatPage.tsx:383
+#: src/pages/NewBeatPage.tsx:38
+#: src/pages/NewBeatPage.tsx:390
 msgid "Standard · 8–12 picks"
 msgstr "Standardowy · 8–12 wyborów"
 
@@ -775,19 +767,19 @@ msgstr "Standardowy · 8–12 wyborów"
 msgid "Start <0>your</0> paper."
 msgstr "Zacznij <0>swoją</0> gazetę."
 
-#: src/pages/NewBeatPage.tsx:271
+#: src/pages/NewBeatPage.tsx:278
 msgid "Talk to me normally — I'll read between the lines and ask if I need to. As we go, I'll jot the rules I've understood as pencil notes; at the end, I'll read the whole brief back."
 msgstr "Pisz normalnie — wyczytam sens z kontekstu i dopytam, jeśli będzie trzeba. W trakcie będę notować ustalone zasady jako notatki ołówkiem; na końcu odczytam cały brief."
 
-#: src/pages/NewBeatPage.tsx:268
+#: src/pages/NewBeatPage.tsx:275
 msgid "Tell me <0>what</0> you'd like me to read for you."
 msgstr "Powiedz mi, <0>co</0> mam dla ciebie śledzić."
 
-#: src/pages/NewBeatPage.tsx:206
+#: src/pages/NewBeatPage.tsx:215
 msgid "Tell me a bit more about the beat first."
 msgstr "Najpierw powiedz mi nieco więcej o tym beacie."
 
-#: src/pages/NewBeatPage.tsx:345
+#: src/pages/NewBeatPage.tsx:352
 msgid "Tell me however you'd say it out loud…"
 msgstr "Powiedz mi tak, jak powiedziałbyś to na głos…"
 
@@ -799,7 +791,7 @@ msgstr "Powiedz mi, czego chciałbyś, żeby ktoś pilnował za Ciebie. Redaktor
 msgid "Tell me one thing you wish someone was watching for you…"
 msgstr "Powiedz mi, czego chciałbyś, żeby ktoś pilnował za Ciebie…"
 
-#: src/pages/NewBeatPage.tsx:266
+#: src/pages/NewBeatPage.tsx:273
 msgid "The editor · conversation"
 msgstr "Redaktor · rozmowa"
 
@@ -813,11 +805,11 @@ msgstr "Temat"
 msgid "there"
 msgstr "tam"
 
-#: src/pages/NewBeatPage.tsx:312
+#: src/pages/NewBeatPage.tsx:319
 msgid "Thinking…"
 msgstr "Myślę…"
 
-#: src/pages/BeatDetailPage.tsx:59
+#: src/pages/BeatDetailPage.tsx:51
 msgid "This beat doesn't exist or you don't have access."
 msgstr "Ten beat nie istnieje lub nie masz do niego dostępu."
 
@@ -829,8 +821,9 @@ msgstr "To wydanie nie istnieje lub nie masz do niego dostępu."
 msgid "This issue had no publishable items."
 msgstr "To wydanie nie zawierało żadnych materiałów do opublikowania."
 
-#: src/pages/beat/ActivePanel.tsx:52
+#: src/pages/beat/ActivePanel.tsx:166
 #: src/pages/DashboardPage.tsx:308
+#: src/pages/NewBeatPage.tsx:36
 msgid "Tight · 3–5 picks"
 msgstr "Skrócony · 3–5 wyborów"
 
@@ -838,12 +831,12 @@ msgstr "Skrócony · 3–5 wyborów"
 msgid "Time-based"
 msgstr "Czasowy"
 
-#: src/pages/NewBeatPage.tsx:254
-#: src/pages/NewBeatPage.tsx:391
+#: src/pages/NewBeatPage.tsx:264
+#: src/pages/NewBeatPage.tsx:398
 msgid "Timezone"
 msgstr "Strefa czasowa"
 
-#: src/pages/beat/DesignerPanel.tsx:313
+#: src/pages/beat/ActivePanel.tsx:147
 msgid "to send"
 msgstr "do wysłania"
 
@@ -856,16 +849,21 @@ msgstr "Do wysłania"
 msgid "Today"
 msgstr "Dziś"
 
-#: src/pages/beat/DesignerPanel.tsx:206
-#: src/pages/NewBeatPage.tsx:374
+#: src/pages/NewBeatPage.tsx:259
+#: src/pages/NewBeatPage.tsx:381
 msgid "Topic"
 msgstr "Temat"
 
-#: src/pages/beat/DesignerPanel.tsx:284
+#: src/pages/beat/ActivePanel.tsx:106
 msgid "Type your answer…"
 msgstr "Wpisz odpowiedź…"
 
-#: src/pages/beat/DesignerPanel.tsx:184
+#: src/pages/NewBeatPage.tsx:85
+msgid "Ukrainian"
+msgstr "Ukraiński"
+
+#: src/pages/beat/ActivePanel.tsx:206
+#: src/pages/NewBeatPage.tsx:96
 msgid "Untitled beat"
 msgstr "Beat bez nazwy"
 
@@ -889,10 +887,6 @@ msgstr "Weryfikowanie adresu e-mail…"
 msgid "Verifying…"
 msgstr "Weryfikowanie…"
 
-#: src/pages/beat/DesignerPanel.tsx:387
-msgid "Waiting for the designer to respond…"
-msgstr "Oczekiwanie na odpowiedź projektanta…"
-
 #: src/pages/DashboardPage.tsx:270
 msgid "Want me to also <0>watch something else?</0>"
 msgstr "Chcesz, żebym <0>obserwował coś jeszcze?</0>"
@@ -901,8 +895,8 @@ msgstr "Chcesz, żebym <0>obserwował coś jeszcze?</0>"
 msgid "We sent an activation link to your address. Click it to finish signing up."
 msgstr "Wysłaliśmy link aktywacyjny na Twój adres. Kliknij go, aby dokończyć rejestrację."
 
-#: src/pages/NewBeatPage.tsx:210
-#: src/pages/NewBeatPage.tsx:214
+#: src/pages/NewBeatPage.tsx:219
+#: src/pages/NewBeatPage.tsx:223
 msgid "We still need to settle the schedule."
 msgstr "Harmonogram wymaga jeszcze ustalenia."
 
@@ -914,13 +908,25 @@ msgstr "Wyślemy <0>nowy</0> link."
 msgid "We're checking your address so we know where to deliver the paper."
 msgstr "Weryfikujemy Twój adres, aby wiedzieć, gdzie dostarczać gazetę."
 
+#: src/pages/NewBeatPage.tsx:66
+msgid "Weekdays · {time}"
+msgstr "Dni robocze · {time}"
+
 #: src/shared/cadence.ts:42
 msgid "Weekdays {time}{tz}"
 msgstr "W dni robocze {time}{tz}"
 
+#: src/pages/NewBeatPage.tsx:67
+msgid "Weekends · {time}"
+msgstr "Weekendy · {time}"
+
 #: src/shared/cadence.ts:43
 msgid "Weekends {time}{tz}"
 msgstr "W weekendy {time}{tz}"
+
+#: src/pages/NewBeatPage.tsx:64
+msgid "Weekly · {day} {time}"
+msgstr "Co tydzień · {day} {time}"
 
 #: src/shared/cadence.ts:40
 msgid "Weekly · {day} {time}{tz}"
@@ -934,7 +940,7 @@ msgstr "Tygodniowo {dow} {time}{tz}"
 msgid "Welcome back, <0>reader</0>."
 msgstr "Witaj z powrotem, <0>czytelniku</0>."
 
-#: src/pages/beat/ActivePanel.tsx:236
+#: src/pages/beat/ActivePanel.tsx:390
 msgid "What I've learned"
 msgstr "Czego się nauczyłem"
 
@@ -942,17 +948,9 @@ msgstr "Czego się nauczyłem"
 msgid "What should <0>we</0> be reading<1/>for <2>you</2>?"
 msgstr "Co <0>powinniśmy</0> czytać<1/>dla <2>Ciebie</2>?"
 
-#: src/pages/beat/DesignerPanel.tsx:242
-msgid "When the spec is locked, the Scout looks for sources and the beat becomes live. You'll get the first issue on the cadence above."
-msgstr "Gdy specyfikacja zostanie zatwierdzona, Scout wyszuka źródła i beat stanie się aktywny. Pierwsze wydanie otrzymasz zgodnie z harmonogramem powyżej."
-
 #: src/pages/DashboardPage.tsx:228
 msgid "Working on it now"
 msgstr "Pracuję nad tym teraz"
-
-#: src/pages/beat/DesignerPanel.tsx:344
-msgid "Working on your beat."
-msgstr "Pracuję nad Twoim beatem."
 
 #: src/layout/Rail.tsx:41
 msgid "Workspace navigation"
@@ -964,7 +962,7 @@ msgid "Wrocław restaurant openings"
 msgstr "Otwarcia restauracji we Wrocławiu"
 
 #: src/pages/LandingPage.tsx:15
-#: src/pages/NewBeatPage.tsx:105
+#: src/pages/NewBeatPage.tsx:107
 msgid "Wrocław weekends with the kids"
 msgstr "Weekendy we Wrocławiu z dziećmi"
 

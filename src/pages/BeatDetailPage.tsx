@@ -4,15 +4,7 @@ import { Trans } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 import { useBeatActions } from "../hooks/useBeatActions";
-import { DesignerPanel } from "./beat/DesignerPanel";
 import { ActivePanel } from "./beat/ActivePanel";
-
-const DESIGNER_STATUSES = new Set<string>([
-  "DRAFT",
-  "DESIGNING",
-  "AWAITING_CLARIFICATION",
-  "SCOUTING",
-]);
 
 function userEmailFrom(user: unknown): string | null {
   if (!user || typeof user !== "object") return null;
@@ -73,31 +65,6 @@ export function BeatDetailPage() {
 
   const { beat } = actions;
 
-  if (DESIGNER_STATUSES.has(beat.status)) {
-    return (
-      <DesignerPanel
-        beat={{
-          id: beat.id,
-          title: beat.title,
-          brief: beat.brief,
-          summary: beat.summary ?? null,
-          status: beat.status,
-          cadenceType: beat.cadenceType,
-          cronExpression: beat.cronExpression ?? null,
-          outputLanguage: beat.outputLanguage,
-          depth: beat.depth,
-          defaultsApplied: beat.defaultsApplied ?? "[]",
-        }}
-        events={actions.events}
-        agentEventsError={actions.agentEventsError}
-        latestClarification={actions.latestClarification}
-        sendClarification={actions.sendClarification}
-        clarifyPending={actions.clarifyPending}
-        clarifyError={actions.clarifyError}
-      />
-    );
-  }
-
   return (
     <ActivePanel
       beat={{
@@ -117,6 +84,7 @@ export function BeatDetailPage() {
         createdAt: beat.createdAt,
       }}
       issues={actions.issues}
+      sourceDomains={actions.sourceDomains ?? []}
       isGenerating={actions.isGenerating}
       triggerPending={actions.triggerPending}
       triggerError={actions.triggerError}
@@ -128,6 +96,11 @@ export function BeatDetailPage() {
       onDelete={() => actions.remove()}
       pausePending={actions.pausePending}
       deletePending={actions.deletePending}
+      agentEventsError={actions.agentEventsError}
+      latestClarification={actions.latestClarification}
+      sendClarification={actions.sendClarification}
+      clarifyPending={actions.clarifyPending}
+      clarifyError={actions.clarifyError}
     />
   );
 }

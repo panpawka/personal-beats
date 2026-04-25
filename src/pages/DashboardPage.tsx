@@ -258,7 +258,6 @@ export function DashboardPage() {
                   <BeatCard
                     key={b.id}
                     beat={b}
-                    lead={i === 0 && b.status === "ACTIVE"}
                   />
                 ))}
               </div>
@@ -297,12 +296,10 @@ export function DashboardPage() {
   );
 }
 
-function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
+function BeatCard({ beat }: { beat: BeatRow;  }) {
   const { t, i18n } = useLingui();
   const kind = statusKind(beat);
   const cad = cadenceLabel(beat, i18n);
-  const lvl = signalLevel(beat);
-  const issues = beat.issueCount ?? 0;
 
   const depthText = (() => {
     if (beat.depth === "BRIEF") return t`Tight · 3–5 picks`;
@@ -311,20 +308,9 @@ function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
     return beat.depth;
   })();
 
-  const nextText = (() => {
-    if (beat.status === "PAUSED") return t`Paused`;
-    if (beat.status === "DRAFT") return t`First issue: ${cad}`;
-    if (
-      beat.status === "DESIGNING" ||
-      beat.status === "AWAITING_CLARIFICATION" ||
-      beat.status === "SCOUTING"
-    )
-      return t`Designing now`;
-    return cad;
-  })();
-
   return (
-    <Link to={`/beats/${beat.id}`} className={`beat-card${lead ? " lead" : ""}`}>
+    <Link to={`/beats/${beat.id}`} className={`beat-card`}>
+      <div className="beat-head-row">
       <div className="meta">
         {kind === "live" ? (
           <span className="live">{cad}</span>
@@ -336,31 +322,11 @@ function BeatCard({ beat, lead }: { beat: BeatRow; lead: boolean }) {
         <span>{depthText}</span>
         <span>{languageTag(beat.outputLanguage)}</span>
       </div>
+      <span className="arrow"><Trans>Open →</Trans></span>
+      </div>
 
       <h4>{beat.title}</h4>
       <p>{pitch(beat)}</p>
-
-      {kind !== "planned" || issues > 0 ? (
-        <div className="signal-bars" title={t`Relevance ${lvl}/5`}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <span
-              key={i}
-              style={{
-                height: 4 + i * 3,
-                opacity: i <= lvl ? 0.85 : 0.18,
-              }}
-            />
-          ))}
-        </div>
-      ) : null}
-
-      <div className="beat-foot-row">
-        <span>
-          {issues > 0 ? t`${issues} issues · ` : ""}
-          {nextText}
-        </span>
-        <span className="arrow"><Trans>Open →</Trans></span>
-      </div>
     </Link>
   );
 }

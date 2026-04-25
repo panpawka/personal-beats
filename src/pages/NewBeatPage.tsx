@@ -2,6 +2,8 @@ import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from "react
 import { useNavigate } from "react-router";
 import { createBeat, chatBeatBrief } from "wasp/client/operations";
 import { Trans, useLingui } from "@lingui/react/macro";
+import { msg } from "@lingui/core/macro";
+import type { I18n, MessageDescriptor } from "@lingui/core";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 
@@ -13,7 +15,6 @@ interface BriefDraft {
   timezone: string | null;
   depth: "BRIEF" | "STANDARD" | "DEEP" | null;
   outputLanguage: string | null;
-  rules: string[];
 }
 
 const EMPTY_DRAFT: BriefDraft = {
@@ -24,7 +25,6 @@ const EMPTY_DRAFT: BriefDraft = {
   timezone: null,
   depth: null,
   outputLanguage: null,
-  rules: [],
 };
 
 interface ChatMessage {
@@ -32,12 +32,10 @@ interface ChatMessage {
   content: string;
 }
 
-type TFn = (strings: TemplateStringsArray, ...values: unknown[]) => string;
-
-function depthLabel(depth: BriefDraft["depth"], t: TFn): string {
-  if (depth === "BRIEF") return t`Tight · 3–5 picks`;
-  if (depth === "DEEP") return t`Deep · everything that matters`;
-  if (depth === "STANDARD") return t`Standard · 8–12 picks`;
+function depthLabel(depth: BriefDraft["depth"], i18n: I18n): string {
+  if (depth === "BRIEF") return i18n._(msg`Tight · 3–5 picks`);
+  if (depth === "DEEP") return i18n._(msg`Deep · everything that matters`);
+  if (depth === "STANDARD") return i18n._(msg`Standard · 8–12 picks`);
   return "";
 }
 
@@ -51,8 +49,8 @@ const DAY_NAMES = [
   "Saturday",
 ];
 
-function cadenceLabel(draft: BriefDraft, t: TFn): string {
-  if (draft.cadenceType === "ON_DEMAND") return t`On demand`;
+function cadenceLabel(draft: BriefDraft, i18n: I18n): string {
+  if (draft.cadenceType === "ON_DEMAND") return i18n._(msg`On demand`);
   if (draft.cadenceType !== "TIME_BASED" || !draft.cronExpression) return "";
   const parts = draft.cronExpression.trim().split(/\s+/);
   if (parts.length < 5) return draft.cronExpression;
@@ -61,37 +59,41 @@ function cadenceLabel(draft: BriefDraft, t: TFn): string {
   const hh = /^\d+$/.test(hour) ? String(hour).padStart(2, "0") : hour;
   const time = `${hh}:${mm}`;
   if (dow !== "*" && dom === "*" && mon === "*") {
-    if (/^\d$/.test(dow)) return t`Weekly · ${DAY_NAMES[Number(dow)]} ${time}`;
-    if (dow === "1-5") return t`Weekdays · ${time}`;
-    if (dow === "0,6" || dow === "6,0") return t`Weekends · ${time}`;
+    if (/^\d$/.test(dow)) {
+      const day = DAY_NAMES[Number(dow)];
+      return i18n._(msg`Weekly · ${day} ${time}`);
+    }
+    if (dow === "1-5") return i18n._(msg`Weekdays · ${time}`);
+    if (dow === "0,6" || dow === "6,0") return i18n._(msg`Weekends · ${time}`);
     return `${dow} · ${time}`;
   }
-  if (dom === "*" && mon === "*" && dow === "*") return t`Daily · ${time}`;
+  if (dom === "*" && mon === "*" && dow === "*") return i18n._(msg`Daily · ${time}`);
   return draft.cronExpression;
 }
 
-function languageLabel(code: string | null): string {
+const LANGUAGE_NAMES: Record<string, MessageDescriptor> = {
+  en: msg`English`,
+  pl: msg`Polish`,
+  de: msg`German`,
+  fr: msg`French`,
+  es: msg`Spanish`,
+  it: msg`Italian`,
+  nl: msg`Dutch`,
+  pt: msg`Portuguese`,
+  cs: msg`Czech`,
+  sk: msg`Slovak`,
+  uk: msg`Ukrainian`,
+};
+
+function languageLabel(code: string | null, i18n: I18n): string {
   if (!code) return "";
-  const c = code.toLowerCase();
-  const NAMES: Record<string, string> = {
-    en: "English",
-    pl: "Polish",
-    de: "German",
-    fr: "French",
-    es: "Spanish",
-    it: "Italian",
-    nl: "Dutch",
-    pt: "Portuguese",
-    cs: "Czech",
-    sk: "Slovak",
-    uk: "Ukrainian",
-  };
-  return NAMES[c] ?? code.toUpperCase();
+  const descriptor = LANGUAGE_NAMES[code.toLowerCase()];
+  return descriptor ? i18n._(descriptor) : code.toUpperCase();
 }
 
-function deriveTitle(draft: BriefDraft, fallback: string, t: TFn): string {
+function deriveTitle(draft: BriefDraft, fallback: string, i18n: I18n): string {
   const candidate = draft.title?.trim() || draft.topic?.trim() || fallback.trim();
-  if (!candidate) return t`Untitled beat`;
+  if (!candidate) return i18n._(msg`Untitled beat`);
   const first = candidate.split(/[.!?\n]/)[0].trim();
   const trimmed = first.length > 80 ? `${first.slice(0, 77)}…` : first;
   return trimmed.replace(/^./, (c) => c.toUpperCase());
@@ -118,8 +120,13 @@ export function NewBeatPage() {
   const [error, setError] = useState<string | null>(null);
 
   const seedHandledRef = useRef(false);
+  const draftRef = useRef<BriefDraft>(EMPTY_DRAFT);
   const endRef = useRef<HTMLDivElement | null>(null);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    draftRef.current = draft;
+  }, [draft]);
 
   async function exchange(nextMessages: ChatMessage[]) {
     setPending(true);
@@ -128,12 +135,14 @@ export function NewBeatPage() {
       const res = await chatBeatBrief({
         messages: nextMessages,
         locale: i18n.locale || "en",
+        currentDraft: draftRef.current,
       });
       setMessages([
         ...nextMessages,
         { role: "assistant", content: res.reply },
       ]);
       setDraft(res.draft);
+      draftRef.current = res.draft;
       setComplete(Boolean(res.complete));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -240,23 +249,21 @@ export function NewBeatPage() {
   const briefTitle = deriveTitle(
     draft,
     messages.find((m) => m.role === "user")?.content ?? "",
-    t,
+    i18n,
   );
-  const cadenceText = cadenceLabel(draft, t);
-  const depthText = depthLabel(draft.depth, t);
-  const languageText = languageLabel(draft.outputLanguage);
+  const cadenceText = cadenceLabel(draft, i18n);
+  const depthText = depthLabel(draft.depth, i18n);
+  const languageText = languageLabel(draft.outputLanguage, i18n);
 
   const inlineRules: { key: string; label: string; value: string }[] = [];
+  if (draft.topic) inlineRules.push({ key: "topic", label: t`Topic`, value: draft.topic });
   if (cadenceText) inlineRules.push({ key: "cadence", label: t`Cadence`, value: cadenceText });
   if (depthText) inlineRules.push({ key: "depth", label: t`Depth`, value: depthText });
   if (languageText) inlineRules.push({ key: "language", label: t`Language`, value: languageText });
   if (draft.timezone && draft.cadenceType === "TIME_BASED")
     inlineRules.push({ key: "tz", label: t`Timezone`, value: draft.timezone });
-  draft.rules.slice(0, 4).forEach((r, i) =>
-    inlineRules.push({ key: `r${i}`, label: t`Rule`, value: r }),
-  );
 
-  const showInlineRules = !complete && inlineRules.length > 0 && messages.length >= 2;
+  const showInlineRules = !complete && inlineRules.length > 0 && messages.length >= 1;
 
   return (
     <AppShell>
@@ -390,12 +397,6 @@ export function NewBeatPage() {
                   <div className="brief-row">
                     <div className="k"><Trans>Timezone</Trans></div>
                     <div className="v">{draft.timezone}</div>
-                  </div>
-                ) : null}
-                {draft.rules.length > 0 ? (
-                  <div className="brief-row">
-                    <div className="k"><Trans>Rules</Trans></div>
-                    <div className="v">{draft.rules.join(" · ")}</div>
                   </div>
                 ) : null}
               </div>

@@ -1,10 +1,13 @@
+import { useState, type KeyboardEvent } from "react";
 import { Link } from "react-router";
-import { Trans, useLingui, Plural } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../../layout/AppShell";
 import { Masthead } from "../../layout/Masthead";
 import { Icon } from "../../components/editorial/Icon";
+import { EditorialButton } from "../../components/editorial/Button";
 import { cadenceLabel } from "../../shared/cadence";
 import { formatShortDate } from "../../lib/formatting";
+import type { ClarificationSummary } from "../../hooks/useBeatActions";
 
 interface Issue {
   id: string;
@@ -33,6 +36,7 @@ interface ActivePanelProps {
     createdAt: Date | string;
   };
   issues: Issue[] | undefined;
+  sourceDomains: string[];
   isGenerating: boolean;
   triggerPending: boolean;
   triggerError: string | null;
@@ -44,6 +48,117 @@ interface ActivePanelProps {
   onDelete: () => void;
   pausePending: boolean;
   deletePending: boolean;
+  agentEventsError: unknown;
+  latestClarification: ClarificationSummary | null;
+  sendClarification: (reply: string) => Promise<void>;
+  clarifyPending: boolean;
+  clarifyError: string | null;
+}
+
+function usePhaseStatusPill(status: string): string | null {
+  const { t } = useLingui();
+  switch (status) {
+    case "DRAFT":
+      return t`Reading your brief…`;
+    case "DESIGNING":
+      return t`Drafting the spec…`;
+    case "AWAITING_CLARIFICATION":
+      return t`One question for you`;
+    case "SCOUTING":
+      return t`Finding sources…`;
+    default:
+      return null;
+  }
+}
+
+function ClarifyComposer({
+  sendClarification,
+  clarifyPending,
+  clarifyError,
+  questions,
+  reasoning,
+}: {
+  sendClarification: (r: string) => Promise<void>;
+  clarifyPending: boolean;
+  clarifyError: string | null;
+  questions: string[];
+  reasoning: string;
+}) {
+  const { t } = useLingui();
+  const [reply, setReply] = useState("");
+
+  async function submit() {
+    if (clarifyPending) return;
+    const trimmed = reply.trim();
+    if (!trimmed) return;
+    await sendClarification(trimmed);
+    setReply("");
+  }
+
+  function onKeyDown(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      submit();
+    }
+  }
+
+  const placeholder = questions[0]
+    ? t`Answer: ${questions[0]}`
+    : t`Type your answer…`;
+
+  return (
+    <div className="chat-composer" style={{ marginTop: 18 }}>
+      {clarifyError ? (
+        <div className="editorial-error" style={{ marginTop: 0, marginBottom: 12 }}>
+          {clarifyError}
+        </div>
+      ) : null}
+      {questions.length > 0 ? (
+        <ol
+          className="pb-body"
+          style={{ marginBottom: 10, paddingLeft: 18 }}
+        >
+          {questions.map((q, i) => (
+            <li key={i} style={{ marginBottom: 4 }}>
+              {q}
+            </li>
+          ))}
+        </ol>
+      ) : null}
+      {reasoning ? (
+        <p
+          className="ui-xs"
+          style={{ marginBottom: 8, color: "var(--ink-3)", fontStyle: "italic" }}
+        >
+          {reasoning}
+        </p>
+      ) : null}
+      <div className="composer-box">
+        <textarea
+          className="composer-input"
+          placeholder={placeholder}
+          value={reply}
+          onChange={(e) => setReply(e.target.value)}
+          onKeyDown={onKeyDown}
+          rows={3}
+        />
+        <div className="composer-foot">
+          <div className="composer-hints">
+            <span className="kbd">⌘↵</span>
+            <span><Trans>to send</Trans></span>
+          </div>
+          <EditorialButton
+            variant="primary"
+            disabled={clarifyPending || reply.trim().length === 0}
+            onClick={submit}
+          >
+            <Icon name="send" size={13} />
+            <span>{clarifyPending ? <Trans>Sending</Trans> : <Trans>Reply</Trans>}</span>
+          </EditorialButton>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function ActivePanel(props: ActivePanelProps) {
@@ -56,6 +171,7 @@ export function ActivePanel(props: ActivePanelProps) {
   const {
     beat,
     issues,
+    sourceDomains,
     isGenerating,
     triggerPending,
     triggerError,
@@ -67,16 +183,28 @@ export function ActivePanel(props: ActivePanelProps) {
     onDelete,
     pausePending,
     deletePending,
+    agentEventsError,
+    latestClarification,
+    sendClarification,
+    clarifyPending,
+    clarifyError,
   } = props;
 
   const isPaused = beat.status === "PAUSED";
   const isActive = beat.status === "ACTIVE";
+  const isFailed = beat.status === "FAILED";
+  const phasePill = usePhaseStatusPill(beat.status);
+  const isDesignerPhase = phasePill !== null;
+  const showLiveSections = isActive || isPaused;
+  const awaiting =
+    beat.status === "AWAITING_CLARIFICATION" && !!latestClarification;
+
   const cadence = cadenceLabel(beat, i18n);
   const depth = DEPTH_LABEL[beat.depth] ?? beat.depth;
   const lang = (beat.outputLanguage ?? "").toUpperCase();
-  const sourceTotal = beat.sourceCount ?? 0;
   const nextRun = beat.cadenceType === "ON_DEMAND" ? t`On demand` : cadence;
   const createdAtLabel = formatShortDate(beat.createdAt, i18n.locale);
+  const title = beat.title?.trim() ? beat.title : t`Untitled beat`;
 
   return (
     <AppShell>
@@ -88,20 +216,37 @@ export function ActivePanel(props: ActivePanelProps) {
             <span className="live"><Trans>Active</Trans></span>
           ) : isPaused ? (
             <span><Trans>Paused</Trans></span>
+          ) : isFailed ? (
+            <span><Trans>Failed</Trans></span>
           ) : (
             <span>{beat.status}</span>
           )}
-          <span>
-            <Trans>· Next run: {nextRun}</Trans>
-          </span>
+          {showLiveSections ? (
+            <span>
+              <Trans>· Next run: {nextRun}</Trans>
+            </span>
+          ) : null}
           <span>· {depth}</span>
           <span>· {lang}</span>
           <span>
             <Trans>· est. {createdAtLabel}</Trans>
           </span>
         </div>
-        <h1>{beat.title}</h1>
+        <h1>{title}</h1>
         <p className="pitch">{beat.summary ?? beat.brief}</p>
+        {sourceDomains.length > 0 ? (
+          <div
+            className="src-list"
+            style={{ marginTop: 14, maxWidth: 700 }}
+            aria-label={t`Source domains`}
+          >
+            {sourceDomains.map((d) => (
+              <span key={d} className="src">
+                {d}
+              </span>
+            ))}
+          </div>
+        ) : null}
         <div className="actions">
           {isPaused ? (
             <button
@@ -135,28 +280,35 @@ export function ActivePanel(props: ActivePanelProps) {
             <Icon name="trash" size={13} />
             <span><Trans>Delete</Trans></span>
           </button>
-          <button
-            type="button"
-            className="pb-btn pb-btn-signal"
-            onClick={onTrigger}
-            disabled={triggerPending || isGenerating || !isActive}
-          >
-            <Icon name="play" size={13} />
-            <span>
-              {triggerPending
-                ? t`Queuing…`
-                : isGenerating
-                  ? t`Generating…`
-                  : t`Send me one now`}
-            </span>
-          </button>
+          {showLiveSections ? (
+            <button
+              type="button"
+              className="pb-btn pb-btn-signal"
+              onClick={onTrigger}
+              disabled={triggerPending || isGenerating || !isActive}
+            >
+              <Icon name="play" size={13} />
+              <span>
+                {triggerPending
+                  ? t`Queuing…`
+                  : isGenerating
+                    ? t`Generating…`
+                    : t`Send me one now`}
+              </span>
+            </button>
+          ) : null}
         </div>
         {triggerError ? (
           <div className="editorial-error" style={{ marginTop: 18 }}>
             {triggerError}
           </div>
         ) : null}
-        {isGenerating ? (
+        {agentEventsError && isDesignerPhase ? (
+          <div className="editorial-error" style={{ marginTop: 18 }}>
+            <Trans>Connection interrupted — still listening for the designer.</Trans>
+          </div>
+        ) : null}
+        {isGenerating || isDesignerPhase ? (
           <div
             className="row pb-enter"
             style={{
@@ -171,7 +323,13 @@ export function ActivePanel(props: ActivePanelProps) {
             }}
           >
             <span className="dot live" />
-            <span><Trans>Editor working — first issue drops in a few minutes.</Trans></span>
+            <span>
+              {isDesignerPhase ? (
+                phasePill
+              ) : (
+                <Trans>Editor working — first issue drops in a few minutes.</Trans>
+              )}
+            </span>
             {sessionLinkId ? (
               <a
                 href={`https://platform.claude.com/sessions/${sessionLinkId}`}
@@ -189,10 +347,19 @@ export function ActivePanel(props: ActivePanelProps) {
             ) : null}
           </div>
         ) : null}
+        {awaiting ? (
+          <ClarifyComposer
+            sendClarification={sendClarification}
+            clarifyPending={clarifyPending}
+            clarifyError={clarifyError}
+            questions={latestClarification?.questions ?? []}
+            reasoning={latestClarification?.reasoning ?? ""}
+          />
+        ) : null}
       </header>
 
-      <div className="twocol">
-        <div>
+      {showLiveSections ? (
+        <section className="b-issues">
           <h3><Trans>Past issues</Trans></h3>
           {!issues || issues.length === 0 ? (
             <div style={{ padding: "26px 0", color: "var(--ink-3)" }} className="pb-body">
@@ -229,75 +396,23 @@ export function ActivePanel(props: ActivePanelProps) {
               })}
             </div>
           )}
-        </div>
-
-        <div>
-          <div className="side-block">
-            <h4><Trans>What I've learned</Trans></h4>
-            <p className="sub">
-              {beat.coverageAssessment
-                ? t`Coverage looks ${beat.coverageAssessment} so far.`
-                : t`Patterns will appear here once a few issues ship.`}
+          {userEmail ? (
+            <p
+              className="sub"
+              style={{
+                marginTop: 22,
+                fontFamily: "var(--mono)",
+                fontSize: 11,
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "var(--ink-3)",
+              }}
+            >
+              <Trans>Delivered to {userEmail}</Trans>
             </p>
-            <div className="learned">
-              <div className="row">
-                <span className="sign plus">+</span>
-                <span><Trans>Lead with the most actionable item in the issue.</Trans></span>
-              </div>
-              <div className="row">
-                <span className="sign plus">+</span>
-                <span><Trans>Cite primary sources before commentary.</Trans></span>
-              </div>
-              {beat.coverageNote ? (
-                <div className="row">
-                  <span className="sign plus">+</span>
-                  <span>{beat.coverageNote}</span>
-                </div>
-              ) : null}
-              <div className="row">
-                <span className="sign minus">−</span>
-                <span><Trans>Skip listicle-style filler — go straight to specifics.</Trans></span>
-              </div>
-            </div>
-            {userEmail ? (
-              <p
-                className="sub"
-                style={{ marginTop: 14, fontFamily: "var(--mono)", letterSpacing: "0.06em", textTransform: "uppercase" }}
-              >
-                <Trans>Delivered to {userEmail}</Trans>
-              </p>
-            ) : null}
-          </div>
-
-          <div className="side-block">
-            <h4><Trans>Sources I rely on</Trans></h4>
-            <p className="sub">
-              {sourceTotal > 0 ? (
-                <Plural
-                  value={sourceTotal}
-                  one="Tracking # source."
-                  other="Tracking # sources."
-                />
-              ) : (
-                <Trans>Source list will fill in as issues ship.</Trans>
-              )}
-            </p>
-            <div className="src-list">
-              {sourceTotal > 0 ? (
-                <span className="src">
-                  <Plural
-                    value={sourceTotal}
-                    one="# source tracked"
-                    other="# sources tracked"
-                  />
-                </span>
-              ) : (
-                <span className="src"><Trans>awaiting first issue</Trans></span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+          ) : null}
+        </section>
+      ) : null}
     </AppShell>
   );
 }
