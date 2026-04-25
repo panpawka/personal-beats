@@ -2,19 +2,23 @@ app personalBeat {
   wasp: {
     version: "^0.23.0"
   },
-  title: "Personal Newsroom",
+  title: "Personal Beats",
 
   head: [
     "<meta charSet='utf-8' />",
-    "<meta name='description' content='Personal Newsroom — your own editorial agent. Describe a beat, get a newsletter.' />",
-    "<meta name='author' content='Personal Newsroom' />",
-    "<meta name='keywords' content='Personal Newsroom, editorial agent, newsletter, AI reporter, beats' />",
+    "<meta name='description' content='Personal Beats — your own editorial agent. Tell us what you care about, how often, how deep. We deliver the newsletter.' />",
+    "<meta name='author' content='Personal Beats' />",
+    "<meta name='keywords' content='Personal Beats, editorial agent, AI newsletter, personalized news, beats, newsroom' />",
 
+    "<link rel='canonical' href='https://pb.lemonode.pl' />",
     "<meta property='og:type' content='website' />",
-    "<meta property='og:title' content='Personal Newsroom' />",
-    "<meta property='og:site_name' content='Personal Newsroom' />",
-    "<meta property='og:description' content='Your own editorial agent. Describe a beat, get a newsletter.' />",
+    "<meta property='og:title' content='Personal Beats' />",
+    "<meta property='og:site_name' content='Personal Beats' />",
+    "<meta property='og:url' content='https://pb.lemonode.pl' />",
+    "<meta property='og:description' content='Describe a beat, get a newsletter. Your own editorial agent on a schedule.' />",
     "<meta name='twitter:card' content='summary_large_image' />",
+    "<meta name='twitter:title' content='Personal Beats' />",
+    "<meta name='twitter:description' content='Describe a beat, get a newsletter. Your own editorial agent on a schedule.' />",
     "<link rel='icon' href='/favicon.ico' />",
 
     "<link rel='preconnect' href='https://fonts.googleapis.com' />",
@@ -28,7 +32,7 @@ app personalBeat {
       //   (RequestPasswordReset(Route|Page), PasswordReset(Route|Page), EmailVerification(Route|Page))
       email: {
         fromField: {
-          name: "Personal Beat",
+          name: "Personal Beats",
           email: "noreply@lemonode.pl"
         },
         emailVerification: {
@@ -60,7 +64,7 @@ app personalBeat {
   emailSender: {
     provider: Mailgun,
     defaultFrom: {
-      name: "Personal Beat",
+      name: "Personal Beats",
       email: "hello@lemonode.pl",
     },
   },
@@ -169,6 +173,11 @@ query getAgentEvents {
 action createBeat {
   fn: import { createBeat } from "@src/server/actions",
   entities: [Beat]
+}
+
+action chatBeatBrief {
+  fn: import { chatBeatBrief } from "@src/server/brief-chat",
+  entities: []
 }
 
 action submitClarification {

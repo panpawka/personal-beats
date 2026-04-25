@@ -15,12 +15,12 @@ export type VerificationEmailProps = {
 export function VerificationEmail({ verificationLink }: VerificationEmailProps) {
   return (
     <EmailTemplateLayout
-      title="Verify your email — Personal Newsroom"
+      title="Verify your email — Personal Beats"
       previewText="Verify your email to activate your account."
       eyebrow="Account verification">
       <EmailH1>Verify your email</EmailH1>
       <EmailLead>
-        Confirm your email address to activate your Personal Newsroom account
+        Confirm your email address to activate your Personal Beats account
         and start receiving your beats.
       </EmailLead>
       <EmailButton href={verificationLink}>Verify email</EmailButton>

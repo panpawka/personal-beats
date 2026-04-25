@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "wasp/client/auth";
 import { useQuery, getBeats } from "wasp/client/operations";
@@ -141,12 +142,22 @@ export function DashboardPage() {
 
   function pickStarter(prompt: string) {
     try {
-      sessionStorage.setItem("pb.newBeatSeed", prompt);
+      localStorage.setItem("pb.newBeatSeed", prompt);
     } catch {
       // ignore
     }
     navigate("/beats/new");
   }
+
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("pb.newBeatSeed")) {
+        navigate("/beats/new", { replace: true });
+      }
+    } catch {
+      // ignore
+    }
+  }, [navigate]);
 
   return (
     <AppShell>

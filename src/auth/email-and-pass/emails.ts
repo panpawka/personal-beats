@@ -13,8 +13,8 @@ export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ ver
     // html stays '' — SendGrid will deliver text-only fallback
   }
   return {
-    subject: 'Verify your email — Personal Newsroom',
-    text: `Click the link below to verify your email:\n\n${verificationLink}\n\nIf you didn't sign up for Personal Newsroom, ignore this message.`,
+    subject: 'Verify your email — Personal Beats',
+    text: `Click the link below to verify your email:\n\n${verificationLink}\n\nIf you didn't sign up for Personal Beats, ignore this message.`,
     html,
   };
 };
@@ -27,7 +27,7 @@ export const getPasswordResetEmailContent: GetPasswordResetEmailContentFn = ({ p
     console.error('PasswordResetEmail render failed', err);
   }
   return {
-    subject: 'Reset your password — Personal Newsroom',
+    subject: 'Reset your password — Personal Beats',
     text: `Click the link below to reset your password:\n\n${passwordResetLink}\n\nThis link expires in 1 hour. If you didn't request a reset, ignore this message.`,
     html,
   };

@@ -129,7 +129,7 @@ export function IssueDetailPage() {
           <header className="email-masthead">
             <div className="est">
               <Trans>
-                {beat?.title ? beat.title : t`Personal Newsroom`} · Vol. I
+                {beat?.title ? beat.title : t`Personal Beats`} · Vol. I
               </Trans>
             </div>
             <h1>{issue.subject}</h1>

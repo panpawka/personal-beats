@@ -94,14 +94,14 @@ async function translateBatch(
   const targetName = LOCALE_NAMES[targetLocale] ?? targetLocale;
   const numbered = msgids.map((m, i) => `${i + 1}. ${JSON.stringify(m)}`).join("\n");
 
-  const sys = `You translate UI strings for a web app called "Personal Newsroom" — a tool that turns user-described "beats" into AI-generated newsletters. Translate from English to ${targetName}.
+  const sys = `You translate UI strings for a web app called "Personal Beats" — a tool that turns user-described "beats" into AI-generated newsletters. Translate from English to ${targetName}.
 
 Rules:
 - Preserve ICU MessageFormat syntax exactly (e.g. {name}, {count, plural, one {...} other {...}}, <0>, <1>).
 - Preserve placeholders like {name} verbatim.
 - Keep tone editorial, concise, professional.
 - Output ONLY a JSON array of strings, same order/length as input. No commentary.
-- Do not translate brand names: "Personal Newsroom", "Personal Beats", "feednode", "Lemonode".
+- Do not translate brand names: "Personal Beats", "feednode", "Lemonode".
 - Do not translate code-like tokens (URLs, identifiers in backticks).`;
 
   const user = `Translate these ${msgids.length} strings to ${targetName}. Return JSON array only.

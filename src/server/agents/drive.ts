@@ -773,28 +773,21 @@ async function handleTool(
 
     // Threshold override: agent self-grading is unreliable. If distinct
     // domains fall below MIN_DOMAINS_HEALTHY, downgrade a "healthy" claim
-    // to "sparse" so the UI shows the honest assessment.
+    // to "sparse" so the UI shows the honest assessment. Optional fields
+    // default to safe-sparse values for old in-flight payloads.
     const MIN_DOMAINS_HEALTHY = 5;
+    const distinctDomains = parsed.data.distinct_domains ?? 0;
+    const recipesUsed = parsed.data.recipes_used ?? [];
+    const categoriesCovered = parsed.data.categories_covered ?? [];
     let coverageAssessment = parsed.data.coverage_assessment;
     let thinnessReason = parsed.data.thinness_reason ?? null;
     if (
-      parsed.data.distinct_domains < MIN_DOMAINS_HEALTHY &&
+      distinctDomains < MIN_DOMAINS_HEALTHY &&
       coverageAssessment === "healthy"
     ) {
       coverageAssessment = "sparse";
-      thinnessReason ??= `Only ${parsed.data.distinct_domains} distinct domains; below threshold ${MIN_DOMAINS_HEALTHY}.`;
+      thinnessReason ??= `Only ${distinctDomains} distinct domains; below threshold ${MIN_DOMAINS_HEALTHY}.`;
     }
-
-    // coverageNote stores a JSON envelope so we can ship distinct_domains,
-    // categories_covered, recipes_used, and thinness_reason without a Beat
-    // schema migration. Readers must JSON.parse before display.
-    const coverageNote = JSON.stringify({
-      note: parsed.data.notes,
-      distinct_domains: parsed.data.distinct_domains,
-      categories_covered: parsed.data.categories_covered,
-      recipes_used: parsed.data.recipes_used,
-      thinness_reason: thinnessReason,
-    });
 
     await prisma.beat.update({
       where: { id: beatId },
@@ -802,7 +795,7 @@ async function handleTool(
         status: "ACTIVE",
         sourceCount: parsed.data.source_count,
         coverageAssessment,
-        coverageNote,
+        coverageNote: parsed.data.notes,
       },
     });
     await replyTool(sessionId, eventId, tool, { ok: true });
@@ -810,9 +803,9 @@ async function handleTool(
       sourceCount: parsed.data.source_count,
       coverage: coverageAssessment,
       note: parsed.data.notes,
-      distinctDomains: parsed.data.distinct_domains,
-      categoriesCovered: parsed.data.categories_covered,
-      recipesUsed: parsed.data.recipes_used,
+      distinctDomains,
+      categoriesCovered,
+      recipesUsed,
       thinnessReason,
     });
     return null;

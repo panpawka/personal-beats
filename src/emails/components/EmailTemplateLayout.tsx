@@ -218,7 +218,7 @@ function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
           color: COLOR.fgMuted,
           letterSpacing: '0.02em',
         }}>
-        © {year} Personal Newsroom · Lemonode sp. z o.o. · Warszawa
+        © {year} Personal Beats · Lemonode sp. z o.o. · Warszawa
       </Text>
       {unsubscribeUrl && (
         <>

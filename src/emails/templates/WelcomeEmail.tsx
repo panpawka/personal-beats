@@ -16,14 +16,14 @@ export type WelcomeEmailProps = {
 export function WelcomeEmail({ userEmail, dashboardUrl }: WelcomeEmailProps) {
   return (
     <EmailTemplateLayout
-      title="Welcome to Personal Newsroom"
+      title="Welcome to Personal Beats"
       previewText="Your account is ready. Open the dashboard to design your first beat."
       eyebrow="Welcome">
-      <EmailH1>Welcome to Personal Newsroom.</EmailH1>
+      <EmailH1>Welcome to Personal Beats.</EmailH1>
       <EmailLead>
-        Your account ({userEmail}) is ready. Personal Newsroom files briefs
-        shaped to your life — you tell us what to watch, our agents design the
-        beat, and issues land on your schedule.
+        Your account ({userEmail}) is ready. Personal Beats files briefs shaped
+        to your life — you tell us what to watch, our agents design the beat,
+        and issues land on your schedule.
       </EmailLead>
       <EmailButton href={dashboardUrl}>Open dashboard</EmailButton>
       <EmailSmall>

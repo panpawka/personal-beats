@@ -1,4 +1,4 @@
-// Personal Newsroom design-system tokens translated for email clients.
+// Personal Beats design-system tokens translated for email clients.
 // Inlined hex values only — no CSS vars (Outlook/Gmail ignore them).
 
 export const FONT_SANS =

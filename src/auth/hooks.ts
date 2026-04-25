@@ -17,7 +17,7 @@ async function sendWelcomeEmail(to: string): Promise<void> {
   );
   await emailSender.send({
     to,
-    subject: 'Welcome to Personal Newsroom',
+    subject: 'Welcome to Personal Beats',
     text: `Your account is ready. Open the dashboard: ${url}`,
     html,
   });

@@ -1,65 +1,99 @@
 import { Fragment, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { useNavigate } from "react-router";
-import { createBeat } from "wasp/client/operations";
+import { createBeat, chatBeatBrief } from "wasp/client/operations";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 
-const DEFAULT_CRON = "0 7 * * *";
-const DEFAULT_CADENCE: "TIME_BASED" | "ON_DEMAND" = "TIME_BASED";
-
-interface Rules {
-  cadence?: string;
-  depth?: string;
-  language?: string;
-  weather?: string;
-  sources?: string;
-  skip?: string;
+interface BriefDraft {
+  title: string | null;
+  topic: string | null;
+  cadenceType: "TIME_BASED" | "ON_DEMAND" | null;
+  cronExpression: string | null;
+  timezone: string | null;
+  depth: "BRIEF" | "STANDARD" | "DEEP" | null;
+  outputLanguage: string | null;
+  rules: string[];
 }
 
-interface Turn {
-  who: "me" | "ed";
-  text: string;
-  sugg?: string[];
-  ask?: string;
+const EMPTY_DRAFT: BriefDraft = {
+  title: null,
+  topic: null,
+  cadenceType: null,
+  cronExpression: null,
+  timezone: null,
+  depth: null,
+  outputLanguage: null,
+  rules: [],
+};
+
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
 }
 
 type TFn = (strings: TemplateStringsArray, ...values: unknown[]) => string;
 
-function parseRules(text: string, t: TFn): Rules {
-  const lower = text.toLowerCase();
-  const r: Rules = {};
-  if (/(every )?morning|daily|each day|every day/.test(lower)) r.cadence = t`Every morning · 7 am`;
-  else if (/friday|fri\b|weekend/.test(lower)) r.cadence = t`Every Friday · 5 pm`;
-  else if (/monday|weekly/.test(lower)) r.cadence = t`Every Monday · 8 am`;
-  else if (/only.*(when|if).*(big|important|breaking|happens)/.test(lower))
-    r.cadence = t`Only when something breaks`;
-  const tm = lower.match(/at (\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
-  if (tm && r.cadence) {
-    const hr = tm[1];
-    const mn = tm[2] ?? "00";
-    const ap = tm[3] ?? (parseInt(hr, 10) < 8 ? "pm" : "am");
-    r.cadence = r.cadence.replace(/·.*$/, `· ${hr}:${mn} ${ap}`);
-  }
-  if (/deep|thorough|long|full|in.?depth|planner/.test(lower)) r.depth = t`Deep · everything that matters`;
-  else if (/short|tight|brief|essential|quick/.test(lower)) r.depth = t`Tight · 3–5 picks`;
-  else if (/standard|regular|normal/.test(lower)) r.depth = t`Standard · 8–12 picks`;
-  if (/english.?friendly|in english|english/.test(lower)) r.language = t`English (Polish translated)`;
-  if (/weather|dress|rain|outdoor|kids|stroller/.test(lower))
-    r.weather = t`Always lead with weather + dress code`;
-  if (/primary source|original source|source.?first|cite/.test(lower))
-    r.sources = t`Primary sources first, opinion labelled`;
-  if (/skip nightlife|no nightlife|kid.?friendly|no adult/.test(lower))
-    r.skip = t`Skip nightlife, adult-only`;
-  return r;
+function depthLabel(depth: BriefDraft["depth"], t: TFn): string {
+  if (depth === "BRIEF") return t`Tight · 3–5 picks`;
+  if (depth === "DEEP") return t`Deep · everything that matters`;
+  if (depth === "STANDARD") return t`Standard · 8–12 picks`;
+  return "";
 }
 
-function deriveTitle(brief: string, _rules: Rules, t: TFn): string {
-  const trimmedBrief = brief.trim();
-  if (!trimmedBrief) return t`Untitled beat`;
-  // first sentence, capitalised
-  const first = trimmedBrief.split(/[.!?\n]/)[0].trim();
-  const trimmed = first.length > 80 ? first.slice(0, 77) + "…" : first;
+const DAY_NAMES = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+function cadenceLabel(draft: BriefDraft, t: TFn): string {
+  if (draft.cadenceType === "ON_DEMAND") return t`On demand`;
+  if (draft.cadenceType !== "TIME_BASED" || !draft.cronExpression) return "";
+  const parts = draft.cronExpression.trim().split(/\s+/);
+  if (parts.length < 5) return draft.cronExpression;
+  const [min, hour, dom, mon, dow] = parts;
+  const mm = /^\d+$/.test(min) ? String(min).padStart(2, "0") : min;
+  const hh = /^\d+$/.test(hour) ? String(hour).padStart(2, "0") : hour;
+  const time = `${hh}:${mm}`;
+  if (dow !== "*" && dom === "*" && mon === "*") {
+    if (/^\d$/.test(dow)) return t`Weekly · ${DAY_NAMES[Number(dow)]} ${time}`;
+    if (dow === "1-5") return t`Weekdays · ${time}`;
+    if (dow === "0,6" || dow === "6,0") return t`Weekends · ${time}`;
+    return `${dow} · ${time}`;
+  }
+  if (dom === "*" && mon === "*" && dow === "*") return t`Daily · ${time}`;
+  return draft.cronExpression;
+}
+
+function languageLabel(code: string | null): string {
+  if (!code) return "";
+  const c = code.toLowerCase();
+  const NAMES: Record<string, string> = {
+    en: "English",
+    pl: "Polish",
+    de: "German",
+    fr: "French",
+    es: "Spanish",
+    it: "Italian",
+    nl: "Dutch",
+    pt: "Portuguese",
+    cs: "Czech",
+    sk: "Slovak",
+    uk: "Ukrainian",
+  };
+  return NAMES[c] ?? code.toUpperCase();
+}
+
+function deriveTitle(draft: BriefDraft, fallback: string, t: TFn): string {
+  const candidate = draft.title?.trim() || draft.topic?.trim() || fallback.trim();
+  if (!candidate) return t`Untitled beat`;
+  const first = candidate.split(/[.!?\n]/)[0].trim();
+  const trimmed = first.length > 80 ? `${first.slice(0, 77)}…` : first;
   return trimmed.replace(/^./, (c) => c.toUpperCase());
 }
 
@@ -75,96 +109,63 @@ export function NewBeatPage() {
     t`Climbing trips, weekend Europe`,
   ];
 
-  const SUGG_CADENCE = [
-    t`Friday at 5pm, standard read`,
-    t`Every morning, tight briefing`,
-    t`Only when something big is on`,
-  ];
-
-  const SUGG_FLAGS = [
-    t`Always weather + dress code`,
-    t`Skip nightlife and adult-only`,
-    t`Cite 2+ primary sources`,
-  ];
-
-  const RULE_LABELS: Record<keyof Rules, string> = {
-    cadence: t`Cadence`,
-    depth: t`Depth`,
-    language: t`Language`,
-    weather: t`Always with`,
-    sources: t`Sourcing`,
-    skip: t`Skip`,
-  };
-
-  const [seed, setSeed] = useState("");
-  const [turns, setTurns] = useState<Turn[]>([]);
-  const [rules, setRules] = useState<Rules>({});
-  const [asked, setAsked] = useState<string[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [draft, setDraft] = useState<BriefDraft>(EMPTY_DRAFT);
+  const [complete, setComplete] = useState(false);
   const [composer, setComposer] = useState("");
-  const [done, setDone] = useState(false);
+  const [pending, setPending] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const seedHandledRef = useRef(false);
   const endRef = useRef<HTMLDivElement | null>(null);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Pull seed from sessionStorage (set by LandingPage / DashboardPage chips)
+  async function exchange(nextMessages: ChatMessage[]) {
+    setPending(true);
+    setError(null);
+    try {
+      const res = await chatBeatBrief({
+        messages: nextMessages,
+        locale: i18n.locale || "en",
+      });
+      setMessages([
+        ...nextMessages,
+        { role: "assistant", content: res.reply },
+      ]);
+      setDraft(res.draft);
+      setComplete(Boolean(res.complete));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg);
+    } finally {
+      setPending(false);
+    }
+  }
+
   useEffect(() => {
+    if (seedHandledRef.current) return;
     let initial = "";
     try {
-      const s = sessionStorage.getItem("pb.newBeatSeed");
+      const s = localStorage.getItem("pb.newBeatSeed");
       if (s) {
-        initial = s;
-        sessionStorage.removeItem("pb.newBeatSeed");
+        initial = s.trim();
+        localStorage.removeItem("pb.newBeatSeed");
       }
     } catch {
       // ignore
     }
-    setSeed(initial);
-  }, []);
-
-  function agentReply(rulesNow: Rules, askedNow: string[]): Omit<Turn, "who"> | null {
-    if (!askedNow.includes("cadence_depth")) {
-      return {
-        text: t`Got it. Two things I'd love your call on — when should I send, and how much do you want each time? Say it however feels natural.`,
-        sugg: SUGG_CADENCE,
-        ask: "cadence_depth",
-      };
-    }
-    if (!askedNow.includes("flags")) {
-      const cad = rulesNow.cadence ?? t`your schedule`;
-      const dep = (rulesNow.depth ?? t`a standard read`).toLowerCase();
-      return {
-        text: t`${cad}, ${dep}. Last thing — should I always lead with weather and what to wear? And anything you'd like me to always skip?`,
-        sugg: SUGG_FLAGS,
-        ask: "flags",
-      };
-    }
-    return null;
-  }
-
-  // Seed first exchange when seed value resolves
-  useEffect(() => {
-    if (turns.length > 0) return;
-    const first = seed.trim();
-    if (!first) return;
-    const r = parseRules(first, t);
-    setRules(r);
-    setTurns([{ who: "me", text: first }]);
-    const timeoutId = window.setTimeout(() => {
-      const a = agentReply(r, []);
-      if (a) {
-        setTurns((prev) => [...prev, { who: "ed", text: a.text, sugg: a.sugg, ask: a.ask }]);
-        if (a.ask) setAsked((k) => [...k, a.ask!]);
-      }
-    }, 450);
-    return () => window.clearTimeout(timeoutId);
+    if (!initial) return;
+    seedHandledRef.current = true;
+    const seedMessages: ChatMessage[] = [{ role: "user", content: initial }];
+    setMessages(seedMessages);
+    void exchange(seedMessages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seed]);
+  }, []);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [turns, done]);
+  }, [messages, complete, pending]);
 
   useEffect(() => {
     const el = taRef.current;
@@ -175,29 +176,19 @@ export function NewBeatPage() {
 
   function send(text: string) {
     const trimmed = text.trim();
-    if (!trimmed) return;
-    if (turns.length === 0) {
-      // First turn — establish the seed
-      setSeed(trimmed);
-      return;
-    }
-    const merged: Rules = { ...rules, ...parseRules(trimmed, t) };
-    setRules(merged);
-    setTurns((prev) => [...prev, { who: "me", text: trimmed }]);
+    if (!trimmed || pending) return;
+    const next: ChatMessage[] = [...messages, { role: "user", content: trimmed }];
+    setMessages(next);
     setComposer("");
-    window.setTimeout(() => {
-      const a = agentReply(merged, asked);
-      if (a) {
-        setTurns((prev) => [...prev, { who: "ed", text: a.text, sugg: a.sugg, ask: a.ask }]);
-        if (a.ask) setAsked((k) => [...k, a.ask!]);
-      } else {
-        setTurns((prev) => [
-          ...prev,
-          { who: "ed", text: t`Done. Your beat is ready — I'll start reading and send the first issue on schedule.` },
-        ]);
-        setDone(true);
-      }
-    }, 500);
+    void exchange(next);
+  }
+
+  function pickStarter(seed: string) {
+    if (pending || messages.length > 0) return;
+    seedHandledRef.current = true;
+    const seedMessages: ChatMessage[] = [{ role: "user", content: seed }];
+    setMessages(seedMessages);
+    void exchange(seedMessages);
   }
 
   function onKey(e: KeyboardEvent<HTMLTextAreaElement>) {
@@ -209,18 +200,33 @@ export function NewBeatPage() {
 
   async function fileBeat() {
     setError(null);
-    const brief = (seed || turns.find((tn) => tn.who === "me")?.text || "").trim();
+    const firstUser = messages.find((m) => m.role === "user")?.content ?? "";
+    const brief = (draft.topic?.trim() || firstUser).trim();
     if (brief.length < 4) {
       setError(t`Tell me a bit more about the beat first.`);
+      return;
+    }
+    if (!draft.cadenceType) {
+      setError(t`We still need to settle the schedule.`);
+      return;
+    }
+    if (draft.cadenceType === "TIME_BASED" && !draft.cronExpression) {
+      setError(t`We still need to settle the schedule.`);
       return;
     }
     setSubmitting(true);
     try {
       const { beatId } = await createBeat({
         brief,
-        cadenceType: DEFAULT_CADENCE,
-        cronExpression: DEFAULT_CRON,
-        outputLanguage: i18n.locale || "en",
+        title: draft.title?.trim() || undefined,
+        cadenceType: draft.cadenceType,
+        cronExpression:
+          draft.cadenceType === "TIME_BASED"
+            ? (draft.cronExpression ?? undefined)
+            : undefined,
+        timezone: draft.timezone?.trim() || undefined,
+        depth: draft.depth ?? undefined,
+        outputLanguage: draft.outputLanguage?.trim() || i18n.locale || "en",
       });
       navigate(`/beats/${beatId}`);
     } catch (err) {
@@ -230,14 +236,27 @@ export function NewBeatPage() {
     }
   }
 
-  const filled = (Object.entries(rules) as [keyof Rules, string | undefined][]).filter(
-    ([, v]) => Boolean(v),
+  const isEmpty = messages.length === 0;
+  const briefTitle = deriveTitle(
+    draft,
+    messages.find((m) => m.role === "user")?.content ?? "",
+    t,
   );
-  const showInlineRules = turns.length >= 2 && !done && filled.length > 0;
-  const briefTitle = deriveTitle(seed || turns.find((tn) => tn.who === "me")?.text || "", rules, t);
+  const cadenceText = cadenceLabel(draft, t);
+  const depthText = depthLabel(draft.depth, t);
+  const languageText = languageLabel(draft.outputLanguage);
 
-  // Empty state — show starter chips if no seed yet
-  const isEmpty = turns.length === 0;
+  const inlineRules: { key: string; label: string; value: string }[] = [];
+  if (cadenceText) inlineRules.push({ key: "cadence", label: t`Cadence`, value: cadenceText });
+  if (depthText) inlineRules.push({ key: "depth", label: t`Depth`, value: depthText });
+  if (languageText) inlineRules.push({ key: "language", label: t`Language`, value: languageText });
+  if (draft.timezone && draft.cadenceType === "TIME_BASED")
+    inlineRules.push({ key: "tz", label: t`Timezone`, value: draft.timezone });
+  draft.rules.slice(0, 4).forEach((r, i) =>
+    inlineRules.push({ key: `r${i}`, label: t`Rule`, value: r }),
+  );
+
+  const showInlineRules = !complete && inlineRules.length > 0 && messages.length >= 2;
 
   return (
     <AppShell>
@@ -265,7 +284,8 @@ export function NewBeatPage() {
                 key={s}
                 type="button"
                 className="hero-chip"
-                onClick={() => setSeed(s)}
+                onClick={() => pickStarter(s)}
+                disabled={pending}
               >
                 {s}
               </button>
@@ -274,39 +294,33 @@ export function NewBeatPage() {
         ) : null}
 
         <div className="turns">
-          {turns.map((turn, i) => (
+          {messages.map((turn, i) => (
             <Fragment key={i}>
-              <div className={`turn ${turn.who}`}>
+              <div className={`turn ${turn.role === "user" ? "me" : "ed"}`}>
                 <div className="who" aria-hidden>
-                  {turn.who === "me" ? "M" : "P"}
+                  {turn.role === "user" ? "M" : "P"}
                 </div>
-                <div className="bub">{turn.text}</div>
+                <div className="bub">{turn.content}</div>
               </div>
-              {turn.who === "ed" && turn.sugg && i === turns.length - 1 && !done ? (
-                <div className="suggests">
-                  <span className="label"><Trans>or pick one —</Trans></span>
-                  {turn.sugg.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      className="qa"
-                      onClick={() => send(s)}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
             </Fragment>
           ))}
+
+          {pending ? (
+            <div className="turn ed">
+              <div className="who" aria-hidden>P</div>
+              <div className="bub" style={{ opacity: 0.6 }}>
+                <Trans>Thinking…</Trans>
+              </div>
+            </div>
+          ) : null}
 
           {showInlineRules ? (
             <div className="rules-inline">
               <span className="label"><Trans>Pencil notes —</Trans></span>
-              {filled.map(([k, v]) => (
-                <div key={k} className="rule-chip">
-                  <span className="k">{RULE_LABELS[k]}:</span>
-                  <span>{v}</span>
+              {inlineRules.map((r) => (
+                <div key={r.key} className="rule-chip">
+                  <span className="k">{r.label}:</span>
+                  <span>{r.value}</span>
                 </div>
               ))}
             </div>
@@ -315,7 +329,13 @@ export function NewBeatPage() {
           <div ref={endRef} />
         </div>
 
-        {!done ? (
+        {error && !complete ? (
+          <div className="editorial-error" style={{ marginBottom: 12 }}>
+            {error}
+          </div>
+        ) : null}
+
+        {!complete ? (
           <div className="composer-box-merged">
             <textarea
               ref={taRef}
@@ -328,19 +348,20 @@ export function NewBeatPage() {
               value={composer}
               onChange={(e) => setComposer(e.target.value)}
               onKeyDown={onKey}
+              disabled={pending}
             />
             <button
               type="button"
               className={`send ${composer.trim() ? "ready" : ""}`}
               onClick={() => send(composer)}
-              disabled={!composer.trim()}
+              disabled={!composer.trim() || pending}
             >
               <Trans>Send</Trans> <span aria-hidden>↵</span>
             </button>
           </div>
         ) : null}
 
-        {done ? (
+        {complete ? (
           <div className="brief-card">
             <div className="brief-head">
               <span className="lbl"><Trans>✦ Your brief, filed</Trans></span>
@@ -351,38 +372,30 @@ export function NewBeatPage() {
               <div className="brief-rows">
                 <div className="brief-row">
                   <div className="k"><Trans>Topic</Trans></div>
-                  <div className="v">{seed || briefTitle}</div>
+                  <div className="v">{draft.topic ?? briefTitle}</div>
                 </div>
                 <div className="brief-row">
                   <div className="k"><Trans>Cadence</Trans></div>
-                  <div className="v">{rules.cadence ?? t`Daily · 7 am`}</div>
+                  <div className="v">{cadenceText || t`Daily · 07:00`}</div>
                 </div>
                 <div className="brief-row">
                   <div className="k"><Trans>Depth</Trans></div>
-                  <div className="v">{rules.depth ?? t`Standard · 8–12 picks`}</div>
+                  <div className="v">{depthText || t`Standard · 8–12 picks`}</div>
                 </div>
-                {rules.language ? (
+                <div className="brief-row">
+                  <div className="k"><Trans>Language</Trans></div>
+                  <div className="v">{languageText || (i18n.locale || "en").toUpperCase()}</div>
+                </div>
+                {draft.timezone && draft.cadenceType === "TIME_BASED" ? (
                   <div className="brief-row">
-                    <div className="k"><Trans>Language</Trans></div>
-                    <div className="v">{rules.language}</div>
+                    <div className="k"><Trans>Timezone</Trans></div>
+                    <div className="v">{draft.timezone}</div>
                   </div>
                 ) : null}
-                {rules.weather ? (
+                {draft.rules.length > 0 ? (
                   <div className="brief-row">
-                    <div className="k"><Trans>Always with</Trans></div>
-                    <div className="v">{rules.weather}</div>
-                  </div>
-                ) : null}
-                {rules.skip ? (
-                  <div className="brief-row">
-                    <div className="k"><Trans>Skip</Trans></div>
-                    <div className="v">{rules.skip}</div>
-                  </div>
-                ) : null}
-                {rules.sources ? (
-                  <div className="brief-row">
-                    <div className="k"><Trans>Sourcing</Trans></div>
-                    <div className="v">{rules.sources}</div>
+                    <div className="k"><Trans>Rules</Trans></div>
+                    <div className="v">{draft.rules.join(" · ")}</div>
                   </div>
                 ) : null}
               </div>
@@ -394,16 +407,12 @@ export function NewBeatPage() {
             </div>
             <div className="brief-foot">
               <span className="spacer-msg">
-                <Trans>
-                  First issue arrives {(rules.cadence ?? t`soon`).replace(/^Every /, "")}
-                </Trans>
+                <Trans>First issue arrives on schedule.</Trans>
               </span>
               <button
                 type="button"
                 className="pb-btn pb-btn-ghost"
-                onClick={() => {
-                  setDone(false);
-                }}
+                onClick={() => setComplete(false)}
                 disabled={submitting}
               >
                 <Trans>Keep refining</Trans>

@@ -51,7 +51,7 @@ export function LandingPage() {
     const trimmed = seed.trim();
     if (trimmed) {
       try {
-        sessionStorage.setItem("pb.newBeatSeed", trimmed);
+        localStorage.setItem("pb.newBeatSeed", trimmed);
       } catch {
         // ignore
       }

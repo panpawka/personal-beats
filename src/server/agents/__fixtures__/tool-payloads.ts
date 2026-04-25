@@ -37,6 +37,19 @@ export const scoutCompleteValid = {
   notes: "17 verified sources across press, official, community categories.",
 };
 
+// Sparse-coverage payload: agent self-graded "healthy" but distinct_domains < 5
+// must trip the drive.ts threshold override and persist as "sparse". Schema
+// itself accepts the payload — the override is enforced at handleTool.
+export const scoutCompleteSparse = {
+  beat_slug: "wroclaw-daily",
+  source_count: 6,
+  distinct_domains: 2,
+  categories_covered: ["press"] as const,
+  recipes_used: ["google_news_rss"],
+  coverage_assessment: "healthy" as const,
+  notes: "Only two press domains responded; community recipes pending.",
+};
+
 export const scoutCompleteInvalid = {
   beat_slug: "wroclaw-daily",
   source_count: -1, // negative
@@ -58,6 +71,9 @@ export const publishIssueValid = {
       secondary_source_urls: ["https://gazetawroclawska.pl/2026/04/24/tramwaj"],
       fingerprint: "rada-tramwaj-2026-04-24",
       tags: ["transport", "rada-miejska"],
+      single_source: false,
+      verification_notes:
+        "Cross-checked agenda PDF on wroclaw.pl against gazetawroclawska.pl coverage.",
     },
   ],
   coverage_note: "Normal news day.",

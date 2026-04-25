@@ -81,9 +81,13 @@ export type SourceCategory = (typeof SourceCategoryValues)[number];
 export const ScoutCompleteSchema = z.object({
   beat_slug: z.string(),
   source_count: z.number().int().nonnegative(),
-  distinct_domains: z.number().int().nonnegative(),
-  categories_covered: z.array(z.enum(SourceCategoryValues)).default([]),
-  recipes_used: z.array(z.string()).default([]),
+  // New diversity fields are required in the CMA tool input_schema (so the
+  // model emits them) but optional in Zod so in-flight sessions on the old
+  // agent version drain gracefully. Drive.ts defaults missing values to
+  // safe-sparse, so a payload without distinct_domains trips the override.
+  distinct_domains: z.number().int().nonnegative().optional(),
+  categories_covered: z.array(z.enum(SourceCategoryValues)).optional(),
+  recipes_used: z.array(z.string()).optional(),
   coverage_assessment: z.enum(["healthy", "thin", "sparse"]),
   thinness_reason: z.string().optional(),
   notes: z.string(),

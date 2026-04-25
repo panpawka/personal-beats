@@ -18,6 +18,7 @@ import {
   publishIssueInvalid,
   publishIssueValid,
   scoutCompleteInvalid,
+  scoutCompleteSparse,
   scoutCompleteValid,
 } from "../src/server/agents/__fixtures__/tool-payloads.js";
 
@@ -57,6 +58,12 @@ const cases: Case[] = [
     name: "scout_complete valid",
     parse: (x) => ScoutCompleteSchema.safeParse(x),
     input: scoutCompleteValid,
+    expect: "pass",
+  },
+  {
+    name: "scout_complete sparse (Zod accepts; drive.ts override enforces)",
+    parse: (x) => ScoutCompleteSchema.safeParse(x),
+    input: scoutCompleteSparse,
     expect: "pass",
   },
   {

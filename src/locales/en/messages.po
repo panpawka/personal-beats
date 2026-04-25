@@ -13,52 +13,48 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/beat/ActivePanel.tsx:215
+#: src/pages/beat/ActivePanel.tsx:202
 msgid " Resume the beat or run it on demand to produce one."
 msgstr " Resume the beat or run it on demand to produce one."
 
-#: src/pages/beat/ActivePanel.tsx:214
+#: src/pages/beat/ActivePanel.tsx:201
 msgid " The first one will land on the schedule above."
 msgstr " The first one will land on the schedule above."
 
-#: src/pages/beat/ActivePanel.tsx:113
+#: src/pages/beat/ActivePanel.tsx:100
 msgid "· est. {createdAtLabel}"
 msgstr "· est. {createdAtLabel}"
 
-#: src/pages/beat/ActivePanel.tsx:108
+#: src/pages/beat/ActivePanel.tsx:95
 msgid "· Next run: {nextRun}"
 msgstr "· Next run: {nextRun}"
 
 #. placeholder {0}: issue.items.length
-#: src/pages/IssueDetailPage.tsx:165
+#: src/pages/IssueDetailPage.tsx:140
 msgid "{0, plural, one {# story} other {# stories}}"
 msgstr "{0, plural, one {# story} other {# stories}}"
 
-#. placeholder {0}: beat?.title ? beat.title : t`Personal Newsroom`
-#: src/pages/IssueDetailPage.tsx:156
+#. placeholder {0}: beat?.title ? beat.title : t`Personal Beats`
+#: src/pages/IssueDetailPage.tsx:131
 msgid "{0} · Vol. I"
 msgstr "{0} · Vol. I"
 
 #. placeholder {0}: buckets.active.length
 #. placeholder {1}: buckets.planned.length + buckets.designing.length
 #. placeholder {2}: buckets.paused.length
-#: src/pages/DashboardPage.tsx:234
+#: src/pages/DashboardPage.tsx:245
 msgid "{0} running · {1} planned · {2} paused"
 msgstr "{0} running · {1} planned · {2} paused"
 
-#: src/pages/NewBeatPage.tsx:138
-msgid "{cad}, {dep}. Last thing — should I always lead with weather and what to wear? And anything you'd like me to always skip?"
-msgstr "{cad}, {dep}. Last thing — should I always lead with weather and what to wear? And anything you'd like me to always skip?"
-
-#: src/pages/DashboardPage.tsx:348
+#: src/pages/DashboardPage.tsx:359
 msgid "{issues} issues · "
 msgstr "{issues} issues · "
 
-#: src/pages/beat/ActivePanel.tsx:301
+#: src/pages/beat/ActivePanel.tsx:288
 msgid "{sourceTotal, plural, one {# source tracked} other {# sources tracked}}"
 msgstr "{sourceTotal, plural, one {# source tracked} other {# sources tracked}}"
 
-#: src/pages/beat/ActivePanel.tsx:289
+#: src/pages/beat/ActivePanel.tsx:276
 msgid "{sourceTotal, plural, one {Tracking # source.} other {Tracking # sources.}}"
 msgstr "{sourceTotal, plural, one {Tracking # source.} other {Tracking # sources.}}"
 
@@ -66,12 +62,12 @@ msgstr "{sourceTotal, plural, one {Tracking # source.} other {Tracking # sources
 msgid "© MMXXVI · Lemonode sp. z o.o."
 msgstr "© MMXXVI · Lemonode sp. z o.o."
 
-#: src/pages/DashboardPage.tsx:279
-#: src/pages/DashboardPage.tsx:374
+#: src/pages/DashboardPage.tsx:290
+#: src/pages/DashboardPage.tsx:385
 msgid "+ Begin designing"
 msgstr "+ Begin designing"
 
-#: src/pages/NewBeatPage.tsx:346
+#: src/pages/NewBeatPage.tsx:367
 msgid "✦ Your brief, filed"
 msgstr "✦ Your brief, filed"
 
@@ -88,34 +84,26 @@ msgstr "A personal newsroom"
 msgid "A personal newsroom, yours alone"
 msgstr "A personal newsroom, yours alone"
 
-#: src/pages/NewBeatPage.tsx:136
-msgid "a standard read"
-msgstr "a standard read"
-
 #: src/auth/utils/errorMessages.ts:13
 msgid "A user with this email already exists"
 msgstr "A user with this email already exists"
 
-#: src/pages/beat/ActivePanel.tsx:101
+#: src/pages/beat/ActivePanel.tsx:88
 msgid "Active"
 msgstr "Active"
 
-#: src/pages/DashboardPage.tsx:189
+#: src/pages/DashboardPage.tsx:200
 msgid "Active beats"
 msgstr "Active beats"
 
-#: src/pages/IssueDetailPage.tsx:236
+#: src/pages/IssueDetailPage.tsx:211
 msgid "Adjust this beat"
 msgstr "Adjust this beat"
 
 #: src/pages/LandingPage.tsx:17
-#: src/pages/NewBeatPage.tsx:73
+#: src/pages/NewBeatPage.tsx:107
 msgid "AI agent frameworks"
 msgstr "AI agent frameworks"
-
-#: src/pages/beat/ActivePanel.tsx:92
-msgid "All beats"
-msgstr "All beats"
 
 #: src/auth/email-and-pass/EmailVerificationPage.tsx:19
 msgid "All set? <0>Sign in</0>"
@@ -130,37 +118,23 @@ msgstr "Already a reader → log in"
 msgid "Already have an account? <0>Sign in</0>"
 msgstr "Already have an account? <0>Sign in</0>"
 
-#: src/pages/NewBeatPage.tsx:85
-msgid "Always weather + dress code"
-msgstr "Always weather + dress code"
-
-#: src/pages/NewBeatPage.tsx:94
-#: src/pages/NewBeatPage.tsx:372
-msgid "Always with"
-msgstr "Always with"
-
 #. placeholder {0}: questions[0]
-#: src/pages/beat/DesignerPanel.tsx:287
+#: src/pages/beat/DesignerPanel.tsx:283
 msgid "Answer: {0}"
 msgstr "Answer: {0}"
 
-#: src/pages/beat/ActivePanel.tsx:308
+#: src/pages/beat/ActivePanel.tsx:295
 msgid "awaiting first issue"
 msgstr "awaiting first issue"
 
-#: src/pages/beat/DesignerPanel.tsx:212
+#: src/pages/beat/DesignerPanel.tsx:208
 msgid "awaiting spec"
 msgstr "awaiting spec"
 
-#: src/pages/IssueDetailPage.tsx:96
+#: src/pages/IssueDetailPage.tsx:94
 msgid "Back"
 msgstr "Back"
 
-#: src/pages/IssueDetailPage.tsx:121
-msgid "Back to beat"
-msgstr "Back to beat"
-
-#: src/pages/beat/DesignerPanel.tsx:363
 #: src/pages/BeatDetailPage.tsx:67
 msgid "Back to beats"
 msgstr "Back to beats"
@@ -174,7 +148,7 @@ msgstr "Back to sign in"
 msgid "Back to your inbox of opinions and your agent's replies."
 msgstr "Back to your inbox of opinions and your agent's replies."
 
-#: src/layout/Rail.tsx:32
+#: src/layout/Rail.tsx:27
 msgid "Beat"
 msgstr "Beat"
 
@@ -182,7 +156,7 @@ msgstr "Beat"
 msgid "Beat brief"
 msgstr "Beat brief"
 
-#: src/pages/beat/DesignerPanel.tsx:195
+#: src/pages/beat/DesignerPanel.tsx:191
 msgid "Beat draft · {phase}"
 msgstr "Beat draft · {phase}"
 
@@ -198,13 +172,13 @@ msgstr "Begin"
 msgid "Begin <0>→</0>"
 msgstr "Begin <0>→</0>"
 
-#: src/pages/beat/DesignerPanel.tsx:161
+#: src/pages/beat/DesignerPanel.tsx:157
 msgid "Brief completeness"
 msgstr "Brief completeness"
 
-#: src/pages/beat/DesignerPanel.tsx:216
-#: src/pages/NewBeatPage.tsx:91
-#: src/pages/NewBeatPage.tsx:357
+#: src/pages/beat/DesignerPanel.tsx:212
+#: src/pages/NewBeatPage.tsx:250
+#: src/pages/NewBeatPage.tsx:378
 msgid "Cadence"
 msgstr "Cadence"
 
@@ -217,11 +191,7 @@ msgstr "Check your email"
 msgid "Choose a password you only use here — minimum 8 characters."
 msgstr "Choose a password you only use here — minimum 8 characters."
 
-#: src/pages/NewBeatPage.tsx:87
-msgid "Cite 2+ primary sources"
-msgstr "Cite 2+ primary sources"
-
-#: src/pages/beat/ActivePanel.tsx:262
+#: src/pages/beat/ActivePanel.tsx:249
 msgid "Cite primary sources before commentary."
 msgstr "Cite primary sources before commentary."
 
@@ -229,13 +199,9 @@ msgstr "Cite primary sources before commentary."
 msgid "Click the button below to finish verification."
 msgstr "Click the button below to finish verification."
 
-#: src/layout/Rail.tsx:94
-msgid "click to sign out"
-msgstr "click to sign out"
-
-#: src/pages/DashboardPage.tsx:77
+#: src/pages/DashboardPage.tsx:78
 #: src/pages/LandingPage.tsx:19
-#: src/pages/NewBeatPage.tsx:75
+#: src/pages/NewBeatPage.tsx:109
 msgid "Climbing trips, weekend Europe"
 msgstr "Climbing trips, weekend Europe"
 
@@ -248,7 +214,7 @@ msgstr "Confirming <0>you</0>."
 msgid "Connection error. Check your internet connection."
 msgstr "Connection error. Check your internet connection."
 
-#: src/pages/beat/DesignerPanel.tsx:389
+#: src/pages/beat/DesignerPanel.tsx:363
 msgid "Connection interrupted — still listening for the designer."
 msgstr "Connection interrupted — still listening for the designer."
 
@@ -256,12 +222,12 @@ msgstr "Connection interrupted — still listening for the designer."
 msgid "Continuous"
 msgstr "Continuous"
 
-#: src/pages/DashboardPage.tsx:167
+#: src/pages/DashboardPage.tsx:178
 msgid "Couldn't load your beats. Try again in a moment."
 msgstr "Couldn't load your beats. Try again in a moment."
 
 #. placeholder {0}: beat.coverageAssessment
-#: src/pages/beat/ActivePanel.tsx:252
+#: src/pages/beat/ActivePanel.tsx:239
 msgid "Coverage looks {0} so far."
 msgstr "Coverage looks {0} so far."
 
@@ -274,28 +240,28 @@ msgid "Creating account…"
 msgstr "Creating account…"
 
 #. placeholder {0}: beat.cronExpression
-#: src/pages/beat/DesignerPanel.tsx:221
+#: src/pages/beat/DesignerPanel.tsx:217
 msgid "cron: {0}"
 msgstr "cron: {0}"
 
-#: src/pages/NewBeatPage.tsx:358
-msgid "Daily · 7 am"
-msgstr "Daily · 7 am"
+#: src/pages/NewBeatPage.tsx:379
+msgid "Daily · 07:00"
+msgstr "Daily · 07:00"
 
 #: src/shared/cadence.ts:49
 msgid "Daily {time}{tz}"
 msgstr "Daily {time}{tz}"
 
-#: src/pages/beat/ActivePanel.tsx:56
-#: src/pages/DashboardPage.tsx:299
+#: src/pages/beat/ActivePanel.tsx:54
+#: src/pages/DashboardPage.tsx:310
 msgid "Deep · everything that matters"
 msgstr "Deep · everything that matters"
 
-#: src/pages/beat/ActivePanel.tsx:149
+#: src/pages/beat/ActivePanel.tsx:136
 msgid "Delete"
 msgstr "Delete"
 
-#: src/pages/beat/ActivePanel.tsx:146
+#: src/pages/beat/ActivePanel.tsx:133
 msgid "Delete beat"
 msgstr "Delete beat"
 
@@ -303,66 +269,58 @@ msgstr "Delete beat"
 msgid "Delete this beat? This cannot be undone."
 msgstr "Delete this beat? This cannot be undone."
 
-#: src/pages/beat/ActivePanel.tsx:280
+#: src/pages/beat/ActivePanel.tsx:267
 msgid "Delivered to {userEmail}"
 msgstr "Delivered to {userEmail}"
 
-#: src/pages/IssueDetailPage.tsx:143
+#: src/pages/IssueDetailPage.tsx:118
 msgid "Delivery pending — email bounced. You can still read the issue below."
 msgstr "Delivery pending — email bounced. You can still read the issue below."
 
-#: src/pages/beat/DesignerPanel.tsx:224
-#: src/pages/NewBeatPage.tsx:92
-#: src/pages/NewBeatPage.tsx:361
+#: src/pages/beat/DesignerPanel.tsx:220
+#: src/pages/NewBeatPage.tsx:251
+#: src/pages/NewBeatPage.tsx:382
 msgid "Depth"
 msgstr "Depth"
 
-#: src/pages/beat/DesignerPanel.tsx:352
+#: src/pages/beat/DesignerPanel.tsx:343
 msgid "Designer"
 msgstr "Designer"
 
-#: src/pages/beat/DesignerPanel.tsx:50
+#: src/pages/beat/DesignerPanel.tsx:46
 msgid "Designer · getting started"
 msgstr "Designer · getting started"
 
-#: src/pages/beat/DesignerPanel.tsx:58
+#: src/pages/beat/DesignerPanel.tsx:54
 msgid "Designer · one question"
 msgstr "Designer · one question"
 
-#: src/pages/beat/DesignerPanel.tsx:54
+#: src/pages/beat/DesignerPanel.tsx:50
 msgid "Designer · working"
 msgstr "Designer · working"
 
-#: src/pages/beat/DesignerPanel.tsx:433
+#: src/pages/beat/DesignerPanel.tsx:407
 msgid "Designer at work — reply field appears when you're needed."
 msgstr "Designer at work — reply field appears when you're needed."
 
-#: src/pages/DashboardPage.tsx:221
+#: src/pages/DashboardPage.tsx:232
 msgid "Designer is asking a question."
 msgstr "Designer is asking a question."
 
-#: src/pages/DashboardPage.tsx:311
+#: src/pages/DashboardPage.tsx:322
 msgid "Designing now"
 msgstr "Designing now"
-
-#: src/pages/beat/DesignerPanel.tsx:371
-msgid "Discard"
-msgstr "Discard"
 
 #: src/auth/LoginPage.tsx:20
 msgid "Don't have an account yet? <0>Create one</0>"
 msgstr "Don't have an account yet? <0>Create one</0>"
 
-#: src/pages/NewBeatPage.tsx:196
-msgid "Done. Your beat is ready — I'll start reading and send the first issue on schedule."
-msgstr "Done. Your beat is ready — I'll start reading and send the first issue on schedule."
-
-#: src/pages/NewBeatPage.tsx:347
+#: src/pages/NewBeatPage.tsx:368
 msgid "Draft · Vol. I"
 msgstr "Draft · Vol. I"
 
-#: src/pages/beat/DesignerPanel.tsx:55
-#: src/pages/DashboardPage.tsx:224
+#: src/pages/beat/DesignerPanel.tsx:51
+#: src/pages/DashboardPage.tsx:235
 msgid "Drafting the spec."
 msgstr "Drafting the spec."
 
@@ -370,11 +328,11 @@ msgstr "Drafting the spec."
 msgid "Drop your email and we'll mail a reset link — check your inbox in a moment."
 msgstr "Drop your email and we'll mail a reset link — check your inbox in a moment."
 
-#: src/pages/beat/ActivePanel.tsx:187
+#: src/pages/beat/ActivePanel.tsx:174
 msgid "Editor working — first issue drops in a few minutes."
 msgstr "Editor working — first issue drops in a few minutes."
 
-#: src/pages/IssueDetailPage.tsx:177
+#: src/pages/IssueDetailPage.tsx:152
 msgid "Editor's note"
 msgstr "Editor's note"
 
@@ -396,7 +354,7 @@ msgstr "Email verification"
 msgid "Email verified"
 msgstr "Email verified"
 
-#: src/pages/DashboardPage.tsx:361
+#: src/pages/DashboardPage.tsx:372
 msgid "Empty newsroom"
 msgstr "Empty newsroom"
 
@@ -409,28 +367,23 @@ msgstr "Est. MMXXVI · Vol. I"
 msgid "Every {0}m"
 msgstr "Every {0}m"
 
-#: src/pages/NewBeatPage.tsx:80
-msgid "Every morning, tight briefing"
-msgstr "Every morning, tight briefing"
-
-#: src/pages/NewBeatPage.tsx:417
+#: src/pages/NewBeatPage.tsx:426
 msgid "File this beat →"
 msgstr "File this beat →"
 
-#: src/pages/NewBeatPage.tsx:417
+#: src/pages/NewBeatPage.tsx:426
 msgid "Filing…"
 msgstr "Filing…"
 
-#: src/pages/beat/DesignerPanel.tsx:63
+#: src/pages/beat/DesignerPanel.tsx:59
 msgid "Finding the right sources for this beat."
 msgstr "Finding the right sources for this beat."
 
-#. placeholder {0}: (rules.cadence ?? t`soon`).replace(/^Every /, "")
-#: src/pages/NewBeatPage.tsx:397
-msgid "First issue arrives {0}"
-msgstr "First issue arrives {0}"
+#: src/pages/NewBeatPage.tsx:410
+msgid "First issue arrives on schedule."
+msgstr "First issue arrives on schedule."
 
-#: src/pages/DashboardPage.tsx:305
+#: src/pages/DashboardPage.tsx:316
 msgid "First issue: {cad}"
 msgstr "First issue: {cad}"
 
@@ -443,31 +396,23 @@ msgstr "Forgot your password?"
 msgid "Found a personal newsroom"
 msgstr "Found a personal newsroom"
 
-#: src/pages/NewBeatPage.tsx:79
-msgid "Friday at 5pm, standard read"
-msgstr "Friday at 5pm, standard read"
-
-#: src/pages/beat/ActivePanel.tsx:162
+#: src/pages/beat/ActivePanel.tsx:149
 msgid "Generating…"
 msgstr "Generating…"
 
-#: src/pages/DashboardPage.tsx:86
+#: src/pages/DashboardPage.tsx:87
 msgid "Good afternoon"
 msgstr "Good afternoon"
 
-#: src/pages/DashboardPage.tsx:87
+#: src/pages/DashboardPage.tsx:88
 msgid "Good evening"
 msgstr "Good evening"
 
-#: src/pages/DashboardPage.tsx:85
+#: src/pages/DashboardPage.tsx:86
 msgid "Good morning"
 msgstr "Good morning"
 
-#: src/pages/NewBeatPage.tsx:129
-msgid "Got it. Two things I'd love your call on — when should I send, and how much do you want each time? Say it however feels natural."
-msgstr "Got it. Two things I'd love your call on — when should I send, and how much do you want each time? Say it however feels natural."
-
-#: src/layout/Rail.tsx:27
+#: src/layout/Rail.tsx:22
 msgid "Home"
 msgstr "Home"
 
@@ -475,7 +420,7 @@ msgstr "Home"
 msgid "If an account with that address exists, we sent a password reset link."
 msgstr "If an account with that address exists, we sent a password reset link."
 
-#: src/pages/DashboardPage.tsx:80
+#: src/pages/DashboardPage.tsx:81
 msgid "Indie game launches"
 msgstr "Indie game launches"
 
@@ -496,36 +441,32 @@ msgid "Invalid or expired token"
 msgstr "Invalid or expired token"
 
 #: src/pages/LandingPage.tsx:16
-#: src/pages/NewBeatPage.tsx:72
+#: src/pages/NewBeatPage.tsx:106
 msgid "Iran–Israel daily briefing"
 msgstr "Iran–Israel daily briefing"
 
-#: src/layout/Rail.tsx:37
+#: src/layout/Rail.tsx:32
 msgid "Issue"
 msgstr "Issue"
 
-#: src/pages/DashboardPage.tsx:200
+#: src/pages/DashboardPage.tsx:211
 msgid "Issues this week"
 msgstr "Issues this week"
 
-#: src/pages/NewBeatPage.tsx:409
+#: src/pages/NewBeatPage.tsx:418
 msgid "Keep refining"
 msgstr "Keep refining"
 
-#: src/layout/Masthead.tsx:42
-#: src/pages/beat/DesignerPanel.tsx:214
-#: src/pages/NewBeatPage.tsx:93
-#: src/pages/NewBeatPage.tsx:366
+#: src/layout/Masthead.tsx:41
+#: src/pages/beat/DesignerPanel.tsx:210
+#: src/pages/NewBeatPage.tsx:252
+#: src/pages/NewBeatPage.tsx:386
 msgid "Language"
 msgstr "Language"
 
-#: src/pages/beat/ActivePanel.tsx:258
+#: src/pages/beat/ActivePanel.tsx:245
 msgid "Lead with the most actionable item in the issue."
 msgstr "Lead with the most actionable item in the issue."
-
-#: src/pages/beat/ActivePanel.tsx:87
-msgid "Live"
-msgstr "Live"
 
 #: src/pages/LandingPage.tsx:45
 msgid "Loading"
@@ -535,26 +476,30 @@ msgstr "Loading"
 msgid "Loading beat"
 msgstr "Loading beat"
 
-#: src/pages/DashboardPage.tsx:183
+#: src/pages/DashboardPage.tsx:194
 msgid "Loading beats"
 msgstr "Loading beats"
 
-#: src/pages/IssueDetailPage.tsx:76
+#: src/pages/IssueDetailPage.tsx:74
 msgid "Loading issue"
 msgstr "Loading issue"
 
+#: src/layout/Masthead.tsx:98
 #: src/layout/Masthead.tsx:101
-#: src/layout/Masthead.tsx:104
-#: src/layout/Rail.tsx:104
-#: src/layout/Rail.tsx:105
+#: src/layout/Rail.tsx:98
+#: src/layout/Rail.tsx:99
 msgid "Log in"
 msgstr "Log in"
 
-#: src/layout/Rail.tsx:111
+#: src/layout/Rail.tsx:105
 msgid "Login"
 msgstr "Login"
 
-#: src/pages/DashboardPage.tsx:223
+#: src/layout/Rail.tsx:90
+msgid "Logout"
+msgstr "Logout"
+
+#: src/pages/DashboardPage.tsx:234
 msgid "Looking for sources to follow."
 msgstr "Looking for sources to follow."
 
@@ -573,7 +518,7 @@ msgstr "Missing verification token in the link"
 msgid "Monthly · day {dom} {time}{tz}"
 msgstr "Monthly · day {dom} {time}{tz}"
 
-#: src/layout/Rail.tsx:29
+#: src/layout/Rail.tsx:24
 msgid "New"
 msgstr "New"
 
@@ -581,16 +526,16 @@ msgstr "New"
 msgid "New password"
 msgstr "New password"
 
-#: src/pages/beat/ActivePanel.tsx:212
+#: src/pages/beat/ActivePanel.tsx:199
 msgid "No issues delivered yet."
 msgstr "No issues delivered yet."
 
-#: src/pages/beat/DesignerPanel.tsx:229
+#: src/pages/beat/DesignerPanel.tsx:225
 msgid "none yet"
 msgstr "none yet"
 
-#: src/pages/beat/ActivePanel.tsx:80
-#: src/pages/beat/DesignerPanel.tsx:219
+#: src/pages/beat/ActivePanel.tsx:78
+#: src/pages/beat/DesignerPanel.tsx:215
 #: src/shared/cadence.ts:24
 msgid "On demand"
 msgstr "On demand"
@@ -599,11 +544,7 @@ msgstr "On demand"
 msgid "One sentence is enough. We'll ask a couple of follow-ups, then deliver a paper shaped to your life — on your schedule, from sources you trust."
 msgstr "One sentence is enough. We'll ask a couple of follow-ups, then deliver a paper shaped to your life — on your schedule, from sources you trust."
 
-#: src/pages/NewBeatPage.tsx:81
-msgid "Only when something big is on"
-msgstr "Only when something big is on"
-
-#: src/pages/DashboardPage.tsx:351
+#: src/pages/DashboardPage.tsx:362
 msgid "Open →"
 msgstr "Open →"
 
@@ -612,13 +553,9 @@ msgid "Open navigation"
 msgstr "Open navigation"
 
 #: src/pages/LandingPage.tsx:104
-#: src/pages/NewBeatPage.tsx:262
+#: src/pages/NewBeatPage.tsx:281
 msgid "or borrow a starter:"
 msgstr "or borrow a starter:"
-
-#: src/pages/NewBeatPage.tsx:287
-msgid "or pick one —"
-msgstr "or pick one —"
 
 #: src/auth/components/CustomLoginForm.tsx:72
 #: src/auth/components/CustomSignupForm.tsx:93
@@ -648,78 +585,70 @@ msgstr "Password updated"
 msgid "Passwords do not match"
 msgstr "Passwords do not match"
 
-#: src/pages/beat/ActivePanel.tsx:209
+#: src/pages/beat/ActivePanel.tsx:196
 msgid "Past issues"
 msgstr "Past issues"
 
-#: src/pages/beat/ActivePanel.tsx:253
+#: src/pages/beat/ActivePanel.tsx:240
 msgid "Patterns will appear here once a few issues ship."
 msgstr "Patterns will appear here once a few issues ship."
 
-#: src/pages/beat/ActivePanel.tsx:138
+#: src/pages/beat/ActivePanel.tsx:125
 msgid "Pause"
 msgstr "Pause"
 
-#: src/pages/beat/ActivePanel.tsx:87
-#: src/pages/beat/ActivePanel.tsx:103
-#: src/pages/DashboardPage.tsx:304
+#: src/pages/beat/ActivePanel.tsx:90
+#: src/pages/DashboardPage.tsx:315
 msgid "Paused"
 msgstr "Paused"
 
-#: src/pages/NewBeatPage.tsx:305
+#: src/pages/NewBeatPage.tsx:319
 msgid "Pencil notes —"
 msgstr "Pencil notes —"
 
-#: src/layout/Masthead.tsx:93
+#: src/layout/Masthead.tsx:90
 msgid "Personal <0>Beats</0>"
 msgstr "Personal <0>Beats</0>"
 
-#: src/layout/Rail.tsx:58
+#: src/layout/Rail.tsx:47
+#: src/pages/IssueDetailPage.tsx:132
 msgid "Personal Beats"
 msgstr "Personal Beats"
 
-#: src/layout/Rail.tsx:57
+#: src/layout/Rail.tsx:46
 msgid "Personal Beats home"
 msgstr "Personal Beats home"
-
-#: src/pages/IssueDetailPage.tsx:157
-msgid "Personal Newsroom"
-msgstr "Personal Newsroom"
 
 #: src/auth/email-and-pass/PasswordResetPage.tsx:12
 msgid "Pick a <0>new</0> password."
 msgstr "Pick a <0>new</0> password."
 
-#: src/pages/DashboardPage.tsx:196
+#: src/pages/DashboardPage.tsx:207
 msgid "Planned"
 msgstr "Planned"
 
-#: src/pages/DashboardPage.tsx:321
+#: src/pages/DashboardPage.tsx:332
 msgid "Planned · {cad}"
 msgstr "Planned · {cad}"
 
 #: src/pages/LandingPage.tsx:18
-#: src/pages/NewBeatPage.tsx:74
+#: src/pages/NewBeatPage.tsx:108
 msgid "Polish cinema"
 msgstr "Polish cinema"
 
-#: src/pages/DashboardPage.tsx:78
+#: src/pages/DashboardPage.tsx:79
 msgid "Polish kid-lit new releases"
 msgstr "Polish kid-lit new releases"
 
-#: src/pages/IssueDetailPage.tsx:131
-msgid "Print"
-msgstr "Print"
-
-#: src/pages/beat/ActivePanel.tsx:160
+#: src/pages/beat/ActivePanel.tsx:147
 msgid "Queuing…"
 msgstr "Queuing…"
 
-#: src/pages/beat/DesignerPanel.tsx:59
+#: src/pages/beat/DesignerPanel.tsx:55
 msgid "Quick clarification before I file this beat."
 msgstr "Quick clarification before I file this beat."
 
-#: src/pages/DashboardPage.tsx:333
+#: src/pages/DashboardPage.tsx:344
 msgid "Relevance {lvl}/5"
 msgstr "Relevance {lvl}/5"
 
@@ -736,11 +665,11 @@ msgstr "Repeat new password"
 msgid "Repeat password"
 msgstr "Repeat password"
 
-#: src/pages/beat/DesignerPanel.tsx:325
+#: src/pages/beat/DesignerPanel.tsx:321
 msgid "Reply"
 msgstr "Reply"
 
-#: src/pages/NewBeatPage.tsx:326
+#: src/pages/NewBeatPage.tsx:346
 msgid "Reply with whatever feels natural…"
 msgstr "Reply with whatever feels natural…"
 
@@ -748,35 +677,40 @@ msgstr "Reply with whatever feels natural…"
 msgid "Reset password"
 msgstr "Reset password"
 
-#: src/pages/beat/ActivePanel.tsx:127
+#: src/pages/beat/ActivePanel.tsx:114
 msgid "Resume"
 msgstr "Resume"
 
-#: src/pages/beat/DesignerPanel.tsx:51
+#: src/pages/beat/DesignerPanel.tsx:47
 msgid "Reviewing your brief."
 msgstr "Reviewing your brief."
 
-#: src/pages/beat/DesignerPanel.tsx:226
+#: src/pages/NewBeatPage.tsx:256
+msgid "Rule"
+msgstr "Rule"
+
+#: src/pages/beat/DesignerPanel.tsx:222
+#: src/pages/NewBeatPage.tsx:397
 msgid "Rules"
 msgstr "Rules"
 
-#: src/pages/beat/DesignerPanel.tsx:62
+#: src/pages/beat/DesignerPanel.tsx:58
 msgid "Scout · looking for sources"
 msgstr "Scout · looking for sources"
 
-#: src/pages/beat/DesignerPanel.tsx:432
+#: src/pages/beat/DesignerPanel.tsx:406
 msgid "Scouting sources…"
 msgstr "Scouting sources…"
 
-#: src/pages/DashboardPage.tsx:227
+#: src/pages/DashboardPage.tsx:238
 msgid "See progress"
 msgstr "See progress"
 
-#: src/pages/NewBeatPage.tsx:338
+#: src/pages/NewBeatPage.tsx:359
 msgid "Send"
 msgstr "Send"
 
-#: src/pages/beat/ActivePanel.tsx:163
+#: src/pages/beat/ActivePanel.tsx:150
 msgid "Send me one now"
 msgstr "Send me one now"
 
@@ -784,7 +718,7 @@ msgstr "Send me one now"
 msgid "Send reset link →"
 msgstr "Send reset link →"
 
-#: src/pages/beat/DesignerPanel.tsx:325
+#: src/pages/beat/DesignerPanel.tsx:321
 msgid "Sending"
 msgstr "Sending"
 
@@ -792,7 +726,7 @@ msgstr "Sending"
 msgid "Sending…"
 msgstr "Sending…"
 
-#: src/pages/beat/ActivePanel.tsx:200
+#: src/pages/beat/ActivePanel.tsx:187
 msgid "session ↗"
 msgstr "session ↗"
 
@@ -802,7 +736,8 @@ msgstr "session ↗"
 msgid "Sign in →"
 msgstr "Sign in →"
 
-#: src/layout/Rail.tsx:95
+#: src/layout/Rail.tsx:83
+#: src/layout/Rail.tsx:84
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -810,51 +745,29 @@ msgstr "Sign out"
 msgid "signal {safe}/5"
 msgstr "signal {safe}/5"
 
-#: src/layout/Rail.tsx:94
-msgid "signed in"
-msgstr "signed in"
-
 #: src/auth/components/CustomLoginForm.tsx:90
 msgid "Signing in…"
 msgstr "Signing in…"
 
-#: src/pages/NewBeatPage.tsx:96
-#: src/pages/NewBeatPage.tsx:378
-msgid "Skip"
-msgstr "Skip"
-
-#: src/pages/beat/ActivePanel.tsx:272
+#: src/pages/beat/ActivePanel.tsx:259
 msgid "Skip listicle-style filler — go straight to specifics."
 msgstr "Skip listicle-style filler — go straight to specifics."
 
-#: src/pages/NewBeatPage.tsx:86
-msgid "Skip nightlife and adult-only"
-msgstr "Skip nightlife and adult-only"
-
-#: src/pages/NewBeatPage.tsx:398
-msgid "soon"
-msgstr "soon"
-
-#: src/pages/beat/ActivePanel.tsx:295
+#: src/pages/beat/ActivePanel.tsx:282
 msgid "Source list will fill in as issues ship."
 msgstr "Source list will fill in as issues ship."
 
-#: src/pages/beat/ActivePanel.tsx:286
+#: src/pages/beat/ActivePanel.tsx:273
 msgid "Sources I rely on"
 msgstr "Sources I rely on"
 
-#: src/pages/DashboardPage.tsx:204
+#: src/pages/DashboardPage.tsx:215
 msgid "Sources read"
 msgstr "Sources read"
 
-#: src/pages/NewBeatPage.tsx:95
-#: src/pages/NewBeatPage.tsx:384
-msgid "Sourcing"
-msgstr "Sourcing"
-
-#: src/pages/beat/ActivePanel.tsx:55
-#: src/pages/DashboardPage.tsx:298
-#: src/pages/NewBeatPage.tsx:362
+#: src/pages/beat/ActivePanel.tsx:53
+#: src/pages/DashboardPage.tsx:309
+#: src/pages/NewBeatPage.tsx:383
 msgid "Standard · 8–12 picks"
 msgstr "Standard · 8–12 picks"
 
@@ -862,23 +775,23 @@ msgstr "Standard · 8–12 picks"
 msgid "Start <0>your</0> paper."
 msgstr "Start <0>your</0> paper."
 
-#: src/pages/NewBeatPage.tsx:252
+#: src/pages/NewBeatPage.tsx:271
 msgid "Talk to me normally — I'll read between the lines and ask if I need to. As we go, I'll jot the rules I've understood as pencil notes; at the end, I'll read the whole brief back."
 msgstr "Talk to me normally — I'll read between the lines and ask if I need to. As we go, I'll jot the rules I've understood as pencil notes; at the end, I'll read the whole brief back."
 
-#: src/pages/NewBeatPage.tsx:249
+#: src/pages/NewBeatPage.tsx:268
 msgid "Tell me <0>what</0> you'd like me to read for you."
 msgstr "Tell me <0>what</0> you'd like me to read for you."
 
-#: src/pages/NewBeatPage.tsx:214
+#: src/pages/NewBeatPage.tsx:206
 msgid "Tell me a bit more about the beat first."
 msgstr "Tell me a bit more about the beat first."
 
-#: src/pages/NewBeatPage.tsx:325
+#: src/pages/NewBeatPage.tsx:345
 msgid "Tell me however you'd say it out loud…"
 msgstr "Tell me however you'd say it out loud…"
 
-#: src/pages/DashboardPage.tsx:367
+#: src/pages/DashboardPage.tsx:378
 msgid "Tell me one thing you wish someone was watching for you. The editor will read between the lines and ask if anything's unclear."
 msgstr "Tell me one thing you wish someone was watching for you. The editor will read between the lines and ask if anything's unclear."
 
@@ -886,39 +799,38 @@ msgstr "Tell me one thing you wish someone was watching for you. The editor will
 msgid "Tell me one thing you wish someone was watching for you…"
 msgstr "Tell me one thing you wish someone was watching for you…"
 
-#. placeholder {0}: beat.title
-#: src/pages/beat/ActivePanel.tsx:86
-msgid "The beat · {0}"
-msgstr "The beat · {0}"
-
-#: src/pages/NewBeatPage.tsx:247
+#: src/pages/NewBeatPage.tsx:266
 msgid "The editor · conversation"
 msgstr "The editor · conversation"
 
+#: src/layout/Masthead.tsx:67
 #: src/layout/Masthead.tsx:68
-#: src/layout/Masthead.tsx:69
 msgid "Theme"
 msgstr "Theme"
 
-#: src/pages/DashboardPage.tsx:91
-#: src/pages/DashboardPage.tsx:93
+#: src/pages/DashboardPage.tsx:92
+#: src/pages/DashboardPage.tsx:94
 msgid "there"
 msgstr "there"
+
+#: src/pages/NewBeatPage.tsx:312
+msgid "Thinking…"
+msgstr "Thinking…"
 
 #: src/pages/BeatDetailPage.tsx:59
 msgid "This beat doesn't exist or you don't have access."
 msgstr "This beat doesn't exist or you don't have access."
 
-#: src/pages/IssueDetailPage.tsx:88
+#: src/pages/IssueDetailPage.tsx:86
 msgid "This issue doesn't exist or you don't have access."
 msgstr "This issue doesn't exist or you don't have access."
 
-#: src/pages/IssueDetailPage.tsx:184
+#: src/pages/IssueDetailPage.tsx:159
 msgid "This issue had no publishable items."
 msgstr "This issue had no publishable items."
 
-#: src/pages/beat/ActivePanel.tsx:54
-#: src/pages/DashboardPage.tsx:297
+#: src/pages/beat/ActivePanel.tsx:52
+#: src/pages/DashboardPage.tsx:308
 msgid "Tight · 3–5 picks"
 msgstr "Tight · 3–5 picks"
 
@@ -926,7 +838,12 @@ msgstr "Tight · 3–5 picks"
 msgid "Time-based"
 msgstr "Time-based"
 
-#: src/pages/beat/DesignerPanel.tsx:317
+#: src/pages/NewBeatPage.tsx:254
+#: src/pages/NewBeatPage.tsx:391
+msgid "Timezone"
+msgstr "Timezone"
+
+#: src/pages/beat/DesignerPanel.tsx:313
 msgid "to send"
 msgstr "to send"
 
@@ -935,20 +852,20 @@ msgstr "to send"
 msgid "To send"
 msgstr "To send"
 
-#: src/layout/Rail.tsx:28
+#: src/layout/Rail.tsx:23
 msgid "Today"
 msgstr "Today"
 
-#: src/pages/beat/DesignerPanel.tsx:210
-#: src/pages/NewBeatPage.tsx:353
+#: src/pages/beat/DesignerPanel.tsx:206
+#: src/pages/NewBeatPage.tsx:374
 msgid "Topic"
 msgstr "Topic"
 
-#: src/pages/beat/DesignerPanel.tsx:288
+#: src/pages/beat/DesignerPanel.tsx:284
 msgid "Type your answer…"
 msgstr "Type your answer…"
 
-#: src/pages/beat/DesignerPanel.tsx:188
+#: src/pages/beat/DesignerPanel.tsx:184
 msgid "Untitled beat"
 msgstr "Untitled beat"
 
@@ -972,21 +889,22 @@ msgstr "Verifying your email address…"
 msgid "Verifying…"
 msgstr "Verifying…"
 
-#: src/layout/Masthead.tsx:83
-msgid "Vol. I"
-msgstr "Vol. I"
-
-#: src/pages/beat/DesignerPanel.tsx:413
+#: src/pages/beat/DesignerPanel.tsx:387
 msgid "Waiting for the designer to respond…"
 msgstr "Waiting for the designer to respond…"
 
-#: src/pages/DashboardPage.tsx:259
+#: src/pages/DashboardPage.tsx:270
 msgid "Want me to also <0>watch something else?</0>"
 msgstr "Want me to also <0>watch something else?</0>"
 
 #: src/auth/components/CustomSignupForm.tsx:53
 msgid "We sent an activation link to your address. Click it to finish signing up."
 msgstr "We sent an activation link to your address. Click it to finish signing up."
+
+#: src/pages/NewBeatPage.tsx:210
+#: src/pages/NewBeatPage.tsx:214
+msgid "We still need to settle the schedule."
+msgstr "We still need to settle the schedule."
 
 #: src/auth/email-and-pass/RequestPasswordResetPage.tsx:12
 msgid "We'll send a <0>fresh</0> link."
@@ -1016,7 +934,7 @@ msgstr "Weekly {dow} {time}{tz}"
 msgid "Welcome back, <0>reader</0>."
 msgstr "Welcome back, <0>reader</0>."
 
-#: src/pages/beat/ActivePanel.tsx:249
+#: src/pages/beat/ActivePanel.tsx:236
 msgid "What I've learned"
 msgstr "What I've learned"
 
@@ -1024,39 +942,39 @@ msgstr "What I've learned"
 msgid "What should <0>we</0> be reading<1/>for <2>you</2>?"
 msgstr "What should <0>we</0> be reading<1/>for <2>you</2>?"
 
-#: src/pages/beat/DesignerPanel.tsx:246
+#: src/pages/beat/DesignerPanel.tsx:242
 msgid "When the spec is locked, the Scout looks for sources and the beat becomes live. You'll get the first issue on the cadence above."
 msgstr "When the spec is locked, the Scout looks for sources and the beat becomes live. You'll get the first issue on the cadence above."
 
-#: src/pages/DashboardPage.tsx:217
+#: src/pages/DashboardPage.tsx:228
 msgid "Working on it now"
 msgstr "Working on it now"
 
-#: src/pages/beat/DesignerPanel.tsx:353
+#: src/pages/beat/DesignerPanel.tsx:344
 msgid "Working on your beat."
 msgstr "Working on your beat."
 
-#: src/layout/Rail.tsx:52
+#: src/layout/Rail.tsx:41
 msgid "Workspace navigation"
 msgstr "Workspace navigation"
 
-#: src/pages/DashboardPage.tsx:79
+#: src/pages/DashboardPage.tsx:80
 #: src/pages/LandingPage.tsx:20
 msgid "Wrocław restaurant openings"
 msgstr "Wrocław restaurant openings"
 
 #: src/pages/LandingPage.tsx:15
-#: src/pages/NewBeatPage.tsx:71
+#: src/pages/NewBeatPage.tsx:105
 msgid "Wrocław weekends with the kids"
 msgstr "Wrocław weekends with the kids"
 
-#: src/pages/IssueDetailPage.tsx:103
+#: src/pages/IssueDetailPage.tsx:101
 msgid "you"
 msgstr "you"
 
 #. placeholder {0}: String(issue.items.length ? 1 : 0).padStart(3, "0")
 #. placeholder {1}: beat?.title ?? t`your beat`
-#: src/pages/IssueDetailPage.tsx:229
+#: src/pages/IssueDetailPage.tsx:204
 msgid "You are reading issue №{0} of {1}."
 msgstr "You are reading issue №{0} of {1}."
 
@@ -1064,7 +982,7 @@ msgstr "You are reading issue №{0} of {1}."
 msgid "You can now sign in with the new password."
 msgstr "You can now sign in with the new password."
 
-#: src/pages/DashboardPage.tsx:364
+#: src/pages/DashboardPage.tsx:375
 msgid "You haven't filed a beat yet."
 msgstr "You haven't filed a beat yet."
 
@@ -1082,18 +1000,14 @@ msgstr "Your account is active"
 msgid "Your account is active. You can sign in now."
 msgstr "Your account is active. You can sign in now."
 
-#: src/pages/IssueDetailPage.tsx:231
+#: src/pages/IssueDetailPage.tsx:206
 msgid "your beat"
 msgstr "your beat"
 
-#: src/pages/DashboardPage.tsx:232
+#: src/pages/DashboardPage.tsx:243
 msgid "Your beats"
 msgstr "Your beats"
 
 #: src/auth/utils/errorMessages.ts:14
 msgid "Your email is not verified"
 msgstr "Your email is not verified"
-
-#: src/pages/NewBeatPage.tsx:135
-msgid "your schedule"
-msgstr "your schedule"
