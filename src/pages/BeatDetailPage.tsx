@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { useAuth } from "wasp/client/auth";
-import { Trans, useLingui } from "@lingui/react/macro";
+import { Trans } from "@lingui/react/macro";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 import { useBeatActions } from "../hooks/useBeatActions";
@@ -24,7 +24,7 @@ function userEmailFrom(user: unknown): string | null {
 }
 
 export function BeatDetailPage() {
-  useLingui();
+
   const { beatId } = useParams<{ beatId: string }>();
   const navigate = useNavigate();
   const { data: user } = useAuth();

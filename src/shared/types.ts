@@ -68,10 +68,24 @@ export const FinalizeBeatSpecSchema = z.object({
 });
 export type FinalizeBeatSpecInput = z.infer<typeof FinalizeBeatSpecSchema>;
 
+export const SourceCategoryValues = [
+  "official",
+  "press",
+  "community",
+  "aggregator",
+  "primary_data",
+  "expert",
+] as const;
+export type SourceCategory = (typeof SourceCategoryValues)[number];
+
 export const ScoutCompleteSchema = z.object({
   beat_slug: z.string(),
   source_count: z.number().int().nonnegative(),
+  distinct_domains: z.number().int().nonnegative(),
+  categories_covered: z.array(z.enum(SourceCategoryValues)).default([]),
+  recipes_used: z.array(z.string()).default([]),
   coverage_assessment: z.enum(["healthy", "thin", "sparse"]),
+  thinness_reason: z.string().optional(),
   notes: z.string(),
 });
 export type ScoutCompleteInput = z.infer<typeof ScoutCompleteSchema>;
@@ -84,6 +98,11 @@ export const PublishIssueItemSchema = z.object({
   secondary_source_urls: z.array(z.string().url()).default([]),
   fingerprint: z.string(),
   tags: z.array(z.string()).default([]),
+  // Editor self-grades — accepted for forward-compat but not persisted to
+  // IssueItem (no UI surface yet). Kept in AgentEvent transcript via the
+  // captured publish_issue payload.
+  single_source: z.boolean().optional(),
+  verification_notes: z.string().optional(),
 });
 export type PublishIssueItem = z.infer<typeof PublishIssueItemSchema>;
 

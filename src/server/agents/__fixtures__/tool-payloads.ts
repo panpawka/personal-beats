@@ -30,6 +30,9 @@ export const finalizeBeatSpecInvalid = {
 export const scoutCompleteValid = {
   beat_slug: "wroclaw-daily",
   source_count: 17,
+  distinct_domains: 12,
+  categories_covered: ["press", "official", "community", "aggregator"] as const,
+  recipes_used: ["google_news_rss", "rss_autodiscovery", "reddit_json"],
   coverage_assessment: "healthy" as const,
   notes: "17 verified sources across press, official, community categories.",
 };

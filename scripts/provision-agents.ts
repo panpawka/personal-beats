@@ -14,6 +14,9 @@
  *
  * Run: `npx tsx scripts/provision-agents.ts [--force]`
  */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { loadServerEnv, saveServerEnv } from "./env-loader.js";
 import {
   createAgent,
@@ -27,6 +30,10 @@ import {
   editorDefinition,
   sourcesScoutDefinition,
 } from "../src/server/agents/definitions.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const SEEDS_DIR = path.join(__dirname, "seeds");
 
 const FORCE = process.argv.includes("--force");
 const SEED_ONLY = process.argv.includes("--seed-only");
@@ -44,7 +51,24 @@ const REQUIRED_KEYS = [
   "COORDINATOR_VERSION",
 ] as const;
 
-const GLOBAL_PATTERNS_SEEDS: Record<string, string> = {
+/**
+ * Load seed files from `scripts/seeds/<subdir>/<file>` into memory paths
+ * `/<subdir>/<file>`. Used for the recipe catalog (`/recipes/*.md`) and
+ * golden examples (`/examples/*.yaml`) so the source material lives as
+ * editable files on disk rather than escaped template literals.
+ */
+function loadSeedDir(subdir: string): Record<string, string> {
+  const dir = path.join(SEEDS_DIR, subdir);
+  if (!fs.existsSync(dir)) return {};
+  const out: Record<string, string> = {};
+  for (const file of fs.readdirSync(dir).sort()) {
+    if (file.startsWith(".")) continue;
+    out[`/${subdir}/${file}`] = fs.readFileSync(path.join(dir, file), "utf8");
+  }
+  return out;
+}
+
+const GLOBAL_PATTERNS_INLINE: Record<string, string> = {
   "/source_discovery/local_news_tactics.md": `# Local news source discovery
 
 ## Strong source types for local beats
@@ -100,6 +124,12 @@ Gazeta Wyborcza, Rzeczpospolita, Onet, WP — these are national, not local.
 - "gazeta<miasto>.pl" also common
 - Municipal sites are at "<miasto>.pl" or "um.<miasto>.pl"
 `,
+};
+
+const GLOBAL_PATTERNS_SEEDS: Record<string, string> = {
+  ...GLOBAL_PATTERNS_INLINE,
+  ...loadSeedDir("recipes"),
+  ...loadSeedDir("examples"),
 };
 
 async function main() {

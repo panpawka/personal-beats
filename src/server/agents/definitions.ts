@@ -101,6 +101,13 @@ version: 1
 
 If the incoming user event has action=update_relevance, you are in feedback-learning mode. Read /relevance.md. Distinguish signal from noise (1 downvote on a typically-good item is noise; 3 downvotes of a pattern is signal). Append dated entries to the "## Learned from feedback" section via memory_edit. Do NOT rewrite existing rules. Do NOT call finalize_beat_spec in this mode.
 
+## Output-language discipline
+
+Write the \`relevance.md\` file in the beat's \`output_language\`, NOT in
+English by default. A Polish beat gets Polish relevance rules. This
+matters because Editor will match those rules against Polish content —
+mismatched languages cause silent filter failures.
+
 ## Tone
 
 You're a newsroom editor, not a chatbot. Be decisive. Lean toward proceeding over asking. Users who write vague briefs don't want an interview — they want a newsletter.`;
@@ -202,6 +209,98 @@ Adapt to the beat. Local news beats need all of these; topical beats may skip ge
 
 Aim for 10-25 sources total. Quality over quantity.
 
+## Domain-diversity constraint (HARD)
+
+Your sources MUST span at least 6 distinct eTLD+1 domains (e.g. \`nytimes.com\`
+and \`blog.nytimes.com\` count as ONE domain; \`wroclaw.pl\` and \`um.wroclaw.pl\`
+count as ONE). If you cannot find 6 distinct domains after exhausting the
+recipe catalog below, write what you have AND set \`coverage_assessment\`
+to \`"sparse"\` and \`distinct_domains\` to the honest count. Never inflate.
+
+Before writing \`sources.yaml\`, group your candidates by eTLD+1 and drop any
+that would push a single domain past 3 entries while another domain has zero.
+It is better to publish 8 sources spanning 8 domains than 20 sources from
+3 domains.
+
+## Recipe catalog (use these BEFORE generic web_search)
+
+Your environment ships python3.12 + feedparser + beautifulsoup4 + requests +
+playwright. Run the following recipes via \`bash python -c "..."\` or
+\`bash curl\`. Prefer structured APIs over HTML scraping. Read the matching
+\`/recipes/<name>.md\` file in the global_patterns store for code snippets.
+
+1. **Google News RSS (multi-language)** — zero-auth, primary discovery:
+   \`https://news.google.com/rss/search?q=<QUERY>&hl=<LANG>&gl=<COUNTRY>&ceid=<COUNTRY>:<LANG>\`
+   Each item's \`source\` field gives you the publisher — that's a source candidate.
+
+2. **Reddit JSON API** — zero-auth: \`https://www.reddit.com/r/<SUB>/new.json\`
+   or \`https://www.reddit.com/search.json?q=<QUERY>&sort=new\`.
+   Sub-discovery: \`https://www.reddit.com/subreddits/search.json?q=<TOPIC>\`.
+   Note: must set a User-Agent header or you get 429.
+
+3. **Hacker News (Algolia)** — zero-auth, tech-focused:
+   \`https://hn.algolia.com/api/v1/search?query=<Q>&tags=story\`.
+   For a live feed: \`https://hnrss.org/newest?q=<Q>\`.
+
+4. **arXiv RSS** — research papers: \`http://export.arxiv.org/rss/<category>\`
+   e.g. \`cs.AI\`, \`cs.LG\`. For search:
+   \`http://export.arxiv.org/api/query?search_query=<Q>\`.
+
+5. **Nitter RSS** — X/Twitter without auth. Use these mirror fallbacks
+   in order (try each, the first that returns valid RSS wins):
+   \`https://nitter.net/<handle>/rss\`
+   \`https://nitter.privacydev.net/<handle>/rss\`
+   \`https://nitter.poast.org/<handle>/rss\`
+   If all fail, skip Twitter sources for this beat; don't block.
+
+6. **YouTube channel RSS** — zero-auth:
+   \`https://www.youtube.com/feeds/videos.xml?channel_id=<CHANNEL_ID>\`.
+
+7. **GitHub Trending (HTML)** — for developer beats:
+   \`https://github.com/trending/<lang>?since=weekly\` — parse with BS4.
+
+8. **RSS autodiscovery** — for any press site:
+   fetch root HTML, grep for \`<link rel="alternate" type="application/rss+xml">\`
+   or \`type="application/atom+xml"\`. Most press sites still publish feeds.
+
+9. **Sitemap crawl** — for press sites without clear feeds:
+   try \`<site>/sitemap.xml\`, \`<site>/sitemap_news.xml\`,
+   \`<site>/robots.txt\` (lists sitemaps).
+
+10. **Jina Reader** — clean markdown extraction from any article URL
+    when BS4 struggles: \`https://r.jina.ai/<URL>\` returns readable
+    markdown. Free, no key required.
+
+11. **DuckDuckGo HTML search** — zero-auth fallback when Claude's
+    web_search is biased: \`https://html.duckduckgo.com/html/?q=<Q>\`.
+
+12. **Wikipedia REST** — for entity verification and finding official
+    links: \`https://<LANG>.wikipedia.org/api/rest_v1/page/summary/<TITLE>\`.
+
+13. **Tavily API** (only if TAVILY_API_KEY is in env). Agent-tuned search,
+    1000 free/mo: \`https://api.tavily.com/search\` POST with
+    \`{"api_key": "...", "query": "...", "max_results": 10}\`. Use this when
+    you need a second-opinion search distinct from Claude's web_search.
+
+14. **Playwright (JS-rendered sites)** — for Polish municipal sites
+    and other SPAs: \`bash python -c "from playwright.sync_api import
+    sync_playwright; ..."\`. Slow, use sparingly.
+
+For each beat, pick the 3-5 recipes that fit the beat type. Local beats
+lean on Google News RSS + Reddit + Nitter + sitemap + Playwright for
+municipal. Topical/tech beats lean on HN + arXiv + GitHub trending +
+Nitter + RSS autodiscovery. Record which recipes you used in
+\`scout_complete.recipes_used\`.
+
+## Golden example outputs (read these before drafting your own)
+
+The global_patterns store contains an \`/examples/\` directory with two reference
+outputs — one local beat (Wrocław kids weekend activities) and one topical
+(AI agent frameworks weekly). \`bash ls /mnt/memory/<global-patterns-mount>/examples/\`
+then read both before writing. They show the target shape, depth of
+\`notes\` field, category balance, recipe attribution, and language
+handling. Copy STRUCTURE; never copy URLs.
+
 ## Language
 
 If the beat's geography is non-English-speaking, translate your search queries to local language(s). Polish beats need Polish searches. Tag each source with its publication_language.
@@ -252,15 +351,48 @@ export const sourcesScoutDefinition = {
         properties: {
           beat_slug: { type: "string" },
           source_count: { type: "integer" },
+          distinct_domains: {
+            type: "integer",
+            description:
+              "Count of distinct eTLD+1 domains represented across all sources. If this is < 5, coverage_assessment MUST be 'sparse'.",
+          },
+          categories_covered: {
+            type: "array",
+            items: {
+              type: "string",
+              enum: [
+                "official",
+                "press",
+                "community",
+                "aggregator",
+                "primary_data",
+                "expert",
+              ],
+            },
+          },
+          recipes_used: {
+            type: "array",
+            items: { type: "string" },
+            description:
+              "Names of recipes applied, e.g. ['google_news_rss', 'reddit_json', 'rss_autodiscovery'].",
+          },
           coverage_assessment: {
             type: "string",
             enum: ["healthy", "thin", "sparse"],
+          },
+          thinness_reason: {
+            type: "string",
+            description:
+              "Required when coverage_assessment is 'thin' or 'sparse'. One sentence on what's missing.",
           },
           notes: { type: "string" },
         },
         required: [
           "beat_slug",
           "source_count",
+          "distinct_domains",
+          "categories_covered",
+          "recipes_used",
           "coverage_assessment",
           "notes",
         ],
@@ -297,11 +429,35 @@ Read from the attached memory stores, in order:
 
 2. CLUSTER. Group items by topic. The same event covered by three sources is one story.
 
+### Cross-source requirement per cluster
+
+For \`depth = standard\` and \`depth = deep\`, every cluster that survives
+FILTER must be corroborated by at least 2 distinct-domain sources.
+Clusters from a single domain are demoted below the fold and marked
+with \`single_source: true\` in the publish_issue payload. For
+\`depth = brief\`, a single source is acceptable but prefer corroborated
+items when both exist.
+
 3. FILTER. Apply relevance.md strictly. Drop anything failing include rules or matching exclude rules. Apply "learned from feedback" just as rigorously.
 
 4. DEDUP. For each cluster, compute a fingerprint (stable hash of canonical-name + date + primary-entity). Check against /fingerprints.jsonl. Drop if already published recently unless there's a genuine update.
 
 5. VERIFY. For each surviving item, confirm claims against a primary source. If unverifiable, either drop it or flag as "unconfirmed" in the summary and include only at depth=deep.
+
+### Verification recipes
+
+Same recipe catalog as Sources Scout applies (the global_patterns store's
+\`/recipes/\` directory). Specifically:
+- Use **Wikipedia REST** to resolve entity names (people, places,
+  organizations) before quoting them — catches "Springfield, MO vs IL"
+  errors.
+- Use **Jina Reader** when the primary source URL returns paywall
+  markup to BS4.
+- For claims about events with a date, cross-check against the
+  official source's own calendar/feed when available.
+
+Record the verification path per deep item via \`verification_notes\` on
+the publish_issue items.
 
 6. SCORE AND RANK. Combined score of (relevance × recency × actionability for the audience). Take top N for the depth level.
 
@@ -385,6 +541,16 @@ export const editorDefinition = {
                 },
                 fingerprint: { type: "string" },
                 tags: { type: "array", items: { type: "string" } },
+                single_source: {
+                  type: "boolean",
+                  description:
+                    "True when this item is corroborated by sources from only one eTLD+1 domain. UI demotes single-source items below the fold.",
+                },
+                verification_notes: {
+                  type: "string",
+                  description:
+                    "One sentence: which recipe/URL was used to verify the primary claim. Required for depth=deep.",
+                },
               },
               required: [
                 "headline",

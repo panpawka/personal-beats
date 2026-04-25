@@ -1,0 +1,206 @@
+# GOLDEN EXAMPLE — local beat
+#
+# This is a hand-written reference output for a hypothetical beat:
+# "Wrocław kids weekend activities" (Polish, residents with kids 0-12).
+#
+# Read this BEFORE drafting your own sources.yaml. Mirror the:
+#   - source count (~12) and distinct-domain count (~11)
+#   - category balance (5/6 categories represented)
+#   - depth of `notes` field per source
+#   - `discovered_via` recipe annotation per source
+#   - language handling (Polish queries → Polish sources)
+#
+# DO NOT copy these URLs into other beats. Run the recipes for your
+# own beat's geography/topic and produce a fresh list.
+#
+# Domain-diversity check: 11 distinct eTLD+1 across 12 sources.
+# `wroclaw.pl` and `um.wroclaw.pl` share eTLD+1 — counted as ONE.
+beat_slug: wroclaw-kids-weekend
+generated_at: 2026-04-25T12:00:00Z
+sources:
+  - id: wroclaw-pl-dzieci
+    url: https://www.wroclaw.pl/go/wydarzenia/dla-dzieci
+    category: official
+    publication_language: pl
+    signal_score: 4
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      City news portal, specific events directory for kids. Replaced the 
+      hardcoded RSS with the HTML event aggregator, as the city uses 
+      multiple granular feeds rather than a single global one.
+
+  - id: um-wroclaw-komunikaty
+    url: https://um.wroclaw.pl/komunikaty
+    category: official
+    publication_language: pl
+    signal_score: 3
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: playwright_spa
+    notes: >-
+      City hall press releases. Same eTLD+1 as wroclaw.pl (counts as
+      one domain) but kept because it covers council-level events
+      not in the main feed. JS-rendered → Playwright.
+
+  - id: wroclaw-naszemiasto
+    url: https://wroclaw.naszemiasto.pl
+    category: press
+    publication_language: pl
+    signal_score: 4
+    parse_hint: rss
+    feed_url: https://wroclaw.naszemiasto.pl/rss/
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: google_news_rss
+    notes: >-
+      Polish local-press template (`<miasto>.naszemiasto.pl`).
+      Strong on neighborhood events, schools, family activities. Website with various RSS xml links.
+
+  - id: tuwroclaw
+    url: https://tuwroclaw.com/wydarzenia-imprezy
+    category: press
+    publication_language: pl
+    signal_score: 4
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Independent Wrocław news site. No standard RSS feed available, 
+      requires HTML parsing. Target the "czas-wolny" (free time) 
+      category directly to filter out hard news.
+
+  - id: gazetawroclawska
+    url: https://gazetawroclawska.pl/wiadomosci
+    category: press
+    publication_language: pl
+    signal_score: 3
+    parse_hint: html
+    feed_url: https://gazetawroclawska.pl/rss/
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: google_news_rss
+    notes: >-
+      Polska Press regional title. Paywalled deep articles; headlines
+      and lead paragraph remain useful. Use Jina Reader if BS4 hits
+      the paywall.
+
+  - id: radiowroclaw
+    url: https://www.radiowroclaw.pl/ArticlesCategories/index/3/Kultura
+    category: press
+    publication_language: pl
+    signal_score: 3
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Public radio Wrocław. /feed endpoint is dead/non-standard. 
+      Requires HTML scraping of the culture section for weekend 
+      event announcements.
+
+  - id: reddit-wroclaw
+    url: https://www.reddit.com/r/Wroclaw
+    category: community
+    publication_language: pl
+    signal_score: 3
+    parse_hint: json
+    feed_url: https://www.reddit.com/r/Wroclaw/new.json?limit=25
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: reddit_json
+    notes: >-
+      Active subreddit (~50 posts/week, mixed PL/EN). Surfaces
+      meetups, family events, restaurant openings before press.
+      Set User-Agent header to avoid 429.
+  
+  - id: miastodzieci-wroclaw
+    url: https://miastodzieci.pl/wroclaw/
+    category: aggregator
+    publication_language: pl
+    signal_score: 5
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Replaces volatile Nitter instance. Dedicated nationwide portal 
+      with a highly active Wrocław section. The absolute gold standard 
+      for children's events and weekend filtering.
+
+  - id: nitter-wroclaw-x
+    url: https://nitter.net/wroclaw_info
+    category: community
+    publication_language: pl
+    signal_score: 3
+    parse_hint: rss
+    feed_url: https://nitter.net/wroclaw_info/rss
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: nitter_twitter
+    notes: >-
+      Official municipal X account, mirrored via Nitter. If
+      privacydev.net 502s, fall back to nitter.net or nitter.poast.org.
+
+  - id: google-news-rss-wroclaw-kids
+    url: https://news.google.com/rss/search?q=Wroc%C5%82aw+dzieci&hl=pl&gl=PL&ceid=PL:pl
+    category: aggregator
+    publication_language: pl
+    signal_score: 3
+    parse_hint: rss
+    feed_url: https://news.google.com/rss/search?q=Wroc%C5%82aw+dzieci&hl=pl&gl=PL&ceid=PL:pl
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: google_news_rss
+    notes: >-
+      Curated query for Wrocław + dzieci (kids). Use entry.source.title
+      to discover NEW publishers; the feed itself is also a usable
+      candidate stream.
+
+  - id: goingapp-wroclaw
+    url: https://goingapp.pl/szukaj?refinementList[locations_names][0]=Wroc%C5%82aw
+    category: primary_data
+    publication_language: pl
+    signal_score: 4
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Polish events platform with structured event listings (date,
+      venue, price, age range). Excellent for kid-friendly
+      filtering. JSON-LD embedded in event pages.
+
+  - id: pik-wroclaw-dzieci
+    url: https://pik.wroclaw.pl/dzieci/
+    category: primary_data
+    publication_language: pl
+    signal_score: 4
+    parse_hint: html
+    feed_url: https://pik.wroclaw.pl/?cat=455&feed=rss2
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Punkt Informacji Kulturalnej (PIK). Extremely reliable local primary 
+      source for workshops, theater plays, and exhibitions for kids.
+
+  - id: czasdzieci-wroclaw
+    url: https://czasdzieci.pl/wroclaw/wydarzenia/
+    category: aggregator
+    publication_language: pl
+    signal_score: 5
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Major nationwide portal dedicated exclusively to children's events
+      and education. The Wrocław section provides a highly structured,
+      chronological list of weekend activities, workshops, and theater plays.
+      Excellent signal-to-noise ratio, often catching events missed by 
+      general municipal feeds.
+
+# Summary metadata reported to scout_complete:
+# distinct_domains: 11
+# categories_covered: [official, press, community, aggregator, primary_data, expert]
+# recipes_used: [rss_autodiscovery, google_news_rss, reddit_json, nitter_twitter, duckduckgo_html, youtube_rss, playwright_spa]
+# coverage_assessment: healthy

@@ -1,0 +1,229 @@
+# GOLDEN EXAMPLE — topical beat
+#
+# This is a hand-written reference output for a hypothetical beat:
+# "AI agent frameworks weekly" (English, technical audience).
+#
+# Read this BEFORE drafting your own sources.yaml. Mirror the:
+#   - source count (~15) and distinct-domain count (~15)
+#   - category balance (official + primary_data + aggregator + community + expert)
+#   - recipe diversity (HN + arXiv + GitHub trending + Nitter + RSS auto)
+#   - depth of `notes` field per source
+#   - `discovered_via` recipe annotation per source
+#
+# DO NOT copy these URLs into other beats. Run the recipes for your
+# own beat's topic and produce a fresh list.
+#
+# Domain-diversity check: 15 distinct eTLD+1 across 15 sources.
+beat_slug: ai-agent-frameworks-weekly
+generated_at: 2026-04-25T12:00:00Z
+sources:
+  - id: anthropic-news
+    url: https://www.anthropic.com/news
+    category: official
+    publication_language: en
+    signal_score: 5
+    parse_hint: rss
+    feed_url: https://www.anthropic.com/news/rss.xml
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      Anthropic announcements — model releases, tool spec changes,
+      Managed Agents updates. Primary source for any Claude-agent
+      news.
+
+  - id: openai-blog
+    url: https://openai.com/blog
+    category: official
+    publication_language: en
+    signal_score: 5
+    parse_hint: rss
+    feed_url: https://openai.com/blog/rss.xml
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      OpenAI official posts. Primary for GPT/Assistants API/Realtime
+      changes that affect agent-framework users.
+
+  - id: langchain-blog
+    url: https://blog.langchain.com
+    category: official
+    publication_language: en
+    signal_score: 4
+    parse_hint: rss
+    feed_url: https://blog.langchain.com/rss
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      LangChain/LangGraph release notes and case studies. Treat as
+      vendor-voice — pair with HN/Reddit comments for unbiased read.
+
+  - id: huggingface-blog
+    url: https://huggingface.co/blog
+    category: official
+    publication_language: en
+    signal_score: 4
+    parse_hint: rss
+    feed_url: https://huggingface.co/blog/feed.xml
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      HF official posts (including their `smolagents` framework).
+      Mix of tutorials, model cards, framework releases.
+
+  - id: arxiv-cs-ai
+    url: http://export.arxiv.org/rss/cs.AI
+    category: primary_data
+    publication_language: en
+    signal_score: 4
+    parse_hint: rss
+    feed_url: http://export.arxiv.org/rss/cs.AI
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: arxiv
+    notes: >-
+      Research firehose. Filter on title/abstract for "agent",
+      "tool use", "multi-agent". Pair with cs.LG for ML-systems
+      papers.
+
+  - id: paperswithcode-agents
+    url: https://paperswithcode.com/area/agents
+    category: primary_data
+    publication_language: en
+    signal_score: 3
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: duckduckgo_html
+    notes: >-
+      Curated papers + code links for agent-track research. Useful
+      for verifying that a paper has reproducible code before
+      featuring.
+
+  - id: hn-algolia-ai-agents
+    url: https://hn.algolia.com/api/v1/search?query=%22AI+agents%22&tags=story
+    category: aggregator
+    publication_language: en
+    signal_score: 4
+    parse_hint: json
+    feed_url: https://hnrss.org/newest?q=%22AI+agents%22
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: hackernews
+    notes: >-
+      HN stories matching "AI agents". Story comments often surface
+      criticism the post itself avoids. Filter for points >= 50 to
+      reduce noise.
+
+  - id: github-trending-python
+    url: https://github.com/trending/python?since=weekly
+    category: aggregator
+    publication_language: en
+    signal_score: 4
+    parse_hint: html
+    feed_url: null
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: github_trending
+    notes: >-
+      Weekly trending Python repos. Filter description for "agent",
+      "llm", "tool". Catches new frameworks before HN front-pages
+      them.
+
+  - id: google-news-ai-agents
+    url: https://news.google.com/rss/search?q=%22AI+agents%22&hl=en&gl=US&ceid=US:en
+    category: aggregator
+    publication_language: en
+    signal_score: 3
+    parse_hint: rss
+    feed_url: https://news.google.com/rss/search?q=%22AI+agents%22&hl=en&gl=US&ceid=US:en
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: google_news_rss
+    notes: >-
+      English aggregated news on AI agents. Use entry.source.title
+      to discover new publishers (TechCrunch, The Information, etc.)
+      then upgrade those to dedicated sources next week.
+
+  - id: reddit-localllama
+    url: https://www.reddit.com/r/LocalLLaMA
+    category: community
+    publication_language: en
+    signal_score: 4
+    parse_hint: json
+    feed_url: https://www.reddit.com/r/LocalLLaMA/new.json?limit=25
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: reddit_json
+    notes: >-
+      Practitioner subreddit. Best signal for which agent framework
+      is actually being used in production by hobbyists/indie devs,
+      not just hyped on HN.
+
+  - id: nitter-swyx-x
+    url: https://nitter.privacydev.net/swyx
+    category: community
+    publication_language: en
+    signal_score: 3
+    parse_hint: rss
+    feed_url: https://nitter.privacydev.net/swyx/rss
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: nitter_twitter
+    notes: >-
+      Shawn Wang (swyx) — Latent Space co-host, prolific AI-dev
+      poster on X. Use Nitter mirror; fall back to nitter.net /
+      nitter.poast.org if privacydev.net is down.
+
+  - id: simonwillison
+    url: https://simonwillison.net/atom/everything
+    category: expert
+    publication_language: en
+    signal_score: 5
+    parse_hint: atom
+    feed_url: https://simonwillison.net/atom/everything
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      Simon Willison's TIL/notes blog. High signal-per-word for
+      LLM tool use, prompt injection, and practical agent
+      experimentation. Updates daily.
+
+  - id: lilianweng-blog
+    url: https://lilianweng.github.io
+    category: expert
+    publication_language: en
+    signal_score: 4
+    parse_hint: rss
+    feed_url: https://lilianweng.github.io/index.xml
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      Lilian Weng's deep-dive blog. Slow cadence (~1 post/month) but
+      each post is canonical reference material on agents/RL/safety.
+
+  - id: interconnects-newsletter
+    url: https://www.interconnects.ai
+    category: expert
+    publication_language: en
+    signal_score: 4
+    parse_hint: rss
+    feed_url: https://www.interconnects.ai/feed
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      Nathan Lambert's newsletter — strong analytical takes on
+      frontier-model releases, training, RL. Substack-hosted RSS.
+
+  - id: latent-space
+    url: https://www.latent.space
+    category: expert
+    publication_language: en
+    signal_score: 4
+    parse_hint: rss
+    feed_url: https://www.latent.space/feed
+    last_verified: 2026-04-25T12:00:00Z
+    discovered_via: rss_autodiscovery
+    notes: >-
+      Latent Space podcast/newsletter (swyx + Alessio Fanelli).
+      Practitioner interviews — strong on agent-framework adoption
+      stories from companies actually shipping.
+
+# Summary metadata reported to scout_complete:
+# distinct_domains: 15
+# categories_covered: [official, primary_data, aggregator, community, expert]
+# recipes_used: [rss_autodiscovery, arxiv, hackernews, github_trending, google_news_rss, reddit_json, nitter_twitter, duckduckgo_html]
+# coverage_assessment: healthy
