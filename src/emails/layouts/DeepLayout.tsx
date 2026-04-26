@@ -7,6 +7,15 @@ import { EditorsNote } from "../components/EditorsNote";
 import { SourceLink } from "../components/SourceLink";
 import { EDITORIAL, FONT_MONO, FONT_SANS, FONT_SERIF } from "../components/tokens";
 import type { EmailItem, LayoutProps } from "../types";
+import { renderWithCitations } from "../../shared/citations";
+
+const CITE_STYLE: React.CSSProperties = {
+  fontStyle: "italic",
+  fontWeight: 400,
+  color: EDITORIAL.ink2,
+  backgroundColor: EDITORIAL.paper2,
+  padding: "0 2px",
+};
 
 export function DeepLayout({ spec, issue, issueNumber, unsubscribeUrl, dashboardUrl }: LayoutProps) {
   return (
@@ -20,7 +29,11 @@ export function DeepLayout({ spec, issue, issueNumber, unsubscribeUrl, dashboard
         itemCount={issue.items.length}
       />
       <Section style={{ padding: "28px 36px 36px" }}>
-        {issue.coverage_note ? <EditorsNote>{issue.coverage_note}</EditorsNote> : null}
+        {issue.coverage_note ? (
+          <EditorsNote>
+            {renderWithCitations(issue.coverage_note, { tag: "span", style: CITE_STYLE })}
+          </EditorsNote>
+        ) : null}
         {issue.items.map((item, idx) => (
           <DeepItem
             key={item.fingerprint}
@@ -121,11 +134,13 @@ function DeepItem({
             color: EDITORIAL.ink2,
           }}
         >
-          {p}
+          {renderWithCitations(p, { tag: "span", style: CITE_STYLE })}
         </Text>
       ))}
       {item.why_it_matters ? (
-        <Analysis label="Analysis">{item.why_it_matters}</Analysis>
+        <Analysis label="Analysis">
+          {renderWithCitations(item.why_it_matters, { tag: "span", style: CITE_STYLE })}
+        </Analysis>
       ) : null}
       <Section
         style={{

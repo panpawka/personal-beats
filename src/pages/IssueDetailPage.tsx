@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 import { Icon } from "../components/editorial/Icon";
+import { renderWithCitations } from "../shared/citations";
 
 function safeParseArray(raw: string | null | undefined): string[] {
   if (!raw) return [];
@@ -199,7 +200,7 @@ export function IssueDetailPage() {
             {issue.coverageNote ? (
               <div className="email-tldr">
                 <span className="label"><Trans>Editor's note</Trans></span>
-                {issue.coverageNote}
+                {renderWithCitations(issue.coverageNote)}
               </div>
             ) : null}
 
@@ -222,10 +223,10 @@ export function IssueDetailPage() {
                     </div>
                     <h2>{item.headline}</h2>
                     {item.whyItMatters ? (
-                      <p className="story-deck">{item.whyItMatters}</p>
+                      <p className="story-deck">{renderWithCitations(item.whyItMatters)}</p>
                     ) : null}
                     <div className="story-body">
-                      <p>{item.summary}</p>
+                      <p>{renderWithCitations(item.summary)}</p>
                     </div>
                     <div className="story-meta">
                       <div className="sources">
