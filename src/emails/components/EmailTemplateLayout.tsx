@@ -175,6 +175,8 @@ function Masthead({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: string }
  *  the in-app `.brand-mark` (Rail.tsx). The accent dot from the in-app mark
  *  is omitted because absolute positioning is unreliable in Outlook/Gmail. */
 function BrandMark() {
+  // Inner div with fixed width/height + line-height — the td alone won't
+  // hold a square in Gmail/Outlook once content is wider than the width attr.
   return (
     <table
       role="presentation"
@@ -183,28 +185,29 @@ function BrandMark() {
       style={{ borderCollapse: 'collapse' }}>
       <tbody>
         <tr>
-          <td
-            width={38}
-            height={38}
-            style={{
-              width: '38px',
-              height: '38px',
-              backgroundColor: EDITORIAL.ink,
-              borderRadius: 4,
-              textAlign: 'center',
-              verticalAlign: 'middle',
-              letterSpacing: '-0.04em',
-              color: EDITORIAL.paper,
-            }}>
-            <span style={{ font: `500 22px/1 ${FONT_SANS}` }}>P</span>
-            <span
+          <td style={{ padding: 0, lineHeight: 0 }}>
+            <div
               style={{
-                font: `600 22px/1 ${FONT_SERIF}`,
-                fontStyle: 'italic',
-                color: EDITORIAL.accentInk,
+                width: '38px',
+                height: '38px',
+                lineHeight: '38px',
+                backgroundColor: EDITORIAL.ink,
+                borderRadius: 4,
+                textAlign: 'center',
+                color: EDITORIAL.paper,
+                letterSpacing: '-0.04em',
+                overflow: 'hidden',
               }}>
-              B
-            </span>
+              <span style={{ font: `500 18px/1 ${FONT_SANS}` }}>P</span>
+              <span
+                style={{
+                  font: `600 18px/1 ${FONT_SERIF}`,
+                  fontStyle: 'italic',
+                  color: EDITORIAL.accentInk,
+                }}>
+                B
+              </span>
+            </div>
           </td>
         </tr>
       </tbody>
