@@ -134,9 +134,9 @@ jobs:
                   if wasp deploy railway deploy ${{ env.RAILWAY_PROJECT_NAME }} --existing-project-id ${{ env.RAILWAY_PROJECT_ID }}; then
                     echo "Deploy successful"
                   elif [ -f .wasp/out/web-app/build/Caddyfile ]; then
-                    echo "Client deploy failed at Railway (Railpack). Adding start.sh and redeploying client..."
-                    printf '#!/bin/sh\nexec caddy run --config Caddyfile --adapter caddyfile\n' > .wasp/out/web-app/build/start.sh
-                    chmod +x .wasp/out/web-app/build/start.sh
+                    echo "Client deploy failed at Railway. Switching client to Dockerfile (caddy:2-alpine) and redeploying..."
+                    printf 'FROM caddy:2-alpine\nWORKDIR /app\nCOPY . /app\nCMD ["caddy", "run", "--config", "/app/Caddyfile", "--adapter", "caddyfile"]\n' > .wasp/out/web-app/build/Dockerfile
+                    printf '{\n  "$schema": "https://railway.com/railway.schema.json",\n  "build": { "builder": "DOCKERFILE", "dockerfilePath": "Dockerfile" }\n}\n' > .wasp/out/web-app/build/railway.json
                     railway up .wasp/out/web-app/build \
                       --service "${{ env.RAILWAY_PROJECT_NAME }}-client" \
                       --no-gitignore \
