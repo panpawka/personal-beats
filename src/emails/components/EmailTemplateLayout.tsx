@@ -171,9 +171,9 @@ function Masthead({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: string }
   );
 }
 
-/** 38×38 ink square with serif italic "P" in paper. The accent dot from the
- *  in-app brand mark (DESIGN §3.2) is omitted — absolute positioning is
- *  unreliable in Outlook/Gmail. */
+/** 38×38 ink square with sans "P" + serif italic "B" in accent-ink — mirrors
+ *  the in-app `.brand-mark` (Rail.tsx). The accent dot from the in-app mark
+ *  is omitted because absolute positioning is unreliable in Outlook/Gmail. */
 function BrandMark() {
   return (
     <table
@@ -190,14 +190,21 @@ function BrandMark() {
               width: '38px',
               height: '38px',
               backgroundColor: EDITORIAL.ink,
+              borderRadius: 4,
               textAlign: 'center',
               verticalAlign: 'middle',
-              font: `400 22px/1 ${FONT_SERIF}`,
-              fontStyle: 'italic',
+              letterSpacing: '-0.04em',
               color: EDITORIAL.paper,
-              letterSpacing: '-0.02em',
             }}>
-            P
+            <span style={{ font: `500 22px/1 ${FONT_SANS}` }}>P</span>
+            <span
+              style={{
+                font: `600 22px/1 ${FONT_SERIF}`,
+                fontStyle: 'italic',
+                color: EDITORIAL.accentInk,
+              }}>
+              B
+            </span>
           </td>
         </tr>
       </tbody>
