@@ -27,15 +27,16 @@ const root = resolve(here, "..");
 
 const variants = {
   "canonical-85s": {
-    width: 1920, height: 1080, duration: 62,
+    width: 1920, height: 1080, duration: 68,
     scenes: [
-      { id: "info-chaos",      start: 0,  duration: 8  },
-      { id: "open",            start: 8,  duration: 3  },
-      { id: "vignette-maja",   start: 11, duration: 14 },
-      { id: "vignette-kasper", start: 25, duration: 13 },
-      { id: "vignette-ola",    start: 38, duration: 14 },
-      { id: "closer",          start: 52, duration: 7  },
-      { id: "end-card",        start: 59, duration: 3  },
+      { id: "info-chaos",        start: 0,  duration: 8  },
+      { id: "open",              start: 8,  duration: 3  },
+      { id: "vignette-maja",     start: 11, duration: 17 },
+      { id: "vignette-kasper",   start: 28, duration: 13 },
+      { id: "vignette-ola",      start: 41, duration: 14 },
+      { id: "closer",            start: 55, duration: 7  },
+      { id: "product-showcase",  start: 62, duration: 3  },
+      { id: "end-card",          start: 65, duration: 3  },
     ],
   },
   "linkedin-60": {
@@ -201,12 +202,16 @@ ${innerHtml}
       /* ───── global brand wordmark (top-right, persists across all scenes) ───── */
       .pb-brand {
         position: absolute;
-        right: 80px; top: 70px;
+        right: 80px; top: 60px;
         font-size: 18px;
         line-height: 1;
         letter-spacing: 0;
         z-index: 9999;
         white-space: nowrap;
+        text-align: right;
+      }
+      .pb-brand-row {
+        display: block;
       }
       .pb-brand .pb-personal {
         font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -224,6 +229,16 @@ ${innerHtml}
         letter-spacing: -0.005em;
         color: oklch(0.58 0.18 25);
       }
+      .pb-brand .pb-powered {
+        display: block;
+        margin-top: 6px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: oklch(0.52 0.008 70);
+      }
 ${sceneOuts.map((s) => s.css).join("\n")}
     </style>
   </head>
@@ -237,7 +252,7 @@ ${sceneOuts.map((s) => s.css).join("\n")}
       data-height="${cfg.height}"
     >
 ${sceneOuts.map((s) => s.sceneBlock).join("\n")}
-      <div class="pb-brand"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></div>
+      <div class="pb-brand"><span class="pb-brand-row"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></span><span class="pb-powered">Powered by Claude Opus 4.7</span></div>
     </div>
 
     <script>

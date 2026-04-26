@@ -18,12 +18,16 @@
       /* ───── global brand wordmark (top-right, persists across all scenes) ───── */
       .pb-brand {
         position: absolute;
-        right: 80px; top: 70px;
+        right: 80px; top: 60px;
         font-size: 18px;
         line-height: 1;
         letter-spacing: 0;
         z-index: 9999;
         white-space: nowrap;
+        text-align: right;
+      }
+      .pb-brand-row {
+        display: block;
       }
       .pb-brand .pb-personal {
         font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -40,6 +44,16 @@
         font-size: 22px;
         letter-spacing: -0.005em;
         color: oklch(0.58 0.18 25);
+      }
+      .pb-brand .pb-powered {
+        display: block;
+        margin-top: 6px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: oklch(0.52 0.008 70);
       }
 
       /* ───── closer (0..7s) ───── */
@@ -365,7 +379,7 @@
       </div>
 
       <div class="cl-inbox-foot">
-        <span class="cl-foot-l">+ 12 more beats delivered today</span>
+        <span class="cl-foot-l">+ 12 more beats · 7 languages · 142 sources verified today</span>
         <span class="cl-foot-r">SAT · APR 26 · 09:00 CET</span>
       </div>
     </div>
@@ -390,9 +404,9 @@
       </div>
     </div>
 
-    <div class="ec-url">Personal Beats · personal-beats.app</div>
+    <div class="ec-url">Open source · github.com/panpawka/personal-beats</div>
       </div>
-      <div class="pb-brand"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></div>
+      <div class="pb-brand"><span class="pb-brand-row"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></span><span class="pb-powered">Powered by Claude Opus 4.7</span></div>
     </div>
 
     <script>

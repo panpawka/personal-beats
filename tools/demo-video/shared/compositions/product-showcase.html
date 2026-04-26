@@ -1,0 +1,121 @@
+<template id="product-showcase-template">
+  <div data-composition-id="product-showcase" data-start="0" data-width="1920" data-height="1080">
+    <div class="ps-bg"></div>
+
+    <div class="ps-eyebrow">LIVE · github.com/panpawka/personal-beats</div>
+    <h2 class="ps-h">Brief it once. <i>Read it forever.</i></h2>
+
+    <div class="ps-frame">
+      <div class="ps-chrome">
+        <span class="ps-dot ps-dot-r"></span>
+        <span class="ps-dot ps-dot-y"></span>
+        <span class="ps-dot ps-dot-g"></span>
+        <span class="ps-url">github.com/panpawka/personal-beats</span>
+      </div>
+      <div class="ps-screen">
+        <img src="images/website-screenshot.png" alt="" />
+      </div>
+    </div>
+
+    <style>
+      [data-composition-id="product-showcase"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --paper: oklch(0.985 0.006 75);
+        --paper-2: oklch(0.965 0.008 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+        color: var(--ink);
+      }
+      [data-composition-id="product-showcase"] .ps-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-composition-id="product-showcase"] .ps-eyebrow {
+        position: absolute;
+        left: 50%; top: 90px; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 13px; font-weight: 600;
+        letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--accent-ink);
+        opacity: 0;
+      }
+      [data-composition-id="product-showcase"] .ps-h {
+        position: absolute;
+        left: 50%; top: 130px; transform: translateX(-50%);
+        font-family: var(--sans); font-weight: 500;
+        font-size: 56px; letter-spacing: -0.02em; line-height: 1.05;
+        color: var(--ink);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      [data-composition-id="product-showcase"] .ps-h i {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink);
+      }
+      [data-composition-id="product-showcase"] .ps-frame {
+        position: absolute;
+        left: 50%; top: 230px; transform: translateX(-50%);
+        width: 1500px;
+        background: var(--paper);
+        border: 0.5px solid var(--ink);
+        box-shadow: 0 50px 100px -40px color-mix(in oklab, var(--ink) 70%, transparent);
+        opacity: 0;
+      }
+      [data-composition-id="product-showcase"] .ps-chrome {
+        display: flex; align-items: center; gap: 8px;
+        padding: 12px 18px;
+        border-bottom: 0.5px solid var(--rule);
+        background: var(--paper-2);
+      }
+      [data-composition-id="product-showcase"] .ps-dot {
+        width: 12px; height: 12px; border-radius: 50%;
+        background: var(--ink-3);
+      }
+      [data-composition-id="product-showcase"] .ps-dot-r { background: #ff5f57; }
+      [data-composition-id="product-showcase"] .ps-dot-y { background: #febc2e; }
+      [data-composition-id="product-showcase"] .ps-dot-g { background: #28c840; }
+      [data-composition-id="product-showcase"] .ps-url {
+        margin-left: 18px;
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.06em; color: var(--ink-2);
+      }
+      [data-composition-id="product-showcase"] .ps-screen {
+        width: 100%;
+        background: var(--paper);
+        overflow: hidden;
+      }
+      [data-composition-id="product-showcase"] .ps-screen img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 720px;
+        object-fit: cover;
+        object-position: top center;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ns = '[data-composition-id="product-showcase"]';
+
+      // Eyebrow + headline land first
+      tl.to(ns + ' .ps-eyebrow', { opacity: 1, duration: 0.35, ease: "power2.out" }, 0.0);
+      tl.to(ns + ' .ps-h', { opacity: 1, duration: 0.4, ease: "power2.out" }, 0.15);
+      tl.from(ns + ' .ps-h', { y: 14, duration: 0.45, ease: "power3.out" }, 0.15);
+
+      // Browser frame slides up
+      tl.to(ns + ' .ps-frame', { opacity: 1, duration: 0.45, ease: "power2.out" }, 0.45);
+      tl.from(ns + ' .ps-frame', { y: 50, duration: 0.6, ease: "power3.out" }, 0.45);
+
+      window.__timelines["product-showcase"] = tl;
+    </script>
+  </div>
+</template>
