@@ -1,0 +1,26 @@
+{
+  "name": "personal-beats-demo-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HyperFrames composition for the Personal Beats hackathon demo. DEV-ONLY — never imported by the Wasp app.",
+  "scripts": {
+    "bundle:css": "node scripts/bundle-css.mjs",
+    "bundle:scenes": "node scripts/bundle-scenes.mjs",
+    "bundle": "npm run bundle:css && npm run bundle:scenes",
+    "prelint": "npm run bundle",
+    "prevalidate": "npm run bundle",
+    "preinspect": "npm run bundle",
+    "prepreview": "npm run bundle",
+    "prerender": "npm run bundle",
+    "lint": "hyperframes lint",
+    "validate": "hyperframes validate",
+    "inspect": "hyperframes inspect",
+    "preview": "hyperframes preview",
+    "render": "hyperframes render",
+    "render:all": "node scripts/render-all.mjs"
+  },
+  "devDependencies": {
+    "hyperframes": "^0.4.30",
+    "gsap": "^3.14.2"
+  }
+}

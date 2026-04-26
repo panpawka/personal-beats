@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="../../shared/app-editorial.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0; width: 1080px; height: 1080px;
+        overflow: hidden; background: oklch(0.985 0.006 75);
+      }
+      /* ───── global brand wordmark (top-right, persists across all scenes) ───── */
+      .pb-brand {
+        position: absolute;
+        right: 80px; top: 70px;
+        font-size: 18px;
+        line-height: 1;
+        letter-spacing: 0;
+        z-index: 9999;
+        white-space: nowrap;
+      }
+      .pb-brand .pb-personal {
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 22px;
+        letter-spacing: -0.005em;
+        color: oklch(0.22 0.012 70);
+      }
+      .pb-brand .pb-beats {
+        margin-left: 8px;
+        font-family: "Source Serif 4", Georgia, serif;
+        font-style: italic;
+        font-weight: 600;
+        font-size: 22px;
+        letter-spacing: -0.005em;
+        color: oklch(0.58 0.18 25);
+      }
+
+      /* ───── open (0..3s) ───── */
+
+      [data-scene-id="open"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+      }
+      [data-scene-id="open"] .op-bg {
+        position: absolute; inset: 0;
+        background: oklch(0.985 0.006 75);
+      }
+      [data-scene-id="open"] .op-folio {
+        position: absolute; left: 80px; top: 70px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 18px; font-weight: 500;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: oklch(0.52 0.008 70);
+      }
+      [data-scene-id="open"] .op-kicker {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 32px; font-weight: 500;
+        letter-spacing: 0.18em; text-transform: uppercase;
+        color: oklch(0.36 0.01 70);
+        white-space: nowrap;
+      }
+      [data-scene-id="open"] .op-kicker i {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-style: italic; font-weight: 600;
+        text-transform: none; letter-spacing: -0.005em;
+        font-size: 38px;
+        color: oklch(0.58 0.18 25);
+      }
+      [data-scene-id="open"] .op-rule {
+        position: absolute; top: 50%;
+        height: 0.5px;
+        background: oklch(0.22 0.012 70 / 0.28);
+        transform-origin: center;
+      }
+      [data-scene-id="open"] .op-rule-l {
+        left: 80px; right: calc(50% + 380px);
+      }
+      [data-scene-id="open"] .op-rule-r {
+        left: calc(50% + 380px); right: 80px;
+      }
+    
+
+      /* ───── vignette-maja (3..17s) ───── */
+
+      [data-scene-id="vignette-maja"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+        --paper: oklch(0.985 0.006 75);
+        --paper-2: oklch(0.965 0.008 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      [data-scene-id="vignette-maja"] .vm-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-scene-id="vignette-maja"] .vm-folio {
+        position: absolute; left: 80px; top: 70px;
+        font-family: var(--mono); font-size: 18px; font-weight: 500;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--ink-3); z-index: 5;
+      }
+
+      [data-scene-id="vignette-maja"] .vm-scene {
+        position: absolute; inset: 0;
+        opacity: 0;
+      }
+
+      /* Scene 1 — persona */
+      [data-scene-id="vignette-maja"] .vm-scene-persona {
+        display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+        padding: 0 0 0 160px;
+      }
+      [data-scene-id="vignette-maja"] .vm-persona-name {
+        font-family: var(--serif); font-style: italic; font-weight: 400;
+        font-size: 130px; line-height: 1;
+        letter-spacing: -0.025em; color: var(--ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-persona-meta {
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+        margin-top: 18px;
+      }
+
+      /* Scene 2 — composer */
+      [data-scene-id="vignette-maja"] .vm-scene-composer {
+        display: flex; align-items: center; justify-content: center;
+      }
+      [data-scene-id="vignette-maja"] .vm-composer {
+        width: 1280px; padding: 36px 44px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+        box-shadow: 0 16px 40px -16px color-mix(in oklab, var(--ink) 40%, transparent);
+      }
+      [data-scene-id="vignette-maja"] .vm-composer-line {
+        display: flex; gap: 18px; align-items: baseline;
+      }
+      [data-scene-id="vignette-maja"] .vm-composer-prompt {
+        font-family: var(--mono); font-size: 16px; font-weight: 500;
+        letter-spacing: 0.04em; color: var(--ink-3); flex-shrink: 0;
+      }
+      [data-scene-id="vignette-maja"] .vm-composer-text {
+        font-family: var(--sans); font-size: 26px; color: var(--ink);
+        line-height: 1.4;
+      }
+      [data-scene-id="vignette-maja"] .vm-cursor {
+        display: inline-block; font-family: var(--sans); font-size: 26px;
+        color: var(--accent); margin-left: 4px;
+      }
+
+      /* Scene 3 — turns + brief card */
+      [data-scene-id="vignette-maja"] .vm-scene-brief {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 80px 0 40px;
+      }
+      [data-scene-id="vignette-maja"] .vm-turn {
+        width: 1280px; display: flex; gap: 18px; align-items: baseline;
+        margin-bottom: 14px;
+      }
+      [data-scene-id="vignette-maja"] .vm-turn-label {
+        font-family: var(--mono); font-size: 13px; font-weight: 500;
+        letter-spacing: 0.04em; color: var(--ink-3); flex-shrink: 0; width: 72px;
+      }
+      [data-scene-id="vignette-maja"] .vm-turn-body {
+        font-family: var(--serif); font-size: 22px; line-height: 1.4; color: var(--ink-2);
+      }
+      [data-scene-id="vignette-maja"] .vm-turn-body i {
+        font-style: italic; color: var(--accent-ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-card {
+        margin-top: 28px;
+        width: 1280px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-head {
+        padding: 18px 26px 14px;
+        border-bottom: 1.5px double var(--ink);
+        display: flex; justify-content: space-between; align-items: baseline;
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-lbl {
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-vol {
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-body { padding: 22px 26px; }
+      [data-scene-id="vignette-maja"] .vm-brief-h {
+        font-family: var(--sans); font-weight: 500;
+        font-size: 38px; letter-spacing: -0.014em; line-height: 1.1;
+        margin-bottom: 18px;
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-h i {
+        font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--accent-ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-row {
+        padding: 11px 0; border-top: 0.5px solid var(--rule);
+        display: grid; grid-template-columns: 160px 1fr; gap: 18px; align-items: baseline;
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-row:first-child { border-top: 0; padding-top: 0; }
+      [data-scene-id="vignette-maja"] .vm-brief-row .k {
+        font-family: var(--mono); font-size: 12px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-scene-id="vignette-maja"] .vm-brief-row .v {
+        font-family: var(--sans); font-size: 17px; color: var(--ink); line-height: 1.4;
+      }
+
+      /* Scene 4/6 — email */
+      [data-scene-id="vignette-maja"] .vm-scene-email,
+      [data-scene-id="vignette-maja"] .vm-scene-email-2 {
+        display: flex; align-items: center; justify-content: center;
+        padding: 130px 0 130px;
+      }
+      [data-scene-id="vignette-maja"] .vm-email {
+        width: 1100px; background: var(--paper);
+        border: 0.5px solid var(--ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-email-mast {
+        padding: 28px 36px 22px;
+        border-bottom: 2px solid var(--ink);
+        text-align: center;
+      }
+      [data-scene-id="vignette-maja"] .vm-email-est {
+        font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+        letter-spacing: 0.12em; text-transform: uppercase;
+      }
+      [data-scene-id="vignette-maja"] .vm-email-h1 {
+        font-family: var(--sans); font-weight: 400; font-size: 56px;
+        line-height: 0.98; letter-spacing: -0.022em;
+        margin: 8px 0 6px; color: var(--ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-email-h1 i {
+        font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--accent-ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-email-deck {
+        font-family: var(--serif); font-style: italic; font-size: 19px;
+        color: var(--ink-3); margin: 6px 0 14px;
+      }
+      [data-scene-id="vignette-maja"] .vm-email-folio {
+        display: flex; justify-content: space-between;
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+        padding-top: 12px; border-top: 0.5px solid var(--rule);
+      }
+      [data-scene-id="vignette-maja"] .vm-email-body { padding: 22px 36px 30px; }
+      [data-scene-id="vignette-maja"] .vm-story {
+        padding: 18px 0; border-top: 0.5px solid var(--rule);
+      }
+      [data-scene-id="vignette-maja"] .vm-story:first-child {
+        border-top: 0; padding-top: 0;
+      }
+      [data-scene-id="vignette-maja"] .vm-story-eyebrow {
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+        margin-bottom: 8px; display: flex; gap: 8px;
+      }
+      [data-scene-id="vignette-maja"] .vm-story-eyebrow .cat { color: var(--accent-ink); }
+      [data-scene-id="vignette-maja"] .vm-story-h {
+        font-family: var(--sans); font-weight: 400; font-size: 26px;
+        line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 6px;
+      }
+      [data-scene-id="vignette-maja"] .vm-story-deck {
+        font-family: var(--serif); font-style: italic; font-size: 17px;
+        color: var(--ink-3); margin-bottom: 12px;
+      }
+      [data-scene-id="vignette-maja"] .vm-story-meta {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-top: 10px; padding-top: 10px;
+        border-top: 0.5px dashed var(--rule);
+        gap: 18px; flex-wrap: wrap;
+      }
+      [data-scene-id="vignette-maja"] .vm-story-when {
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-scene-id="vignette-maja"] .vm-srcs {
+        display: flex; flex-wrap: wrap; gap: 6px;
+      }
+      [data-scene-id="vignette-maja"] .vm-src {
+        padding: 4px 10px; border: 0.5px solid var(--rule);
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.04em; color: var(--ink-2);
+      }
+
+      /* Scene 5 hold caption */
+      [data-scene-id="vignette-maja"] .vm-scene-hold {
+        pointer-events: none;
+      }
+      [data-scene-id="vignette-maja"] .vm-caption,
+      [data-scene-id="vignette-maja"] .vm-caption-2 {
+        position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-scene-id="vignette-maja"] .vm-caption-2 {
+        bottom: 60px;
+      }
+    
+
+      /* ───── end-card (17..20s) ───── */
+
+      [data-scene-id="end-card"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+        --paper: oklch(0.985 0.006 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      [data-scene-id="end-card"] .ec-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-scene-id="end-card"] .ec-card {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        width: 1100px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+      }
+      [data-scene-id="end-card"] .ec-card-head {
+        padding: 24px 36px 20px;
+        border-bottom: 1.5px double var(--ink);
+        display: flex; justify-content: space-between; align-items: baseline;
+      }
+      [data-scene-id="end-card"] .ec-card-lbl {
+        font-family: var(--mono); font-size: 14px;
+        letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent-ink);
+      }
+      [data-scene-id="end-card"] .ec-card-vol {
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-scene-id="end-card"] .ec-card-body { padding: 70px 36px 60px; text-align: center; }
+      [data-scene-id="end-card"] .ec-card-h {
+        font-family: var(--sans); font-style: normal; font-weight: 500;
+        font-size: 64px; line-height: 1.1; letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+      [data-scene-id="end-card"] .ec-h-sans {
+        font-family: var(--sans); font-style: normal; font-weight: 500;
+        color: var(--ink);
+      }
+      [data-scene-id="end-card"] .ec-h-accent {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink);
+      }
+      [data-scene-id="end-card"] .ec-card-foot {
+        padding: 20px 36px 22px; border-top: 0.5px solid var(--rule);
+        display: flex; justify-content: center;
+      }
+      [data-scene-id="end-card"] .ec-foot-msg {
+        font-family: var(--mono); font-size: 14px;
+        letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-scene-id="end-card"] .ec-url {
+        position: absolute; left: 50%; bottom: 80px; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 18px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2);
+      }
+    
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="twitter-20"
+      data-start="0"
+      data-duration="20"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div id="open-scene" class="clip" data-scene-id="open" data-start="0" data-duration="3" data-track-index="1" style="position:absolute;inset:0;">
+<div class="op-bg"></div>
+      <div class="op-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
+      <div class="op-rule op-rule-l"></div>
+      <div class="op-kicker">Any reader · <i>personalized beats</i></div>
+      <div class="op-rule op-rule-r"></div>
+    </div>
+      </div>
+      <div id="vignette-maja-scene" class="clip" data-scene-id="vignette-maja" data-start="3" data-duration="14" data-track-index="1" style="position:absolute;inset:0;">
+<div class="vm-bg"></div>
+    <div class="vm-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
+
+    <!-- SCENE 1: persona card (0..1s) -->
+    <div class="vm-scene vm-scene-persona" data-scene="1">
+      <span class="vm-persona-name">Maja</span>
+      <span class="vm-persona-meta">Wrocław · parent of two</span>
+    </div>
+
+    <!-- SCENE 2: composer with brief being typed (1..5s) -->
+    <div class="vm-scene vm-scene-composer" data-scene="2">
+      <div class="vm-composer">
+        <div class="vm-composer-line">
+          <span class="vm-composer-prompt">[user]</span>
+          <span class="vm-composer-text vm-typed-1"></span><span class="vm-cursor">▍</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3: designer turn + brief card materialises (5..9s) -->
+    <div class="vm-scene vm-scene-brief" data-scene="3">
+      <div class="vm-turn vm-turn-user-1">
+        <span class="vm-turn-label">[user]</span>
+        <span class="vm-turn-body">kids activities in Wrocław on weekends</span>
+      </div>
+      <div class="vm-turn vm-turn-editor-1">
+        <span class="vm-turn-label">[editor]</span>
+        <span class="vm-turn-body">Quick one — <i>how old are the kids?</i></span>
+      </div>
+      <div class="vm-turn vm-turn-user-2">
+        <span class="vm-turn-label">[user]</span>
+        <span class="vm-turn-body">5 and 8.</span>
+      </div>
+      <div class="vm-turn vm-turn-editor-2">
+        <span class="vm-turn-label">[editor]</span>
+        <span class="vm-turn-body"><i>Got it.</i> Building.</span>
+      </div>
+      <div class="vm-brief-card">
+        <div class="vm-brief-head">
+          <span class="vm-brief-lbl">THE BRIEF</span>
+          <span class="vm-brief-vol">№ 14 · Saturdays · 7:00 CET</span>
+        </div>
+        <div class="vm-brief-body">
+          <h3 class="vm-brief-h">Wrocław <i>Weekends</i></h3>
+          <div class="vm-brief-rows">
+            <div class="vm-brief-row"><span class="k">Topic</span><span class="v">Kids activities · weekend events · family-friendly</span></div>
+            <div class="vm-brief-row"><span class="k">Geo</span><span class="v">Wrocław, PL · radius 25 km</span></div>
+            <div class="vm-brief-row"><span class="k">Audience</span><span class="v">Parents of 5- and 8-year-olds</span></div>
+            <div class="vm-brief-row"><span class="k">Cadence</span><span class="v">Every Saturday · 07:00 Europe/Warsaw</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 4: email lands (issue № 14, "Saturday at Hydropolis") (9..14s) -->
+    <div class="vm-scene vm-scene-email" data-scene="4">
+      <div class="vm-email">
+        <div class="vm-email-mast">
+          <div class="vm-email-est">Wrocław Weekends · № 14 · April 26 2026</div>
+          <h1 class="vm-email-h1">Saturday at <i>Hydropolis</i></h1>
+          <div class="vm-email-deck">two outdoor + one rainy-day option, ages 5–8.</div>
+          <div class="vm-email-folio">
+            <span>VOL. I · WROCŁAW WEEKENDS</span>
+            <span>EST. APR 2026</span>
+          </div>
+        </div>
+        <div class="vm-email-body">
+          <div class="vm-story">
+            <div class="vm-story-eyebrow"><span class="cat">SCIENCE CENTRE</span><span>· INDOOR</span></div>
+            <h2 class="vm-story-h">Hydropolis hosts an English-language family tour Saturday at 11:00.</h2>
+            <div class="vm-story-deck">90 minutes, ages 6+, second edition this spring.</div>
+            <div class="vm-story-meta">
+              <span class="vm-story-when">SAT · 11:00–12:30</span>
+              <div class="vm-srcs">
+                <span class="vm-src">hydropolis.pl</span>
+                <span class="vm-src">visit-wroclaw.eu</span>
+              </div>
+            </div>
+          </div>
+          <div class="vm-story">
+            <div class="vm-story-eyebrow"><span class="cat">PARK</span><span>· OUTDOOR</span></div>
+            <h2 class="vm-story-h">Centennial Hall fountain show resumes — free, with English commentary cards.</h2>
+            <div class="vm-story-deck">runs 12:00, 14:00, 16:00; bring a picnic.</div>
+            <div class="vm-story-meta">
+              <span class="vm-story-when">SAT · 12:00–17:00</span>
+              <div class="vm-srcs">
+                <span class="vm-src">halastulecia.pl</span>
+              </div>
+            </div>
+          </div>
+          <div class="vm-story">
+            <div class="vm-story-eyebrow"><span class="cat">RAINY-DAY</span><span>· INDOOR</span></div>
+            <h2 class="vm-story-h">Kolejkowo extends weekend hours through April.</h2>
+            <div class="vm-story-deck">miniature railway exhibition; English audio guide on request.</div>
+            <div class="vm-story-meta">
+              <span class="vm-story-when">SAT · 10:00–19:00</span>
+              <div class="vm-srcs">
+                <span class="vm-src">kolejkowo.pl</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5: hold on email + caption (16..18s) -->
+    <div class="vm-scene vm-scene-hold" data-scene="5">
+      <div class="vm-caption">every Saturday. delivered.</div>
+    </div>
+      </div>
+      <div id="end-card-scene" class="clip" data-scene-id="end-card" data-start="17" data-duration="3" data-track-index="1" style="position:absolute;inset:0;">
+<div class="ec-bg"></div>
+
+    <div class="ec-card">
+      <div class="ec-card-head">
+        <span class="ec-card-lbl">BEGIN A BEAT</span>
+        <span class="ec-card-vol">No. 0 · Empty State</span>
+      </div>
+      <div class="ec-card-body">
+        <h3 class="ec-card-h"><span class="ec-h-sans">What should we read</span> <i class="ec-h-accent">for you?</i></h3>
+      </div>
+      <div class="ec-card-foot">
+        <span class="ec-foot-msg">Type a topic. Pick a cadence. Press send.</span>
+      </div>
+    </div>
+
+    <div class="ec-url">Personal Beats · personal-beats.app</div>
+      </div>
+      <div class="pb-brand"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ───── open (offset +0s) ─────
+      (function(){
+
+      tl.from('[data-scene-id="open"] .op-folio', {
+        opacity: 0, y: -10, duration: 0.4, ease: "power2.out"
+      }, 0.1);
+      tl.from('[data-scene-id="open"] .op-rule-l', {
+        scaleX: 0, transformOrigin: "right center", duration: 0.55, ease: "expo.out"
+      }, 0.3);
+      tl.from('[data-scene-id="open"] .op-rule-r', {
+        scaleX: 0, transformOrigin: "left center", duration: 0.55, ease: "expo.out"
+      }, 0.3);
+      tl.from('[data-scene-id="open"] .op-kicker', {
+        opacity: 0, letterSpacing: "0.32em", duration: 0.7, ease: "power3.out"
+      }, 0.6);
+
+      })();
+
+      // ───── vignette-maja (offset +3s) ─────
+      (function(){
+
+      const ns = '[data-scene-id="vignette-maja"]';
+
+      // folio entrance (sticks for whole vignette)
+      tl.from(ns + ' .vm-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 3);
+
+      // SCENE 1 — persona (0..1.6s)
+      tl.to(ns + ' .vm-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 3);
+      tl.from(ns + ' .vm-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 3.15);
+      tl.from(ns + ' .vm-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 3.4);
+
+      // SCENE 2 — composer + brief typing (1.6..5s)
+      tl.to(ns + ' .vm-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 4.6);
+      tl.to(ns + ' .vm-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 4.7);
+      tl.from(ns + ' .vm-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 4.75);
+      // Cursor blink
+      tl.to(ns + ' .vm-cursor', { opacity: 0, duration: 0.3, repeat: 9, yoyo: true, ease: "none" }, 5);
+      // Per-char stagger reveal
+      const briefText = "kids activities in Wrocław on weekends";
+      const typedEl = document.querySelector(ns + ' .vm-typed-1');
+      if (typedEl) {
+        typedEl.innerHTML = briefText.split("").map(
+          (c) => `<span class="vm-ch">${c === " " ? "&nbsp;" : c}</span>`
+        ).join("");
+      }
+      tl.from(ns + ' .vm-typed-1 .vm-ch', {
+        autoAlpha: 0, display: "none",
+        duration: 0.001, stagger: 2.2 / briefText.length, ease: "none"
+      }, 5.2);
+
+      // SCENE 3 — clarifying turns + brief card (5..11s)
+      tl.to(ns + ' .vm-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 8);
+      tl.to(ns + ' .vm-scene-brief', { opacity: 1, duration: 0.35, ease: "power2.out" }, 8.1);
+      tl.from(ns + ' .vm-turn-user-1', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 8.25);
+      tl.from(ns + ' .vm-turn-editor-1', { y: 16, opacity: 0, duration: 0.4, ease: "expo.out" }, 8.85);
+      tl.from(ns + ' .vm-turn-user-2', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 9.85);
+      tl.from(ns + ' .vm-turn-editor-2', { y: 16, opacity: 0, duration: 0.4, ease: "expo.out" }, 10.5);
+      tl.from(ns + ' .vm-brief-card', { y: 24, opacity: 0, duration: 0.55, ease: "power3.out" }, 11.4);
+
+      // SCENE 4 — email reveal (11..12.6s)
+      tl.to(ns + ' .vm-scene-brief', { opacity: 0, duration: 0.25, ease: "power2.in" }, 14);
+      tl.to(ns + ' .vm-scene-email', { opacity: 1, duration: 0.35, ease: "power2.out" }, 14.1);
+      tl.from(ns + ' .vm-scene-email .vm-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 14.15);
+      tl.from(ns + ' .vm-scene-email .vm-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 14.55);
+
+      // SCENE 5 — caption (12.6..14s) — email stays, caption pops fast
+      tl.to(ns + ' .vm-scene-hold', { opacity: 1, duration: 0.25, ease: "power2.out" }, 15.6);
+      tl.from(ns + ' .vm-caption', { y: 10, opacity: 0, duration: 0.3, ease: "power2.out" }, 15.65);
+
+      })();
+
+      // ───── end-card (offset +17s) ─────
+      (function(){
+
+      const ns = '[data-scene-id="end-card"]';
+      tl.from(ns + ' .ec-card', { y: 40, opacity: 0, duration: 0.8, ease: "power3.out" }, 17.1);
+      tl.from(ns + ' .ec-card-h', { opacity: 0, duration: 0.6, ease: "power2.out" }, 17.6);
+      tl.from(ns + ' .ec-url', { opacity: 0, y: 10, duration: 0.5, ease: "power2.out" }, 18.2);
+
+      })();
+      window.__timelines["twitter-20"] = tl;
+    </script>
+  </body>
+</html>

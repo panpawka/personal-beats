@@ -1,0 +1,363 @@
+<template id="vignette-ola-template">
+  <div data-composition-id="vignette-ola" data-start="0" data-width="1920" data-height="1080">
+    <div class="vo-bg"></div>
+    <div class="vo-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
+
+    <!-- SCENE 1: persona (0..1s) -->
+    <div class="vo-scene vo-scene-persona" data-scene="1">
+      <span class="vo-persona-name">Ola</span>
+      <span class="vo-persona-meta">AI agent frameworks · weekly</span>
+    </div>
+
+    <!-- SCENE 2: composer + brief (1..5s) -->
+    <div class="vo-scene vo-scene-composer" data-scene="2">
+      <div class="vo-composer">
+        <div class="vo-composer-line">
+          <span class="vo-composer-prompt">[user]</span>
+          <span class="vo-composer-text vo-typed-1"></span><span class="vo-cursor">▍</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3: editor confirms + brief card (5..7s) -->
+    <div class="vo-scene vo-scene-brief" data-scene="3">
+      <div class="vo-turn vo-turn-user-1">
+        <span class="vo-turn-label">[user]</span>
+        <span class="vo-turn-body">AI agent frameworks, weekly digest</span>
+      </div>
+      <div class="vo-turn vo-turn-editor-1">
+        <span class="vo-turn-label">[editor]</span>
+        <span class="vo-turn-body">Open-source frameworks (LangGraph, AutoGen, CrewAI), <i>vendor SDKs</i>, or both?</span>
+      </div>
+      <div class="vo-turn vo-turn-user-2">
+        <span class="vo-turn-label">[user]</span>
+        <span class="vo-turn-body">Both, plus arxiv papers.</span>
+      </div>
+      <div class="vo-turn vo-turn-editor-2">
+        <span class="vo-turn-label">[editor]</span>
+        <span class="vo-turn-body"><i>Got it.</i> Weekly. Building.</span>
+      </div>
+    </div>
+
+    <!-- SCENE 4: email (7..16s) -->
+    <div class="vo-scene vo-scene-email" data-scene="4">
+      <div class="vo-email">
+        <div class="vo-email-mast">
+          <div class="vo-email-est">AI Agent Frameworks · Weekly · № 47 · April 26 2026</div>
+          <h1 class="vo-email-h1">What <i>shipped</i> this week</h1>
+          <div class="vo-email-deck">three releases worth your time, no hype.</div>
+          <div class="vo-email-folio">
+            <span>VOL. I · AI AGENT FRAMEWORKS</span>
+            <span>EST. JUN 2025</span>
+          </div>
+        </div>
+        <div class="vo-email-body">
+          <div class="vo-story">
+            <div class="vo-story-eyebrow"><span class="cat">RELEASE</span><span>· LANGGRAPH</span></div>
+            <h2 class="vo-story-h">LangGraph 0.4.30 lands persistent state via SQLite checkpointer.</h2>
+            <div class="vo-story-deck">drop-in for the in-memory MemorySaver; opt-in WAL mode.</div>
+            <div class="vo-story-meta">
+              <span class="vo-story-when">26 APR · v0.4.30</span>
+              <div class="vo-srcs">
+                <span class="vo-src">github.com/langchain-ai/langgraph</span>
+              </div>
+            </div>
+          </div>
+          <div class="vo-story">
+            <div class="vo-story-eyebrow"><span class="cat">RELEASE</span><span>· CLAUDE AGENT SDK</span></div>
+            <h2 class="vo-story-h">Anthropic ships Managed Agents subagent dispatch in the SDK.</h2>
+            <div class="vo-story-deck">isolation: "worktree" runs each subagent in a temporary git checkout.</div>
+            <div class="vo-story-meta">
+              <span class="vo-story-when">25 APR · SDK 0.91.1</span>
+              <div class="vo-srcs">
+                <span class="vo-src">anthropic.com</span>
+                <span class="vo-src">github.com/anthropics</span>
+              </div>
+            </div>
+          </div>
+          <div class="vo-story">
+            <div class="vo-story-eyebrow"><span class="cat">PAPER</span><span>· ARXIV</span></div>
+            <h2 class="vo-story-h">"Verifier-guided agent loops" — debate-style critique outperforms tree search on SWE-bench Lite.</h2>
+            <div class="vo-story-deck">Stanford / Berkeley collaboration; release candidate, public weights.</div>
+            <div class="vo-story-meta">
+              <span class="vo-story-when">23 APR · arXiv:2604.18112</span>
+              <div class="vo-srcs">
+                <span class="vo-src">arxiv.org/abs/2604.18112</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5: pulse-ring on dashboard (16..22s) -->
+    <div class="vo-scene vo-scene-pulse" data-scene="5">
+      <div class="vo-dash-working">
+        <div class="vo-pulse">
+          <span class="vo-pulse-dot"></span>
+          <span class="vo-pulse-ring"></span>
+        </div>
+        <div class="vo-pulse-text">
+          <div class="vo-pulse-lbl">NOW RUNNING · NEXT ISSUE</div>
+          <div class="vo-pulse-h">Sweeping LangGraph, AutoGen, CrewAI, arxiv cs.AI for issue № 48.</div>
+          <div class="vo-pulse-s">Started 6 minutes ago · ETA 4 min · 14 sources verified, 9 to go</div>
+        </div>
+        <div class="vo-pulse-when">№&nbsp;48</div>
+      </div>
+      <div class="vo-caption">and tomorrow it does it again.</div>
+    </div>
+
+    <style>
+      [data-composition-id="vignette-ola"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+        --paper: oklch(0.985 0.006 75);
+        --paper-2: oklch(0.965 0.008 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --rule-strong: oklch(0.22 0.012 70 / 0.28);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      [data-composition-id="vignette-ola"] .vo-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-composition-id="vignette-ola"] .vo-folio {
+        position: absolute; left: 80px; top: 70px;
+        font-family: var(--mono); font-size: 18px; font-weight: 500;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--ink-3); z-index: 5;
+      }
+      [data-composition-id="vignette-ola"] .vo-scene {
+        position: absolute; inset: 0; opacity: 0;
+      }
+
+      [data-composition-id="vignette-ola"] .vo-scene-persona {
+        display: flex; flex-direction: column; justify-content: center; padding: 0 0 0 160px;
+      }
+      [data-composition-id="vignette-ola"] .vo-persona-name {
+        font-family: var(--serif); font-style: italic; font-weight: 400;
+        font-size: 130px; line-height: 1; letter-spacing: -0.025em; color: var(--ink);
+      }
+      [data-composition-id="vignette-ola"] .vo-persona-meta {
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+        margin-top: 18px;
+      }
+
+      [data-composition-id="vignette-ola"] .vo-scene-composer {
+        display: flex; align-items: center; justify-content: center;
+      }
+      [data-composition-id="vignette-ola"] .vo-composer {
+        width: 1280px; padding: 36px 44px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+        box-shadow: 0 16px 40px -16px color-mix(in oklab, var(--ink) 40%, transparent);
+      }
+      [data-composition-id="vignette-ola"] .vo-composer-line {
+        display: flex; gap: 18px; align-items: baseline;
+      }
+      [data-composition-id="vignette-ola"] .vo-composer-prompt {
+        font-family: var(--mono); font-size: 16px; font-weight: 500;
+        letter-spacing: 0.04em; color: var(--ink-3); flex-shrink: 0;
+      }
+      [data-composition-id="vignette-ola"] .vo-composer-text {
+        font-family: var(--sans); font-size: 26px; color: var(--ink); line-height: 1.4;
+      }
+      [data-composition-id="vignette-ola"] .vo-cursor {
+        display: inline-block; font-family: var(--sans); font-size: 26px; color: var(--accent); margin-left: 4px;
+      }
+
+      [data-composition-id="vignette-ola"] .vo-scene-brief {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 0 0 40px;
+      }
+      [data-composition-id="vignette-ola"] .vo-turn {
+        width: 1280px; display: flex; gap: 18px; align-items: baseline;
+        margin-bottom: 16px;
+      }
+      [data-composition-id="vignette-ola"] .vo-turn-label {
+        font-family: var(--mono); font-size: 13px; font-weight: 500;
+        letter-spacing: 0.04em; color: var(--ink-3); flex-shrink: 0; width: 72px;
+      }
+      [data-composition-id="vignette-ola"] .vo-turn-body {
+        font-family: var(--serif); font-size: 26px; line-height: 1.4; color: var(--ink-2);
+      }
+      [data-composition-id="vignette-ola"] .vo-turn-body i {
+        font-style: italic; color: var(--accent-ink);
+      }
+
+      [data-composition-id="vignette-ola"] .vo-scene-email {
+        display: flex; align-items: center; justify-content: center;
+        padding: 130px 0 130px;
+      }
+      [data-composition-id="vignette-ola"] .vo-email {
+        width: 1100px; background: var(--paper); border: 0.5px solid var(--ink);
+      }
+      [data-composition-id="vignette-ola"] .vo-email-mast {
+        padding: 28px 36px 22px; border-bottom: 2px solid var(--ink); text-align: center;
+      }
+      [data-composition-id="vignette-ola"] .vo-email-est {
+        font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+        letter-spacing: 0.12em; text-transform: uppercase;
+      }
+      [data-composition-id="vignette-ola"] .vo-email-h1 {
+        font-family: var(--sans); font-weight: 400; font-size: 56px;
+        line-height: 0.98; letter-spacing: -0.022em; margin: 8px 0 6px;
+      }
+      [data-composition-id="vignette-ola"] .vo-email-h1 i {
+        font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--accent-ink);
+      }
+      [data-composition-id="vignette-ola"] .vo-email-deck {
+        font-family: var(--serif); font-style: italic; font-size: 19px;
+        color: var(--ink-3); margin: 6px 0 14px;
+      }
+      [data-composition-id="vignette-ola"] .vo-email-folio {
+        display: flex; justify-content: space-between;
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+        padding-top: 12px; border-top: 0.5px solid var(--rule);
+      }
+      [data-composition-id="vignette-ola"] .vo-email-body { padding: 22px 36px 30px; }
+      [data-composition-id="vignette-ola"] .vo-story {
+        padding: 18px 0; border-top: 0.5px solid var(--rule);
+      }
+      [data-composition-id="vignette-ola"] .vo-story:first-child { border-top: 0; padding-top: 0; }
+      [data-composition-id="vignette-ola"] .vo-story-eyebrow {
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+        margin-bottom: 8px; display: flex; gap: 8px;
+      }
+      [data-composition-id="vignette-ola"] .vo-story-eyebrow .cat { color: var(--accent-ink); }
+      [data-composition-id="vignette-ola"] .vo-story-h {
+        font-family: var(--sans); font-weight: 400; font-size: 26px;
+        line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 6px;
+      }
+      [data-composition-id="vignette-ola"] .vo-story-deck {
+        font-family: var(--serif); font-style: italic; font-size: 17px;
+        color: var(--ink-3); margin-bottom: 12px;
+      }
+      [data-composition-id="vignette-ola"] .vo-story-meta {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-top: 10px; padding-top: 10px;
+        border-top: 0.5px dashed var(--rule);
+        gap: 18px; flex-wrap: wrap;
+      }
+      [data-composition-id="vignette-ola"] .vo-story-when {
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-composition-id="vignette-ola"] .vo-srcs { display: flex; flex-wrap: wrap; gap: 6px; }
+      [data-composition-id="vignette-ola"] .vo-src {
+        padding: 4px 10px; border: 0.5px solid var(--rule);
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.04em; color: var(--ink-2);
+      }
+
+      /* dash-working pulse-ring (replicates App.css .dash-working) */
+      [data-composition-id="vignette-ola"] .vo-scene-pulse {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 0 80px;
+      }
+      [data-composition-id="vignette-ola"] .vo-dash-working {
+        width: 1380px;
+        border: 0.5px solid var(--rule-strong); padding: 40px 44px;
+        display: grid; grid-template-columns: auto 1fr auto; gap: 36px;
+        align-items: center; background: var(--paper-2);
+      }
+      [data-composition-id="vignette-ola"] .vo-pulse {
+        position: relative; width: 16px; height: 16px;
+      }
+      [data-composition-id="vignette-ola"] .vo-pulse-dot,
+      [data-composition-id="vignette-ola"] .vo-pulse-ring {
+        position: absolute; inset: 0; border-radius: 50%; background: var(--accent);
+      }
+      [data-composition-id="vignette-ola"] .vo-pulse-ring { opacity: 0.5; }
+      [data-composition-id="vignette-ola"] .vo-pulse-lbl {
+        font-family: var(--mono); font-size: 13px; color: var(--accent-ink);
+        letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px;
+      }
+      [data-composition-id="vignette-ola"] .vo-pulse-h {
+        font-family: var(--sans); font-size: 24px; font-weight: 500;
+        letter-spacing: -0.005em; margin-bottom: 6px; color: var(--ink);
+      }
+      [data-composition-id="vignette-ola"] .vo-pulse-s {
+        font-family: var(--sans); font-size: 16px; color: var(--ink-3);
+      }
+      [data-composition-id="vignette-ola"] .vo-pulse-when {
+        font-family: var(--mono); font-size: 28px; font-weight: 600;
+        letter-spacing: 0.04em; color: var(--ink); white-space: nowrap;
+      }
+      [data-composition-id="vignette-ola"] .vo-caption {
+        margin-top: 56px;
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ns = '[data-composition-id="vignette-ola"]';
+
+      tl.from(ns + ' .vo-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 0.0);
+
+      // SCENE 1 — persona (0..1.4s)
+      tl.to(ns + ' .vo-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 0.0);
+      tl.from(ns + ' .vo-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.15);
+      tl.from(ns + ' .vo-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 0.4);
+
+      // SCENE 2 — composer (1.4..4.5s)
+      tl.to(ns + ' .vo-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 1.4);
+      tl.to(ns + ' .vo-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 1.5);
+      tl.from(ns + ' .vo-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 1.55);
+      tl.to(ns + ' .vo-cursor', { opacity: 0, duration: 0.3, repeat: 8, yoyo: true, ease: "none" }, 1.8);
+      // Per-char stagger reveal
+      const briefText = "AI agent frameworks, weekly digest";
+      const typedEl = document.querySelector(ns + ' .vo-typed-1');
+      if (typedEl) {
+        typedEl.innerHTML = briefText.split("").map(
+          (c) => `<span class="vo-ch">${c === " " ? "&nbsp;" : c}</span>`
+        ).join("");
+      }
+      tl.from(ns + ' .vo-typed-1 .vo-ch', {
+        autoAlpha: 0, display: "none",
+        duration: 0.001, stagger: 2.0 / briefText.length, ease: "none"
+      }, 2.0);
+
+      // SCENE 3 — clarifying turns (4.5..10s)
+      tl.to(ns + ' .vo-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 4.5);
+      tl.to(ns + ' .vo-scene-brief', { opacity: 1, duration: 0.35, ease: "power2.out" }, 4.6);
+      tl.from(ns + ' .vo-turn-user-1', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 4.75);
+      tl.from(ns + ' .vo-turn-editor-1', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 5.4);
+      tl.from(ns + ' .vo-turn-user-2', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 6.85);
+      tl.from(ns + ' .vo-turn-editor-2', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 7.65);
+
+      // SCENE 4 — email (10..12s)
+      tl.to(ns + ' .vo-scene-brief', { opacity: 0, duration: 0.25, ease: "power2.in" }, 10.0);
+      tl.to(ns + ' .vo-scene-email', { opacity: 1, duration: 0.3, ease: "power2.out" }, 10.1);
+      tl.from(ns + ' .vo-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 10.15);
+      tl.from(ns + ' .vo-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 10.5);
+
+      // SCENE 5 — pulse-ring (12..14s)
+      tl.to(ns + ' .vo-scene-email', { opacity: 0, duration: 0.25, ease: "power2.in" }, 12.0);
+      tl.to(ns + ' .vo-scene-pulse', { opacity: 1, duration: 0.3, ease: "power2.out" }, 12.1);
+      tl.from(ns + ' .vo-dash-working', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 12.2);
+      tl.from(ns + ' .vo-caption', { y: 10, opacity: 0, duration: 0.35, ease: "power2.out" }, 12.7);
+
+      // Pulse-ring ripple
+      tl.fromTo(ns + ' .vo-pulse-ring',
+        { scale: 1, opacity: 0.5 },
+        { scale: 2.6, opacity: 0, duration: 1.4, ease: "power2.out", repeat: 0 },
+      12.3);
+
+      window.__timelines["vignette-ola"] = tl;
+    </script>
+  </div>
+</template>

@@ -1,0 +1,351 @@
+<template id="info-chaos-template">
+  <div data-composition-id="info-chaos" data-start="0" data-width="1920" data-height="1080">
+    <div class="ic-bg"></div>
+
+    <!-- ─── peripheral chaos cards (slower-burn, varied moods) ─── -->
+    <div class="ic-stream">
+      <div class="ic-card ic-mood-tabloid"   style="top: 6%;  left: 3%;"><span class="ic-eyebrow">REUTERS</span><span class="ic-h">Brent at $113.25 as 34 vessels report damage in Hormuz</span></div>
+      <div class="ic-card ic-mood-broadsheet" style="top: 10%; left: 56%;"><span class="ic-eyebrow">The New York Times</span><span class="ic-h"><i>Anthropic</i> ships Managed Agents subagent dispatch in latest SDK</span></div>
+      <div class="ic-card ic-mood-techblog"   style="top: 22%; left: 26%;"><span class="ic-eyebrow">techcrunch</span><span class="ic-h">LangGraph 0.4.30 lands persistent state via SQLite checkpointer</span></div>
+      <div class="ic-card ic-mood-academic"   style="top: 32%; left: 70%;"><span class="ic-eyebrow">arXiv:2604.18112</span><span class="ic-h">Verifier-guided agent loops outperform tree search on SWE-bench Lite</span></div>
+      <div class="ic-card ic-mood-wire"       style="top: 42%; left: 4%;"><span class="ic-eyebrow">BBC · WORLD</span><span class="ic-h">Trump cancels Witkoff-Kushner Pakistan trip after Iranian delegation departs</span></div>
+      <div class="ic-card ic-mood-magazine"   style="top: 50%; left: 44%;"><span class="ic-eyebrow">WIRED</span><span class="ic-h">The agent gold rush is here. Few will survive the first quarter.</span></div>
+      <div class="ic-card ic-mood-techblog"   style="top: 60%; left: 14%;"><span class="ic-eyebrow">github / langchain-ai</span><span class="ic-h">v0.4.30 — drop-in for in-memory MemorySaver; opt-in WAL mode</span></div>
+      <div class="ic-card ic-mood-broadsheet" style="top: 66%; left: 60%;"><span class="ic-eyebrow">Foreign Affairs</span><span class="ic-h">Russia and China are betting on US attrition (Alterman + Vaez)</span></div>
+      <div class="ic-card ic-mood-tabloid"    style="top: 78%; left: 6%;"><span class="ic-eyebrow">HAARETZ</span><span class="ic-h">War Powers Act 60-day clock runs out May 1; Murkowski drafts AUMF</span></div>
+      <div class="ic-card ic-mood-wire"       style="top: 82%; left: 50%;"><span class="ic-eyebrow">VISIT WROCŁAW</span><span class="ic-h">Centennial Hall fountain show resumes — full schedule, English commentary</span></div>
+      <div class="ic-card ic-mood-academic"   style="top: 18%; left: 84%;"><span class="ic-eyebrow">IRNA · TEHRAN</span><span class="ic-h">Tollbooth levy clears first deposits as 34 vessels report damage</span></div>
+      <div class="ic-card ic-mood-magazine"   style="top: 54%; left: 80%;"><span class="ic-eyebrow">The Atlantic</span><span class="ic-h">What an AI editor sees that you don't</span></div>
+    </div>
+
+    <!-- ─── center reel: 26 article screenshots flash through at ~120ms each ─── -->
+    <div class="ic-reel">
+      <div class="ic-reel-img"><img src="images/1.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/2.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/3.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/4.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/5.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/6.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/7.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/8.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/9.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/10.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/11.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/12.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/13.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/14.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/15.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/16.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/17.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/18.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/19.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/20.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/21.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/22.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/23.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/24.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/25.png" alt=""/></div>
+      <div class="ic-reel-img"><img src="images/26.png" alt=""/></div>
+    </div>
+
+    <!-- vignette overlay -->
+    <div class="ic-vignette"></div>
+
+    <!-- ending tagline that resolves into the open -->
+    <div class="ic-tagline">
+      <div class="ic-tag-line-1">A thousand headlines. None for you.</div>
+      <div class="ic-tag-line-2">There has to be <i>a better way.</i></div>
+    </div>
+
+    <style>
+      [data-composition-id="info-chaos"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --paper: oklch(0.985 0.006 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+        color: var(--ink);
+        overflow: hidden;
+      }
+      [data-composition-id="info-chaos"] .ic-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-composition-id="info-chaos"] .ic-stream {
+        position: absolute; inset: 0;
+      }
+      [data-composition-id="info-chaos"] .ic-card {
+        position: absolute;
+        max-width: 460px;
+        padding: 14px 18px;
+        background: var(--paper);
+        box-shadow: 0 8px 22px -10px color-mix(in oklab, var(--ink) 35%, transparent);
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      [data-composition-id="info-chaos"] .ic-eyebrow {
+        display: block;
+        margin-bottom: 6px;
+      }
+      [data-composition-id="info-chaos"] .ic-h {
+        font-family: var(--sans); font-size: 16px; font-weight: 400;
+        line-height: 1.32; color: var(--ink);
+      }
+      [data-composition-id="info-chaos"] .ic-h i {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink);
+      }
+
+      /* ─── typographic moods (no real-brand fonts; mood-only) ─── */
+      [data-composition-id="info-chaos"] .ic-mood-tabloid {
+        border-top: 4px solid var(--accent);
+        border-left: 0.5px solid var(--ink);
+        border-right: 0.5px solid var(--ink);
+        border-bottom: 0.5px solid var(--ink);
+        background: var(--paper);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-tabloid .ic-eyebrow {
+        font-family: "Impact", "Geist", sans-serif; font-weight: 800;
+        font-size: 14px; letter-spacing: 0.06em;
+        text-transform: uppercase; color: var(--accent);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-tabloid .ic-h {
+        font-family: "Georgia", serif; font-weight: 700;
+        font-size: 17px; line-height: 1.2;
+      }
+
+      [data-composition-id="info-chaos"] .ic-mood-broadsheet {
+        border: 0.5px solid var(--ink);
+        background: oklch(0.99 0.005 80);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-broadsheet .ic-eyebrow {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-weight: 600; font-style: normal;
+        font-size: 18px; letter-spacing: 0; color: var(--ink);
+        font-variant: small-caps;
+      }
+      [data-composition-id="info-chaos"] .ic-mood-broadsheet .ic-h {
+        font-family: "Source Serif 4", Georgia, serif; font-weight: 400;
+        font-size: 18px; line-height: 1.28;
+      }
+      [data-composition-id="info-chaos"] .ic-mood-broadsheet .ic-h i {
+        font-style: italic;
+      }
+
+      [data-composition-id="info-chaos"] .ic-mood-techblog {
+        border: 0.5px solid color-mix(in oklab, var(--ink) 50%, transparent);
+        background: oklch(0.97 0.01 145);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-techblog .ic-eyebrow {
+        font-family: "Geist", sans-serif; font-weight: 600;
+        font-size: 12px; letter-spacing: -0.01em;
+        text-transform: lowercase; color: oklch(0.45 0.13 145);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-techblog .ic-h {
+        font-family: "Geist", sans-serif; font-weight: 500;
+        font-size: 16px; letter-spacing: -0.01em; line-height: 1.32;
+      }
+
+      [data-composition-id="info-chaos"] .ic-mood-academic {
+        border: 0.5px dashed var(--ink-3);
+        background: oklch(0.98 0.005 90);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-academic .ic-eyebrow {
+        font-family: "JetBrains Mono", monospace; font-weight: 500;
+        font-size: 11px; letter-spacing: 0; color: var(--ink-2);
+        text-transform: none;
+      }
+      [data-composition-id="info-chaos"] .ic-mood-academic .ic-h {
+        font-family: "Times New Roman", "Source Serif 4", serif; font-weight: 400;
+        font-size: 16px; line-height: 1.3; font-style: normal;
+      }
+
+      [data-composition-id="info-chaos"] .ic-mood-wire {
+        border-left: 4px solid var(--ink);
+        background: var(--paper);
+        padding-left: 14px;
+      }
+      [data-composition-id="info-chaos"] .ic-mood-wire .ic-eyebrow {
+        font-family: "JetBrains Mono", monospace; font-weight: 600;
+        font-size: 11px; letter-spacing: 0.16em;
+        text-transform: uppercase; color: var(--accent-ink);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-wire .ic-h {
+        font-family: "Geist", sans-serif; font-weight: 400;
+        font-size: 15px; line-height: 1.32;
+      }
+
+      [data-composition-id="info-chaos"] .ic-mood-magazine {
+        border: 0.5px solid var(--ink);
+        background: oklch(0.96 0.012 60);
+      }
+      [data-composition-id="info-chaos"] .ic-mood-magazine .ic-eyebrow {
+        font-family: "Source Serif 4", Georgia, serif; font-weight: 400;
+        font-style: italic; font-size: 16px; letter-spacing: 0;
+        color: var(--ink); text-transform: none;
+      }
+      [data-composition-id="info-chaos"] .ic-mood-magazine .ic-h {
+        font-family: "Source Serif 4", Georgia, serif; font-weight: 600;
+        font-size: 17px; line-height: 1.22; letter-spacing: -0.01em;
+      }
+
+      /* ─── center reel — image-based ─── */
+      [data-composition-id="info-chaos"] .ic-reel {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%) scale(0.55);
+        transform-origin: center center;
+        width: 760px; height: 540px;
+        will-change: transform;
+      }
+      [data-composition-id="info-chaos"] .ic-reel-img {
+        position: absolute;
+        left: 0; top: 0; right: 0; bottom: 0;
+        opacity: 0;
+        background: var(--paper);
+        border: 0.5px solid var(--ink);
+        box-shadow: 0 28px 70px -20px color-mix(in oklab, var(--ink) 55%, transparent);
+        overflow: hidden;
+      }
+      [data-composition-id="info-chaos"] .ic-reel-img img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      [data-composition-id="info-chaos"] .ic-vignette {
+        position: absolute; inset: 0; pointer-events: none;
+        background: radial-gradient(ellipse at center,
+          transparent 0%,
+          transparent 28%,
+          color-mix(in oklab, var(--paper) 90%, transparent) 70%,
+          var(--paper) 100%);
+        opacity: 0;
+      }
+      [data-composition-id="info-chaos"] .ic-tagline {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        opacity: 0;
+        z-index: 10;
+      }
+      [data-composition-id="info-chaos"] .ic-tag-line-1 {
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.18em; text-transform: uppercase;
+        color: var(--ink-2); margin-bottom: 18px;
+      }
+      [data-composition-id="info-chaos"] .ic-tag-line-2 {
+        font-family: var(--sans); font-size: 64px; font-weight: 500;
+        letter-spacing: -0.02em; line-height: 1.1; color: var(--ink);
+      }
+      [data-composition-id="info-chaos"] .ic-tag-line-2 i {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ns = '[data-composition-id="info-chaos"]';
+
+      // Deterministic PRNG (mulberry32) so every render frame is stable
+      function mulberry32(a) {
+        return function() {
+          a |= 0; a = a + 0x6D2B79F5 | 0;
+          let t = a;
+          t = Math.imul(t ^ t >>> 15, t | 1);
+          t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+          return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+      }
+      const rand = mulberry32(20260426);
+
+      // Peripheral chaos cards — burst in 0..1.8s, then drift outward as the reel grows
+      const cardEls = document.querySelectorAll(ns + ' .ic-card');
+      const W = 1920, H = 1080;
+      const cardDrifts = Array.from(cardEls, (el) => {
+        // outward direction = vector from center to card's anchor
+        const top = parseFloat(el.style.top) / 100 * H;
+        const left = parseFloat(el.style.left) / 100 * W;
+        const dx = left + 230 - W / 2;
+        const dy = top + 50 - H / 2;
+        const len = Math.max(Math.hypot(dx, dy), 1);
+        return {
+          ux: dx / len, uy: dy / len,
+          rot: (rand() - 0.5) * 2.4,
+          burstDelay: rand() * 1.4,
+        };
+      });
+      cardEls.forEach((el, i) => {
+        tl.to(el, {
+          opacity: 1, y: 0, duration: 0.28, ease: "power2.out"
+        }, 0.05 + cardDrifts[i].burstDelay);
+        // outward drift: ~140px in the radial direction over 4s
+        tl.to(el, {
+          x: cardDrifts[i].ux * 140, y: cardDrifts[i].uy * 140,
+          rotation: cardDrifts[i].rot,
+          duration: 4.0, ease: "power1.in"
+        }, 1.4);
+      });
+
+      // Center reel container — slowly zooms 0.55x → 1.35x while images flash
+      tl.to(ns + ' .ic-reel', {
+        scale: 1.35,
+        duration: 3.4, ease: "power1.inOut",
+        transformOrigin: "center center"
+      }, 1.2);
+
+      // Center reel — 26 images, ~125ms each, runs 1.4..4.7s (3.3s window)
+      const reelEls = document.querySelectorAll(ns + ' .ic-reel-img');
+      const REEL_START = 1.4;
+      const REEL_STEP = 3.3 / Math.max(reelEls.length, 1);
+      reelEls.forEach((el, i) => {
+        const at = REEL_START + i * REEL_STEP;
+        tl.set(el, { opacity: 0 }, at - 0.001);
+        tl.to(el, { opacity: 1, duration: 0.04, ease: "none" }, at);
+        tl.to(el, { opacity: 0, duration: 0.04, ease: "none" }, at + REEL_STEP - 0.02);
+      });
+
+      // Peripheral cards fade as overload intensifies
+      tl.to(ns + ' .ic-card', {
+        opacity: 0.35, duration: 1.0, ease: "power2.out"
+      }, 1.6);
+
+      // Vignette closes 4.4..5.2s, rest of cards fade
+      tl.to(ns + ' .ic-vignette', {
+        opacity: 1, duration: 0.7, ease: "power2.out"
+      }, 4.4);
+      tl.to(ns + ' .ic-card', {
+        opacity: 0, duration: 0.5, ease: "power2.in"
+      }, 4.6);
+      // fade the reel as we transition out
+      tl.to(ns + ' .ic-reel', {
+        opacity: 0, duration: 0.5, ease: "power2.in"
+      }, 4.7);
+
+      // Tagline lands 4.7..5.6s, holds through end of scene (~8s)
+      tl.to(ns + ' .ic-tagline', {
+        opacity: 1, duration: 0.4, ease: "power2.out"
+      }, 4.7);
+      tl.from(ns + ' .ic-tag-line-1', {
+        y: 12, opacity: 0, duration: 0.4, ease: "power2.out"
+      }, 4.8);
+      tl.from(ns + ' .ic-tag-line-2', {
+        y: 16, opacity: 0, duration: 0.55, ease: "power3.out"
+      }, 5.0);
+      // Hold tagline visible (deterministic noop tween — keeps it on screen)
+      tl.to(ns + ' .ic-tagline', {
+        opacity: 1, duration: 0.001
+      }, 7.6);
+
+      window.__timelines["info-chaos"] = tl;
+    </script>
+  </div>
+</template>

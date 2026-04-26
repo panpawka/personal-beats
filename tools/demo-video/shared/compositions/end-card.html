@@ -1,0 +1,98 @@
+<template id="end-card-template">
+  <div data-composition-id="end-card" data-start="0" data-width="1920" data-height="1080">
+    <div class="ec-bg"></div>
+
+    <div class="ec-card">
+      <div class="ec-card-head">
+        <span class="ec-card-lbl">BEGIN A BEAT</span>
+        <span class="ec-card-vol">No. 0 · Empty State</span>
+      </div>
+      <div class="ec-card-body">
+        <h3 class="ec-card-h"><span class="ec-h-sans">What should we read</span> <i class="ec-h-accent">for you?</i></h3>
+      </div>
+      <div class="ec-card-foot">
+        <span class="ec-foot-msg">Type a topic. Pick a cadence. Press send.</span>
+      </div>
+    </div>
+
+    <div class="ec-url">Personal Beats · personal-beats.app</div>
+
+    <style>
+      [data-composition-id="end-card"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+        --paper: oklch(0.985 0.006 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      [data-composition-id="end-card"] .ec-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-composition-id="end-card"] .ec-card {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        width: 1100px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+      }
+      [data-composition-id="end-card"] .ec-card-head {
+        padding: 24px 36px 20px;
+        border-bottom: 1.5px double var(--ink);
+        display: flex; justify-content: space-between; align-items: baseline;
+      }
+      [data-composition-id="end-card"] .ec-card-lbl {
+        font-family: var(--mono); font-size: 14px;
+        letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent-ink);
+      }
+      [data-composition-id="end-card"] .ec-card-vol {
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-composition-id="end-card"] .ec-card-body { padding: 70px 36px 60px; text-align: center; }
+      [data-composition-id="end-card"] .ec-card-h {
+        font-family: var(--sans); font-style: normal; font-weight: 500;
+        font-size: 64px; line-height: 1.1; letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+      [data-composition-id="end-card"] .ec-h-sans {
+        font-family: var(--sans); font-style: normal; font-weight: 500;
+        color: var(--ink);
+      }
+      [data-composition-id="end-card"] .ec-h-accent {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink);
+      }
+      [data-composition-id="end-card"] .ec-card-foot {
+        padding: 20px 36px 22px; border-top: 0.5px solid var(--rule);
+        display: flex; justify-content: center;
+      }
+      [data-composition-id="end-card"] .ec-foot-msg {
+        font-family: var(--mono); font-size: 14px;
+        letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-composition-id="end-card"] .ec-url {
+        position: absolute; left: 50%; bottom: 80px; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 18px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ns = '[data-composition-id="end-card"]';
+      tl.from(ns + ' .ec-card', { y: 40, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.1);
+      tl.from(ns + ' .ec-card-h', { opacity: 0, duration: 0.6, ease: "power2.out" }, 0.6);
+      tl.from(ns + ' .ec-url', { opacity: 0, y: 10, duration: 0.5, ease: "power2.out" }, 1.2);
+      window.__timelines["end-card"] = tl;
+    </script>
+  </div>
+</template>

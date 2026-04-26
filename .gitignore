@@ -11,3 +11,14 @@ node_modules/
 !.env.*.example
 # Added by code-review-graph
 .code-review-graph/
+
+# Generated demo video output — rendered by tools/demo-video/scripts/render-all.mjs.
+# Track via release artifacts or CDN, not git. The Wasp public dir still picks
+# them up at deploy time when present locally.
+public/demo/*.mp4
+public/demo/*.webm
+public/demo/*.mov
+public/demo/shared/
+
+# Demo video generated artifacts
+tools/demo-video/shared/app-editorial.css

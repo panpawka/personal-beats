@@ -1,0 +1,298 @@
+<template id="closer-template">
+  <div data-composition-id="closer" data-start="0" data-width="1920" data-height="1080">
+    <div class="cl-bg"></div>
+
+    <!-- inbox window -->
+    <div class="cl-inbox">
+      <div class="cl-inbox-chrome">
+        <span class="cl-dot cl-dot-r"></span>
+        <span class="cl-dot cl-dot-y"></span>
+        <span class="cl-dot cl-dot-g"></span>
+        <span class="cl-inbox-title">Inbox · Personal Beats</span>
+        <span class="cl-inbox-clock">SAT · 07:00</span>
+      </div>
+      <div class="cl-inbox-toolbar">
+        <span class="cl-tool-tab cl-tool-active">Today</span>
+        <span class="cl-tool-tab">This week</span>
+        <span class="cl-tool-tab">All beats</span>
+        <span class="cl-tool-spacer"></span>
+        <span class="cl-tool-meta">8 new · 12 more delivered today</span>
+      </div>
+
+      <div class="cl-inbox-rows">
+        <!-- Row 1 — EN — Maja's beat -->
+        <div class="cl-row" data-i="1">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">Wrocław Weekends</div>
+          <div class="cl-row-subj"><b>Saturday at <i>Hydropolis</i></b> · two outdoor + one rainy-day option, ages 5–8</div>
+          <div class="cl-row-time">07:00</div>
+          <div class="cl-row-lang">EN</div>
+        </div>
+        <!-- Row 2 — PL -->
+        <div class="cl-row" data-i="2">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">Polska Polityka</div>
+          <div class="cl-row-subj"><b>Koalicja przyjmuje budżet awaryjny</b> · co dziś znaczy dla Wrocławia i regionu</div>
+          <div class="cl-row-time">07:14</div>
+          <div class="cl-row-lang">PL</div>
+        </div>
+        <!-- Row 3 — EN — Kasper -->
+        <div class="cl-row" data-i="3">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">Iran-Israel Daily</div>
+          <div class="cl-row-subj"><b>April 26 · the <i>wider arc</i></b> · military + diplomatic, primary sources</div>
+          <div class="cl-row-time">07:32</div>
+          <div class="cl-row-lang">EN</div>
+        </div>
+        <!-- Row 4 — DE -->
+        <div class="cl-row" data-i="4">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">Berliner Morgenbeat</div>
+          <div class="cl-row-subj"><b>Was Berlin heute bewegt</b> · Energiepreise, Bahnreform, Wahlumfragen</div>
+          <div class="cl-row-time">07:47</div>
+          <div class="cl-row-lang">DE</div>
+        </div>
+        <!-- Row 5 — EN — Ola -->
+        <div class="cl-row cl-row-lead" data-i="5">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">AI Agent Frameworks</div>
+          <div class="cl-row-subj"><b>What <i>shipped</i> this week</b> · LangGraph 0.4.30, Anthropic Managed Agents, arxiv pick</div>
+          <div class="cl-row-time">08:01</div>
+          <div class="cl-row-lang">EN</div>
+        </div>
+        <!-- Row 6 — FR -->
+        <div class="cl-row" data-i="6">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">Cinéma · La Semaine</div>
+          <div class="cl-row-subj"><b>Cannes 2026 · ce qu'il faut retenir</b> · cinq films à ne pas rater</div>
+          <div class="cl-row-time">08:14</div>
+          <div class="cl-row-lang">FR</div>
+        </div>
+        <!-- Row 7 — ES -->
+        <div class="cl-row" data-i="7">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">Fútbol · Liga Diaria</div>
+          <div class="cl-row-subj"><b>Última jornada · Real y Barça empatados</b> · alineaciones probables</div>
+          <div class="cl-row-time">08:33</div>
+          <div class="cl-row-lang">ES</div>
+        </div>
+        <!-- Row 8 — JP -->
+        <div class="cl-row" data-i="8">
+          <span class="cl-row-dot"></span>
+          <div class="cl-row-from">スペシャリティ・コーヒー週報</div>
+          <div class="cl-row-subj"><b>今週のロースター3選</b> · 京都・東京・福岡から、テイスティング・ノート付き</div>
+          <div class="cl-row-time">08:52</div>
+          <div class="cl-row-lang">JP</div>
+        </div>
+      </div>
+
+      <div class="cl-inbox-foot">
+        <span class="cl-foot-l">+ 12 more beats delivered today</span>
+        <span class="cl-foot-r">SAT · APR 26 · 09:00 CET</span>
+      </div>
+    </div>
+
+    <!-- tagline overlays -->
+    <div class="cl-caption cl-caption-1">Your beats. <i>Delivered.</i></div>
+    <div class="cl-caption cl-caption-2">On time. On topic. <i>In your language.</i></div>
+
+    <style>
+      [data-composition-id="closer"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+        --paper: oklch(0.985 0.006 75);
+        --paper-2: oklch(0.965 0.008 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      [data-composition-id="closer"] .cl-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-composition-id="closer"] .cl-inbox {
+        position: absolute;
+        left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        width: 1380px;
+        background: var(--paper);
+        border: 0.5px solid var(--ink);
+        box-shadow: 0 32px 80px -32px color-mix(in oklab, var(--ink) 60%, transparent);
+      }
+      [data-composition-id="closer"] .cl-inbox-chrome {
+        display: flex; align-items: center; gap: 8px;
+        padding: 14px 20px;
+        border-bottom: 0.5px solid var(--rule);
+        background: var(--paper-2);
+      }
+      [data-composition-id="closer"] .cl-dot {
+        width: 12px; height: 12px; border-radius: 50%;
+        background: var(--ink-3);
+      }
+      [data-composition-id="closer"] .cl-dot-r { background: #ff5f57; }
+      [data-composition-id="closer"] .cl-dot-y { background: #febc2e; }
+      [data-composition-id="closer"] .cl-dot-g { background: #28c840; }
+      [data-composition-id="closer"] .cl-inbox-title {
+        margin-left: 18px;
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.06em; color: var(--ink-2);
+      }
+      [data-composition-id="closer"] .cl-inbox-clock {
+        margin-left: auto;
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-ink);
+      }
+
+      [data-composition-id="closer"] .cl-inbox-toolbar {
+        display: flex; align-items: center; gap: 14px;
+        padding: 12px 24px;
+        border-bottom: 0.5px solid var(--rule);
+      }
+      [data-composition-id="closer"] .cl-tool-tab {
+        font-family: var(--mono); font-size: 12px;
+        letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3);
+        padding: 6px 12px; border: 0.5px solid var(--rule);
+      }
+      [data-composition-id="closer"] .cl-tool-active {
+        color: var(--paper); background: var(--ink); border-color: var(--ink);
+      }
+      [data-composition-id="closer"] .cl-tool-spacer { flex: 1; }
+      [data-composition-id="closer"] .cl-tool-meta {
+        font-family: var(--mono); font-size: 12px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-ink);
+      }
+
+      [data-composition-id="closer"] .cl-inbox-rows {
+        display: flex; flex-direction: column;
+      }
+      [data-composition-id="closer"] .cl-row {
+        display: grid;
+        grid-template-columns: 16px 220px 1fr 60px 50px;
+        align-items: center; gap: 18px;
+        padding: 14px 24px;
+        border-bottom: 0.5px solid var(--rule);
+        opacity: 0;
+        transform: translateY(-12px);
+        background: var(--paper);
+      }
+      [data-composition-id="closer"] .cl-row:last-child {
+        border-bottom: 0;
+      }
+      [data-composition-id="closer"] .cl-row-dot {
+        width: 9px; height: 9px; border-radius: 50%;
+        background: var(--accent);
+        justify-self: center;
+      }
+      [data-composition-id="closer"] .cl-row-from {
+        font-family: var(--sans); font-size: 16px; font-weight: 600;
+        color: var(--ink);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      [data-composition-id="closer"] .cl-row-subj {
+        font-family: var(--sans); font-size: 16px; font-weight: 400;
+        color: var(--ink-2); line-height: 1.3;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      [data-composition-id="closer"] .cl-row-subj b {
+        font-weight: 600; color: var(--ink);
+      }
+      [data-composition-id="closer"] .cl-row-subj i {
+        font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--accent-ink);
+      }
+      [data-composition-id="closer"] .cl-row-time {
+        font-family: var(--mono); font-size: 12px;
+        letter-spacing: 0.06em; color: var(--ink-3);
+        text-align: right;
+      }
+      [data-composition-id="closer"] .cl-row-lang {
+        font-family: var(--mono); font-size: 11px; font-weight: 600;
+        letter-spacing: 0.1em;
+        color: var(--accent-ink);
+        padding: 4px 8px; border: 0.5px solid var(--accent-ink);
+        text-align: center;
+      }
+      [data-composition-id="closer"] .cl-row.is-highlighted {
+        background: oklch(0.96 0.012 60);
+      }
+
+      [data-composition-id="closer"] .cl-inbox-foot {
+        display: flex; justify-content: space-between; align-items: baseline;
+        padding: 14px 24px;
+        border-top: 1.5px double var(--ink);
+        background: var(--paper-2);
+      }
+      [data-composition-id="closer"] .cl-foot-l {
+        font-family: var(--mono); font-size: 12px; font-weight: 600;
+        letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-ink);
+      }
+      [data-composition-id="closer"] .cl-foot-r {
+        font-family: var(--mono); font-size: 11px;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+      }
+
+      [data-composition-id="closer"] .cl-caption {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      [data-composition-id="closer"] .cl-caption i {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink); text-transform: none; letter-spacing: -0.01em;
+        font-size: 28px;
+      }
+      [data-composition-id="closer"] .cl-caption-1 { bottom: 64px; }
+      [data-composition-id="closer"] .cl-caption-2 { bottom: 64px; }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ns = '[data-composition-id="closer"]';
+
+      // 0..0.5s — inbox window slides up
+      tl.from(ns + ' .cl-inbox', {
+        y: 30, opacity: 0, duration: 0.5, ease: "power3.out"
+      }, 0.0);
+
+      // 0.4..2.8s — rows drop in, fast cascade (~0.18s each)
+      tl.to(ns + ' .cl-row', {
+        opacity: 1, y: 0, duration: 0.28,
+        stagger: 0.16, ease: "power2.out"
+      }, 0.4);
+
+      // 2.8..3.4s — caption 1 lands
+      tl.to(ns + ' .cl-caption-1', {
+        opacity: 1, duration: 0.4, ease: "power2.out"
+      }, 2.8);
+
+      // 4.0..4.5s — highlight Ola's row (lead)
+      tl.to(ns + ' .cl-row-lead', {
+        className: "+=is-highlighted cl-row cl-row-lead is-highlighted",
+        duration: 0
+      }, 4.0);
+      tl.fromTo(ns + ' .cl-row-lead',
+        { boxShadow: "inset 4px 0 0 0 oklch(0.58 0.18 25 / 0)" },
+        { boxShadow: "inset 4px 0 0 0 oklch(0.58 0.18 25 / 0.9)", duration: 0.35, ease: "power2.out" },
+      4.0);
+
+      // 4.4..4.8s — swap captions
+      tl.to(ns + ' .cl-caption-1', {
+        opacity: 0, y: -8, duration: 0.3, ease: "power2.in"
+      }, 4.4);
+      tl.to(ns + ' .cl-caption-2', {
+        opacity: 1, y: 0, duration: 0.4, ease: "power2.out"
+      }, 4.7);
+
+      window.__timelines["closer"] = tl;
+    </script>
+  </div>
+</template>

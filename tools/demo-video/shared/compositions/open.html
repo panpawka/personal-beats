@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div data-composition-id="open" data-start="0" data-width="1920" data-height="1080">
+      <div class="op-bg"></div>
+      <div class="op-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
+      <div class="op-rule op-rule-l"></div>
+      <div class="op-kicker">Any reader · <i>personalized beats</i></div>
+      <div class="op-rule op-rule-r"></div>
+    </div>
+
+    <style>
+      [data-composition-id="open"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+      }
+      [data-composition-id="open"] .op-bg {
+        position: absolute; inset: 0;
+        background: oklch(0.985 0.006 75);
+      }
+      [data-composition-id="open"] .op-folio {
+        position: absolute; left: 80px; top: 70px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 18px; font-weight: 500;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: oklch(0.52 0.008 70);
+      }
+      [data-composition-id="open"] .op-kicker {
+        position: absolute; left: 50%; top: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 32px; font-weight: 500;
+        letter-spacing: 0.18em; text-transform: uppercase;
+        color: oklch(0.36 0.01 70);
+        white-space: nowrap;
+      }
+      [data-composition-id="open"] .op-kicker i {
+        font-family: "Source Serif 4", Georgia, serif;
+        font-style: italic; font-weight: 600;
+        text-transform: none; letter-spacing: -0.005em;
+        font-size: 38px;
+        color: oklch(0.58 0.18 25);
+      }
+      [data-composition-id="open"] .op-rule {
+        position: absolute; top: 50%;
+        height: 0.5px;
+        background: oklch(0.22 0.012 70 / 0.28);
+        transform-origin: center;
+      }
+      [data-composition-id="open"] .op-rule-l {
+        left: 80px; right: calc(50% + 380px);
+      }
+      [data-composition-id="open"] .op-rule-r {
+        left: calc(50% + 380px); right: 80px;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from('[data-composition-id="open"] .op-folio', {
+        opacity: 0, y: -10, duration: 0.4, ease: "power2.out"
+      }, 0.1);
+      tl.from('[data-composition-id="open"] .op-rule-l', {
+        scaleX: 0, transformOrigin: "right center", duration: 0.55, ease: "expo.out"
+      }, 0.3);
+      tl.from('[data-composition-id="open"] .op-rule-r', {
+        scaleX: 0, transformOrigin: "left center", duration: 0.55, ease: "expo.out"
+      }, 0.3);
+      tl.from('[data-composition-id="open"] .op-kicker', {
+        opacity: 0, letterSpacing: "0.32em", duration: 0.7, ease: "power3.out"
+      }, 0.6);
+      window.__timelines["open"] = tl;
+    </script>
+  </body>
+</html>

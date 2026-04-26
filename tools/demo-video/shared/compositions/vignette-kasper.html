@@ -1,0 +1,317 @@
+<template id="vignette-kasper-template">
+  <div data-composition-id="vignette-kasper" data-start="0" data-width="1920" data-height="1080">
+    <div class="vk-bg"></div>
+    <div class="vk-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
+
+    <!-- SCENE 1: persona (0..1s) -->
+    <div class="vk-scene vk-scene-persona" data-scene="1">
+      <span class="vk-persona-name">Kasper</span>
+      <span class="vk-persona-meta">tracking Iran-Israel · daily</span>
+    </div>
+
+    <!-- SCENE 2: composer + brief typing (1..5s) -->
+    <div class="vk-scene vk-scene-composer" data-scene="2">
+      <div class="vk-composer">
+        <div class="vk-composer-line">
+          <span class="vk-composer-prompt">[user]</span>
+          <span class="vk-composer-text vk-typed-1"></span><span class="vk-cursor">▍</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3: clarification gate (5..12s) -->
+    <div class="vk-scene vk-scene-clarif" data-scene="3">
+      <div class="vk-turn vk-turn-user-1">
+        <span class="vk-turn-label">[user]</span>
+        <span class="vk-turn-body">Iran-Israel situation, daily, with primary sources</span>
+      </div>
+      <div class="vk-turn vk-turn-editor-1">
+        <span class="vk-turn-label">[editor]</span>
+        <span class="vk-turn-body">Two angles to lock in: military track, diplomatic track, <i>or both?</i></span>
+      </div>
+      <div class="vk-turn vk-turn-user-2">
+        <span class="vk-turn-label">[user]</span>
+        <span class="vk-turn-body">Both.</span>
+      </div>
+      <div class="vk-turn vk-turn-editor-2">
+        <span class="vk-turn-label">[editor]</span>
+        <span class="vk-turn-body"><i>Confirmed.</i> Building.</span>
+      </div>
+    </div>
+
+    <!-- SCENE 4: email (12..18s) -->
+    <div class="vk-scene vk-scene-email" data-scene="4">
+      <div class="vk-email">
+        <div class="vk-email-mast">
+          <div class="vk-email-est">Iran-Israel · Daily · № 22 · April 26 2026</div>
+          <h1 class="vk-email-h1">April 26 · the <i>wider arc</i></h1>
+          <div class="vk-email-deck">military track and diplomatic track, with primary sources for every claim.</div>
+          <div class="vk-email-folio">
+            <span>VOL. I · IRAN-ISRAEL DAILY</span>
+            <span>EST. APR 2026</span>
+          </div>
+        </div>
+        <div class="vk-email-body">
+          <div class="vk-story">
+            <div class="vk-story-eyebrow"><span class="cat">DIPLOMATIC</span><span>· ISLAMABAD</span></div>
+            <h2 class="vk-story-h">Trump cancels Witkoff-Kushner Pakistan trip after Iranian delegation departs.</h2>
+            <div class="vk-story-deck">Araqchi gave Pakistan a "workable framework"; ambiguity over US engagement persists.</div>
+            <div class="vk-story-meta">
+              <span class="vk-story-when">26 APR · 14:00 GMT</span>
+              <div class="vk-srcs">
+                <span class="vk-src">reuters.com</span>
+                <span class="vk-src">bbc.com/persian</span>
+              </div>
+            </div>
+          </div>
+          <div class="vk-story">
+            <div class="vk-story-eyebrow"><span class="cat">MILITARY</span><span>· STRAIT OF HORMUZ</span></div>
+            <h2 class="vk-story-h">Brent at $113.25 as 34 vessels report damage; Iran's "Tollbooth" levy cleared first deposits.</h2>
+            <div class="vk-story-deck">Germany moves the Fulda mine-hunter into the Mediterranean; Italy preparing four ships.</div>
+            <div class="vk-story-meta">
+              <span class="vk-story-when">26 APR · 09:30 GMT</span>
+              <div class="vk-srcs">
+                <span class="vk-src">timesofisrael.com</span>
+                <span class="vk-src">al-monitor.com</span>
+                <span class="vk-src">irna.ir</span>
+              </div>
+            </div>
+          </div>
+          <div class="vk-story">
+            <div class="vk-story-eyebrow"><span class="cat">CONGRESS</span><span>· WASHINGTON</span></div>
+            <h2 class="vk-story-h">War Powers Act 60-day clock runs out May 1; Murkowski drafting an AUMF.</h2>
+            <div class="vk-story-deck">Foreign Affairs (Alterman + Vaez): Russia and China are betting on US attrition.</div>
+            <div class="vk-story-meta">
+              <span class="vk-story-when">26 APR · 18:00 GMT</span>
+              <div class="vk-srcs">
+                <span class="vk-src">foreignaffairs.com</span>
+                <span class="vk-src">haaretz.com</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5: hold caption (15.5..17s) -->
+    <div class="vk-scene vk-scene-hold" data-scene="5">
+      <div class="vk-caption">primary sources, every issue.</div>
+    </div>
+
+    <style>
+      [data-composition-id="vignette-kasper"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        color: oklch(0.22 0.012 70);
+        --paper: oklch(0.985 0.006 75);
+        --paper-2: oklch(0.965 0.008 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+      [data-composition-id="vignette-kasper"] .vk-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-composition-id="vignette-kasper"] .vk-folio {
+        position: absolute; left: 80px; top: 70px;
+        font-family: var(--mono); font-size: 18px; font-weight: 500;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--ink-3); z-index: 5;
+      }
+      [data-composition-id="vignette-kasper"] .vk-scene {
+        position: absolute; inset: 0; opacity: 0;
+      }
+
+      /* persona */
+      [data-composition-id="vignette-kasper"] .vk-scene-persona {
+        display: flex; flex-direction: column; justify-content: center; padding: 0 0 0 160px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-persona-name {
+        font-family: var(--serif); font-style: italic; font-weight: 400;
+        font-size: 130px; line-height: 1; letter-spacing: -0.025em; color: var(--ink);
+      }
+      [data-composition-id="vignette-kasper"] .vk-persona-meta {
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+        margin-top: 18px;
+      }
+
+      /* composer */
+      [data-composition-id="vignette-kasper"] .vk-scene-composer {
+        display: flex; align-items: center; justify-content: center;
+      }
+      [data-composition-id="vignette-kasper"] .vk-composer {
+        width: 1380px; padding: 36px 44px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+        box-shadow: 0 16px 40px -16px color-mix(in oklab, var(--ink) 40%, transparent);
+      }
+      [data-composition-id="vignette-kasper"] .vk-composer-line {
+        display: flex; gap: 18px; align-items: baseline;
+      }
+      [data-composition-id="vignette-kasper"] .vk-composer-prompt {
+        font-family: var(--mono); font-size: 16px; font-weight: 500;
+        letter-spacing: 0.04em; color: var(--ink-3); flex-shrink: 0;
+      }
+      [data-composition-id="vignette-kasper"] .vk-composer-text {
+        font-family: var(--sans); font-size: 26px; color: var(--ink); line-height: 1.4;
+      }
+      [data-composition-id="vignette-kasper"] .vk-cursor {
+        display: inline-block; font-family: var(--sans); font-size: 26px; color: var(--accent); margin-left: 4px;
+      }
+
+      /* clarification turns */
+      [data-composition-id="vignette-kasper"] .vk-scene-clarif {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 0 0 40px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-turn {
+        width: 1380px; display: flex; gap: 18px; align-items: baseline;
+        margin-bottom: 16px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-turn-label {
+        font-family: var(--mono); font-size: 13px; font-weight: 500;
+        letter-spacing: 0.04em; color: var(--ink-3); flex-shrink: 0; width: 72px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-turn-body {
+        font-family: var(--serif); font-size: 26px; line-height: 1.4; color: var(--ink-2);
+      }
+      [data-composition-id="vignette-kasper"] .vk-turn-body i {
+        font-style: italic; color: var(--accent-ink);
+      }
+
+      /* email */
+      [data-composition-id="vignette-kasper"] .vk-scene-email {
+        display: flex; align-items: center; justify-content: center;
+        padding: 130px 0 130px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-email {
+        width: 1100px; background: var(--paper); border: 0.5px solid var(--ink);
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-mast {
+        padding: 28px 36px 22px; border-bottom: 2px solid var(--ink); text-align: center;
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-est {
+        font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+        letter-spacing: 0.12em; text-transform: uppercase;
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-h1 {
+        font-family: var(--sans); font-weight: 400; font-size: 56px;
+        line-height: 0.98; letter-spacing: -0.022em; margin: 8px 0 6px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-h1 i {
+        font-family: var(--serif); font-style: italic; font-weight: 600; color: var(--accent-ink);
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-deck {
+        font-family: var(--serif); font-style: italic; font-size: 19px;
+        color: var(--ink-3); margin: 6px 0 14px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-folio {
+        display: flex; justify-content: space-between;
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+        padding-top: 12px; border-top: 0.5px solid var(--rule);
+      }
+      [data-composition-id="vignette-kasper"] .vk-email-body { padding: 22px 36px 30px; }
+      [data-composition-id="vignette-kasper"] .vk-story {
+        padding: 18px 0; border-top: 0.5px solid var(--rule);
+      }
+      [data-composition-id="vignette-kasper"] .vk-story:first-child { border-top: 0; padding-top: 0; }
+      [data-composition-id="vignette-kasper"] .vk-story-eyebrow {
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3);
+        margin-bottom: 8px; display: flex; gap: 8px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-story-eyebrow .cat { color: var(--accent-ink); }
+      [data-composition-id="vignette-kasper"] .vk-story-h {
+        font-family: var(--sans); font-weight: 400; font-size: 26px;
+        line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 6px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-story-deck {
+        font-family: var(--serif); font-style: italic; font-size: 17px;
+        color: var(--ink-3); margin-bottom: 12px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-story-meta {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-top: 10px; padding-top: 10px;
+        border-top: 0.5px dashed var(--rule);
+        gap: 18px; flex-wrap: wrap;
+      }
+      [data-composition-id="vignette-kasper"] .vk-story-when {
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+      }
+      [data-composition-id="vignette-kasper"] .vk-srcs {
+        display: flex; flex-wrap: wrap; gap: 6px;
+      }
+      [data-composition-id="vignette-kasper"] .vk-src {
+        padding: 4px 10px; border: 0.5px solid var(--rule);
+        font-family: var(--mono); font-size: 11.5px;
+        letter-spacing: 0.04em; color: var(--ink-2);
+      }
+
+      [data-composition-id="vignette-kasper"] .vk-caption {
+        position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 22px; font-weight: 500;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const ns = '[data-composition-id="vignette-kasper"]';
+
+      tl.from(ns + ' .vk-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 0.0);
+
+      // SCENE 1 — persona (0..1.4s)
+      tl.to(ns + ' .vk-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 0.0);
+      tl.from(ns + ' .vk-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.15);
+      tl.from(ns + ' .vk-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 0.4);
+
+      // SCENE 2 — composer (1.4..4.5s)
+      tl.to(ns + ' .vk-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 1.4);
+      tl.to(ns + ' .vk-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 1.5);
+      tl.from(ns + ' .vk-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 1.55);
+      tl.to(ns + ' .vk-cursor', { opacity: 0, duration: 0.3, repeat: 8, yoyo: true, ease: "none" }, 1.8);
+      // Per-char stagger reveal — deterministic in render.
+      const briefText = "Iran-Israel situation, daily, with primary sources";
+      const typedEl = document.querySelector(ns + ' .vk-typed-1');
+      if (typedEl) {
+        typedEl.innerHTML = briefText.split("").map(
+          (c) => `<span class="vk-ch">${c === " " ? "&nbsp;" : c}</span>`
+        ).join("");
+      }
+      tl.from(ns + ' .vk-typed-1 .vk-ch', {
+        autoAlpha: 0, display: "none",
+        duration: 0.001, stagger: 2.4 / briefText.length, ease: "none"
+      }, 2.0);
+
+      // SCENE 3 — clarification gate (4.5..10.5s)
+      tl.to(ns + ' .vk-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 4.5);
+      tl.to(ns + ' .vk-scene-clarif', { opacity: 1, duration: 0.35, ease: "power2.out" }, 4.6);
+      tl.from(ns + ' .vk-turn-user-1', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 4.75);
+      tl.from(ns + ' .vk-turn-editor-1', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 5.6);
+      tl.from(ns + ' .vk-turn-user-2', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 7.4);
+      tl.from(ns + ' .vk-turn-editor-2', { y: 14, opacity: 0, duration: 0.4, ease: "power3.out" }, 8.05);
+
+      // SCENE 4 — email reveal (10.5..11.85s)
+      tl.to(ns + ' .vk-scene-clarif', { opacity: 0, duration: 0.25, ease: "power2.in" }, 10.5);
+      tl.to(ns + ' .vk-scene-email', { opacity: 1, duration: 0.3, ease: "power2.out" }, 10.6);
+      tl.from(ns + ' .vk-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 10.65);
+      tl.from(ns + ' .vk-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 11.0);
+
+      // SCENE 5 — caption (11.85..13s) — email stays
+      tl.to(ns + ' .vk-scene-hold', { opacity: 1, duration: 0.25, ease: "power2.out" }, 11.85);
+      tl.from(ns + ' .vk-caption', { y: 10, opacity: 0, duration: 0.3, ease: "power2.out" }, 11.9);
+
+      window.__timelines["vignette-kasper"] = tl;
+    </script>
+  </div>
+</template>
