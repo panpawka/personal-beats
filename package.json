@@ -6,12 +6,17 @@
     ".wasp/out/sdk/wasp"
   ],
   "scripts": {
-    "email:dev": "email dev --dir src/emails/preview --port 3030",
-    "email:check": "tsx --tsconfig scripts/tsconfig.json scripts/render-emails.tsx",
-    "email:send-test": "tsx --tsconfig scripts/tsconfig.json scripts/send-test-email.tsx",
     "i18n:extract": "lingui extract --clean",
     "i18n:compile": "lingui compile",
-    "i18n:translate": "tsx --tsconfig scripts/tsconfig.json scripts/translate-po.ts"
+    "i18n:translate": "tsx --tsconfig scripts/tsconfig.json scripts/translate-po.ts",
+    "env:pull": "bash scripts/env-pull.sh",
+    "env:pull:dev": "bash scripts/env-pull.sh development",
+    "env:pull:staging": "bash scripts/env-pull.sh staging",
+    "env:pull:prod": "bash scripts/env-pull.sh production",
+    "env:push": "bash scripts/env-push.sh",
+    "env:push:dev": "bash scripts/env-push.sh development",
+    "env:push:staging": "bash scripts/env-push.sh staging",
+    "env:push:prod": "bash scripts/env-push.sh production"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",

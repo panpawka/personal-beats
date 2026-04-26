@@ -1,0 +1,6 @@
+{
+  "slug": "lemonode",
+  "project": "PersonalBeats",
+  "envFileName": ".env.server",
+  "url": "https://shelve-lemonode.vercel.app"
+}
