@@ -238,8 +238,6 @@ Fields still unknown: ${unknownLabel}`,
     },
   });
 
-  console.log(response);
-
   const out = response.parsed_output;
   if (!out) {
     throw new HttpError(

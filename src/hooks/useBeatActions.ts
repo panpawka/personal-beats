@@ -13,7 +13,9 @@ import {
   pauseBeat,
   resumeBeat,
   deleteBeat,
+  updateBeatSchedule,
 } from "wasp/client/operations";
+import type { CadenceType } from "../shared/types";
 
 export type TranscriptEvent = {
   id: string;
@@ -138,6 +140,8 @@ export function useBeatActions(beatId: string | undefined) {
   const [triggerError, setTriggerError] = useState<string | null>(null);
   const [pausePending, setPausePending] = useState(false);
   const [deletePending, setDeletePending] = useState(false);
+  const [editPending, setEditPending] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
 
   async function sendClarification(reply: string) {
     if (!beatId) return;
@@ -192,6 +196,26 @@ export function useBeatActions(beatId: string | undefined) {
     }
   }
 
+  async function editSchedule(input: {
+    cadenceType: CadenceType;
+    cronExpression?: string | null;
+    timezone?: string | null;
+  }): Promise<boolean> {
+    if (!beatId || editPending) return false;
+    setEditPending(true);
+    setEditError(null);
+    try {
+      await updateBeatSchedule({ beatId, ...input });
+      await refetchBeat();
+      return true;
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : String(err));
+      return false;
+    } finally {
+      setEditPending(false);
+    }
+  }
+
   async function remove(confirmMessage?: string) {
     if (!beatId || deletePending) return;
     const message = confirmMessage ?? t`Delete this beat? This cannot be undone.`;
@@ -234,5 +258,8 @@ export function useBeatActions(beatId: string | undefined) {
     pausePending,
     remove,
     deletePending,
+    editSchedule,
+    editPending,
+    editError,
   };
 }

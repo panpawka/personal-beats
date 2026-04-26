@@ -19,9 +19,8 @@ export function Rail({ open, onClose }: { open: boolean; onClose: () => void }) 
   const { t } = useLingui();
 
   const tabs: TabDef[] = [
-    { id: "home", label: t`Home`, glyph: "◇", to: "/", match: (p) => p === "/" },
     { id: "today", label: t`Today`, glyph: "◧", to: "/dashboard", match: (p) => p.startsWith("/dashboard") },
-    { id: "new", label: t`New`, glyph: "✎", to: "/beats/new", match: (p) => p === "/beats/new" },
+    { id: "new", label: t`New`, glyph: "◇", to: "/", match: (p) => p === "/" },
   ];
 
   const goHome = () => {

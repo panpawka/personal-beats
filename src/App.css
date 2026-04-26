@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
@@ -200,7 +201,7 @@ body {
   width: 6px; height: 6px; border-radius: 50%; background: var(--ink-4);
   flex-shrink: 0;
 }
-.rail-link .dot.live { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 20%, transparent); }
+.rail-link .dot.live { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 100%, var(--accent)); }
 .rail-link .dot.paused { background: transparent; border: 1px solid var(--ink-4); }
 .rail-link .badge {
   margin-left: auto;
@@ -846,8 +847,8 @@ body.serif-everywhere :where(p, h1, h2, h3, .ui-l, .ui-s, button, .pill) { font-
 }
 
 @keyframes pb-dot-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent); }
-  50%       { box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent)  6%, transparent); }
+  0%, 100% { box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 75%, transparent); }
+  50%       { box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent)  50%, transparent); }
 }
 
 @keyframes pb-blink {

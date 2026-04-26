@@ -96,6 +96,9 @@ export function BeatDetailPage() {
       onDelete={() => actions.remove()}
       pausePending={actions.pausePending}
       deletePending={actions.deletePending}
+      onEditSchedule={actions.editSchedule}
+      editPending={actions.editPending}
+      editError={actions.editError}
       agentEventsError={actions.agentEventsError}
       latestClarification={actions.latestClarification}
       sendClarification={actions.sendClarification}

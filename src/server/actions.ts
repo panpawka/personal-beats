@@ -9,6 +9,7 @@ import type {
   DeleteBeat,
   TriggerOnDemandRun,
   SendIssueEmail,
+  UpdateBeatSchedule,
 } from "wasp/server/operations";
 import { CronExpressionParser } from "cron-parser";
 import slugify from "slugify";
@@ -210,6 +211,60 @@ export const resumeBeat: ResumeBeat<{ beatId: string }, Beat> = async (
   return context.entities.Beat.update({
     where: { id: beatId },
     data: { status: "ACTIVE", lastScheduledAt: new Date() },
+  });
+};
+
+// =========================================================================
+// updateBeatSchedule
+// =========================================================================
+
+type UpdateBeatScheduleInput = {
+  beatId: string;
+  cadenceType: CadenceType;
+  cronExpression?: string | null;
+  timezone?: string | null;
+};
+
+export const updateBeatSchedule: UpdateBeatSchedule<
+  UpdateBeatScheduleInput,
+  Beat
+> = async (args, context) => {
+  if (!context.user) throw new HttpError(401);
+  const beat = await loadOwnedBeat(args.beatId, context.user.id);
+
+  if (beat.status !== "ACTIVE" && beat.status !== "PAUSED") {
+    throw new HttpError(409, `cannot edit schedule from ${beat.status}`);
+  }
+
+  if (!CadenceTypeValues.includes(args.cadenceType)) {
+    throw new HttpError(400, "invalid cadenceType");
+  }
+
+  let cron: string | null = null;
+  let tz: string = beat.timezone;
+  if (args.cadenceType === "TIME_BASED") {
+    const candidateCron = args.cronExpression?.trim();
+    if (!candidateCron) {
+      throw new HttpError(400, "cronExpression required for TIME_BASED");
+    }
+    const candidateTz = args.timezone?.trim() || beat.timezone;
+    try {
+      CronExpressionParser.parse(candidateCron, { tz: candidateTz });
+    } catch {
+      throw new HttpError(400, "invalid cron expression or timezone");
+    }
+    cron = candidateCron;
+    tz = candidateTz;
+  }
+
+  return context.entities.Beat.update({
+    where: { id: args.beatId },
+    data: {
+      cadenceType: args.cadenceType,
+      cronExpression: cron,
+      timezone: tz,
+      lastScheduledAt: new Date(),
+    },
   });
 };
 

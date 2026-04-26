@@ -8,6 +8,8 @@ import { EditorialButton } from "../../components/editorial/Button";
 import { cadenceLabel } from "../../shared/cadence";
 import { formatShortDate } from "../../lib/formatting";
 import type { ClarificationSummary } from "../../hooks/useBeatActions";
+import { ScheduleEditor } from "./ScheduleEditor";
+import type { CadenceType } from "../../shared/types";
 
 interface Issue {
   id: string;
@@ -48,6 +50,13 @@ interface ActivePanelProps {
   onDelete: () => void;
   pausePending: boolean;
   deletePending: boolean;
+  onEditSchedule: (input: {
+    cadenceType: CadenceType;
+    cronExpression?: string | null;
+    timezone?: string | null;
+  }) => Promise<boolean>;
+  editPending: boolean;
+  editError: string | null;
   agentEventsError: unknown;
   latestClarification: ClarificationSummary | null;
   sendClarification: (reply: string) => Promise<void>;
@@ -183,12 +192,17 @@ export function ActivePanel(props: ActivePanelProps) {
     onDelete,
     pausePending,
     deletePending,
+    onEditSchedule,
+    editPending,
+    editError,
     agentEventsError,
     latestClarification,
     sendClarification,
     clarifyPending,
     clarifyError,
   } = props;
+
+  const [editingSchedule, setEditingSchedule] = useState(false);
 
   const isPaused = beat.status === "PAUSED";
   const isActive = beat.status === "ACTIVE";
@@ -270,6 +284,18 @@ export function ActivePanel(props: ActivePanelProps) {
               <span><Trans>Pause</Trans></span>
             </button>
           ) : null}
+          {showLiveSections ? (
+            <button
+              type="button"
+              className="pb-btn"
+              onClick={() => setEditingSchedule((v) => !v)}
+              disabled={editPending}
+              aria-expanded={editingSchedule}
+            >
+              <Icon name="calendar" size={13} />
+              <span><Trans>Edit schedule</Trans></span>
+            </button>
+          ) : null}
           <button
             type="button"
             className="pb-btn"
@@ -298,6 +324,15 @@ export function ActivePanel(props: ActivePanelProps) {
             </button>
           ) : null}
         </div>
+        {editingSchedule && showLiveSections ? (
+          <ScheduleEditor
+            beat={beat}
+            onSave={onEditSchedule}
+            onCancel={() => setEditingSchedule(false)}
+            pending={editPending}
+            error={editError}
+          />
+        ) : null}
         {triggerError ? (
           <div className="editorial-error" style={{ marginTop: 18 }}>
             {triggerError}
