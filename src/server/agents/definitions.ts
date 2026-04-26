@@ -8,12 +8,9 @@
 // - WORKER_MODEL: Sonnet 4.6. Designer turns brief→spec (structured) and
 //   Scout enumerates sources (web_search heavy, latency-sensitive). Both fit
 //   Sonnet's speed/intelligence tradeoff.
-// - COORDINATOR_MODEL: Haiku 4.5. Pure dispatcher — no editorial work, just
-//   routing. Haiku is the right cost/latency choice for this role.
 
 const EDITOR_MODEL = "claude-opus-4-7";
 const WORKER_MODEL = "claude-sonnet-4-6";
-const COORDINATOR_MODEL = "claude-haiku-4-5";
 
 // -------- Beat Designer --------
 
@@ -68,7 +65,7 @@ Memory store mounts are DIRECTORIES. Use \`bash ls <dir>\` or the \`glob\` tool 
 2. Run the clarification gate silently. If you need to ask, call \`needs_clarification\` and WAIT. The user's answer will arrive as a subsequent user event. Incorporate it and proceed.
 3. Use web_search only if you need to verify a piece of context. Do not over-research at this stage.
 4. Write \`spec.yaml\` INSIDE the spec store's mount directory (schema below).
-5. Write \`relevance.md\` INSIDE the spec store's mount directory (schema below). Keep it under 2KB on creation; it will grow with feedback.
+5. Write \`relevance.md\` INSIDE the spec store's mount directory (schema below). Keep it under 2KB.
 6. Call \`finalize_beat_spec\` with the slug, a one-paragraph summary, and a list of defaults you applied.
 
 ## /spec.yaml schema
@@ -104,13 +101,6 @@ version: 1
 ## Must exclude
 - <rule>
 - <rule>
-
-## Learned from feedback
-(Empty at creation. The feedback-learning pass will append dated entries later.)
-
-## Feedback-learning mode
-
-If the incoming user event has action=update_relevance, you are in feedback-learning mode. Read /relevance.md. Distinguish signal from noise (1 downvote on a typically-good item is noise; 3 downvotes of a pattern is signal). Append dated entries to the "## Learned from feedback" section via memory_edit. Do NOT rewrite existing rules. Do NOT call finalize_beat_spec in this mode.
 
 ## Output-language discipline
 
@@ -456,7 +446,7 @@ Memory mounts are DIRECTORIES. Use \`bash ls <dir>\` or \`glob\` to list. The \`
 Read from the attached memory stores, in order:
 
 1. spec store → \`spec.yaml\`
-2. spec store → \`relevance.md\` (include/exclude rules AND learned preferences from feedback)
+2. spec store → \`relevance.md\` (include/exclude rules)
 3. spec store → \`sources.yaml\`
 4. history store → \`issues/\` (recent issues — skim the last 7 days to avoid repeating)
 5. history store → \`fingerprints.jsonl\` (dedup file)
@@ -476,7 +466,7 @@ with \`single_source: true\` in the publish_issue payload. For
 \`depth = brief\`, a single source is acceptable but prefer corroborated
 items when both exist.
 
-3. FILTER. Apply relevance.md strictly. Drop anything failing include rules or matching exclude rules. Apply "learned from feedback" just as rigorously.
+3. FILTER. Apply relevance.md strictly. Drop anything failing include rules or matching exclude rules.
 
 4. DEDUP. For each cluster, compute a fingerprint (stable hash of canonical-name + date + primary-entity). Check against /fingerprints.jsonl. Drop if already published recently unless there's a genuine update.
 
@@ -615,49 +605,3 @@ export const editorDefinition = {
   ],
 };
 
-// -------- Coordinator --------
-
-const COORDINATOR_SYSTEM = `You are the dispatcher for a personal newsroom. You route session requests to the right sub-agent. You do not do editorial work yourself.
-
-## Incoming requests
-
-Wasp sends you structured user events with an "action" field:
-
-- action=design_beat → delegate to Beat Designer, forwarding the user's brief. When Beat Designer returns (finalize_beat_spec called), also delegate to Sources Scout for the same beat.
-- action=generate_issue → delegate to Editor for the named beat.
-- action=update_relevance → delegate to Beat Designer with the feedback payload (this is the feedback-learning mode).
-- action=resume_design → delegate to Beat Designer; the payload includes the clarification reply.
-
-## Rules
-
-- Never do sub-agents' work yourself. Do not use web_search, web_fetch, or any file-write tools — leave those for sub-agents. You may use \`read\` to spot-check memory contents.
-- Between delegations, summarize sub-agent outcomes briefly in text output, then immediately delegate the next step.
-- If a sub-agent errors or produces incomplete output, report the failure clearly and stop. Do not retry automatically.
-- Do not add editorial opinions or commentary. You are plumbing.
-- Keep your own text output minimal. Haiku is fast; let's keep it that way.`;
-
-export const coordinatorDefinition = (callable: {
-  designerId: string;
-  designerVersion: number;
-  scoutId: string;
-  scoutVersion: number;
-  editorId: string;
-  editorVersion: number;
-}) => ({
-  name: "Newsroom Coordinator",
-  model: COORDINATOR_MODEL,
-  system: COORDINATOR_SYSTEM,
-  // Full toolset — delegation to callable_agents surfaces through the
-  // toolset, so restricting it breaks multi-agent dispatch. Haiku has
-  // read access to memory for coordination but will not write.
-  tools: [{ type: "agent_toolset_20260401" }],
-  callable_agents: [
-    {
-      type: "agent",
-      id: callable.designerId,
-      version: callable.designerVersion,
-    },
-    { type: "agent", id: callable.scoutId, version: callable.scoutVersion },
-    { type: "agent", id: callable.editorId, version: callable.editorVersion },
-  ],
-});

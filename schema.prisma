@@ -65,7 +65,7 @@ model Beat {
 
   // Active CMA session + phase. Replaces per-phase id columns. Only one
   // phase runs at a time per beat (singletonKey on driveAgentJob).
-  // AgentPhase: DESIGNER | SCOUT | EDITOR | RELEVANCE
+  // AgentPhase: DESIGNER | SCOUT | EDITOR
   currentPhase         String?
   currentSessionId     String?
   // CMA event-stream cursor for the active session. driveAgentJob re-enqueues
@@ -114,7 +114,7 @@ model AgentEvent {
   beatId     String
   beat       Beat     @relation(fields: [beatId], references: [id], onDelete: Cascade)
   sessionId  String
-  // AgentPhase: DESIGNER | SCOUT | EDITOR | RELEVANCE
+  // AgentPhase: DESIGNER | SCOUT | EDITOR
   phase      String
   // CMA event id. Null for synthetic server-side markers (phase.started, phase.failed).
   eventId    String?
@@ -180,10 +180,6 @@ model IssueItem {
   // JSON array of tag strings
   tags                String    @default("[]")
   fingerprint         String
-  // Feedback: POSITIVE | NEGATIVE | (null = no feedback)
-  feedback            String?
-  feedbackAt          DateTime?
-  feedbackToken       String?   @unique
 
   @@index([issueId, orderIndex])
 }

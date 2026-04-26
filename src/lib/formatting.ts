@@ -2,10 +2,6 @@ export function pad3(n: number): string {
   return String(n).padStart(3, "0");
 }
 
-export function formatIssueNumber(n: number): string {
-  return `№${pad3(n)}`;
-}
-
 export function formatShortDate(
   input: Date | string | null | undefined,
   locale: string = "en",

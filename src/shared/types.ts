@@ -22,9 +22,6 @@ export type Depth = (typeof DepthValues)[number];
 export const EmailStatusValues = ["PENDING", "SENT", "FAILED"] as const;
 export type EmailStatus = (typeof EmailStatusValues)[number];
 
-export const FeedbackValues = ["POSITIVE", "NEGATIVE"] as const;
-export type Feedback = (typeof FeedbackValues)[number];
-
 // -------- Beat spec (mirrors /spec.yaml structure) --------
 
 export const BeatSpecSchema = z.object({

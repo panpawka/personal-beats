@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router";
-import { useQuery, getIssue, getBeat } from "wasp/client/operations";
+import { useQuery, getIssue, getBeat, sendIssueEmail } from "wasp/client/operations";
 import { useAuth } from "wasp/client/auth";
 import { Trans, useLingui, Plural } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { AppShell } from "../layout/AppShell";
 import { Masthead } from "../layout/Masthead";
 import { Icon } from "../components/editorial/Icon";
@@ -56,6 +59,28 @@ export function IssueDetailPage() {
     { beatId: beatId! },
     { enabled: !!beatId },
   );
+  const queryClient = useQueryClient();
+  const [sending, setSending] = useState(false);
+
+  async function handleSendEmail() {
+    if (!issueId || sending) return;
+    setSending(true);
+    try {
+      const result = await sendIssueEmail({ issueId });
+      if (result.status === "SENT") {
+        toast.success(t`Email sent`);
+      } else {
+        toast.error(t`Send failed: ${result.error ?? "unknown error"}`);
+      }
+      await queryClient.invalidateQueries({ queryKey: getIssue.queryCacheKey });
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : t`Could not send email`;
+      toast.error(message);
+    } finally {
+      setSending(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -104,6 +129,15 @@ export function IssueDetailPage() {
   const folioDate = formatEmailMetaDate(issueDate, i18n.locale);
   const sentDate = issue.emailSentAt ? formatEmailMetaDate(issue.emailSentAt, i18n.locale) : folioDate;
   const emailFailed = issue.emailStatus === "FAILED";
+  const emailSent = issue.emailStatus === "SENT";
+
+  const sendLabel = sending
+    ? t`Sending…`
+    : emailFailed
+      ? t`Retry send`
+      : emailSent
+        ? t`Resend to my email`
+        : t`Send to my email`;
 
   return (
     <AppShell>
@@ -124,6 +158,21 @@ export function IssueDetailPage() {
             <span className="sep-dot">→</span>
             <span>{toEmail}</span>
             <span style={{ marginLeft: "auto" }}>{sentDate}</span>
+            <button
+              type="button"
+              onClick={handleSendEmail}
+              disabled={sending}
+              className="pb-btn pb-btn-ghost"
+              style={{
+                marginLeft: 12,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <Icon name="mail" size={13} />
+              <span>{sendLabel}</span>
+            </button>
           </div>
 
           <header className="email-masthead">

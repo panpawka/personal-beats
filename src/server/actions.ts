@@ -1,4 +1,4 @@
-import type { Beat, IssueItem } from "wasp/entities";
+import type { Beat } from "wasp/entities";
 import { HttpError } from "wasp/server";
 import { prisma } from "wasp/server";
 import type {
@@ -8,19 +8,18 @@ import type {
   ResumeBeat,
   DeleteBeat,
   TriggerOnDemandRun,
-  SubmitItemFeedback,
+  SendIssueEmail,
 } from "wasp/server/operations";
 import { CronExpressionParser } from "cron-parser";
 import slugify from "slugify";
 import { driveAgentJob, generateIssueJob } from "wasp/server/jobs";
 import { deleteMemoryStore } from "./agents/client.js";
+import { sendNewsletter } from "./email/mailgun.js";
 import {
   CadenceTypeValues,
   DepthValues,
-  FeedbackValues,
   type CadenceType,
   type Depth,
-  type Feedback,
 } from "../shared/types.js";
 
 // -------- ownership guard --------
@@ -295,28 +294,42 @@ export const triggerOnDemandRun: TriggerOnDemandRun<
 };
 
 // =========================================================================
-// submitItemFeedback
+// sendIssueEmail
 // =========================================================================
 
-export const submitItemFeedback: SubmitItemFeedback<
-  { issueItemId: string; feedback: Feedback },
-  IssueItem
-> = async ({ issueItemId, feedback }, context) => {
-  if (!context.user) throw new HttpError(401);
-  if (!FeedbackValues.includes(feedback)) {
-    throw new HttpError(400, "invalid feedback value");
-  }
+const SEND_COOLDOWN_MS = 30_000;
 
-  const item = await prisma.issueItem.findUnique({
-    where: { id: issueItemId },
-    include: { issue: { include: { beat: true } } },
+export const sendIssueEmail: SendIssueEmail<
+  { issueId: string },
+  { status: "SENT" | "FAILED"; emailSentAt: Date | null; error?: string }
+> = async ({ issueId }, context) => {
+  if (!context.user) throw new HttpError(401);
+
+  const issue = await prisma.issue.findUnique({
+    where: { id: issueId },
+    include: { beat: { select: { userId: true } } },
   });
-  if (!item || item.issue.beat.userId !== context.user.id) {
+  if (!issue || issue.beat.userId !== context.user.id) {
     throw new HttpError(404);
   }
 
-  return context.entities.IssueItem.update({
-    where: { id: issueItemId },
-    data: { feedback, feedbackAt: new Date() },
+  if (
+    issue.emailSentAt &&
+    Date.now() - issue.emailSentAt.getTime() < SEND_COOLDOWN_MS
+  ) {
+    throw new HttpError(429, "send cooldown — try again in a few seconds");
+  }
+
+  const result = await sendNewsletter(issueId);
+  const fresh = await prisma.issue.findUnique({
+    where: { id: issueId },
+    select: { emailSentAt: true },
   });
+
+  return {
+    status: result.status,
+    emailSentAt: fresh?.emailSentAt ?? null,
+    error: result.status === "FAILED" ? result.error : undefined,
+  };
 };
+

@@ -11,7 +11,6 @@
  */
 import * as React from "react";
 import { render } from "@react-email/components";
-import jwt from "jsonwebtoken";
 import { loadServerEnv } from "./env-loader.js";
 import { NewsletterEmail } from "../src/emails/NewsletterEmail.js";
 import {
@@ -20,7 +19,7 @@ import {
   fixtureStandardIssue,
   fixtureDeepIssue,
 } from "../src/emails/fixtures/common.js";
-import type { EmailIssue, EmailItem } from "../src/emails/types.js";
+import type { EmailIssue } from "../src/emails/types.js";
 
 loadServerEnv();
 
@@ -43,34 +42,17 @@ if (!["brief", "standard", "deep"].includes(depth)) {
   throw new Error(`depth must be brief|standard|deep, got ${depth}`);
 }
 
-const baseIssue: EmailIssue =
+const issue: EmailIssue =
   depth === "brief"
     ? fixtureBriefIssue
     : depth === "deep"
       ? fixtureDeepIssue
       : fixtureStandardIssue;
 
-const WEB_BASE_URL = req("WASP_WEB_CLIENT_URL").replace(/\/$/, "");
-const SERVER_BASE_URL = req("WASP_SERVER_URL").replace(/\/$/, "");
-const JWT_SECRET = req("JWT_SECRET");
+const WEB_BASE_URL = (process.env.WASP_WEB_CLIENT_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+
 req("MAILGUN_API_KEY");
 req("MAILGUN_DOMAIN");
-
-// Mint real JWTs against the live secret so the feedback endpoint will
-// accept them when Phase 10 ships. itemId values are synthetic.
-const itemsWithFeedback: EmailItem[] = baseIssue.items.map((it, idx) => {
-  const fakeItemId = `test-${depth}-${idx}`;
-  const token = jwt.sign({ itemId: fakeItemId, userId: "test-user" }, JWT_SECRET, {
-    expiresIn: 60 * 60 * 24 * 30,
-  });
-  return {
-    ...it,
-    feedbackUpUrl: `${SERVER_BASE_URL}/feedback/${token}?v=up`,
-    feedbackDownUrl: `${SERVER_BASE_URL}/feedback/${token}?v=down`,
-  };
-});
-
-const issue: EmailIssue = { ...baseIssue, items: itemsWithFeedback };
 
 const element = React.createElement(NewsletterEmail, {
   spec: fixtureSpec(depth),

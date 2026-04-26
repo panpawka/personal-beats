@@ -15,9 +15,8 @@ import { driveAgentJob } from "wasp/server/jobs";
 import { prisma } from "wasp/server";
 import { runPhaseTick, type AgentPhase } from "../agents/drive.js";
 
-// Kickoff payloads for DESIGNER/SCOUT/EDITOR are derived from Beat state;
-// RELEVANCE is only invoked from applyFeedback (in-process) which bypasses
-// this worker, so we don't need to pass kickoffPayload through pg-boss.
+// Kickoff payloads for DESIGNER/SCOUT/EDITOR are derived from Beat state,
+// so we don't need to pass kickoffPayload through pg-boss.
 type Args = {
   beatId: string;
   phase: AgentPhase;
@@ -55,15 +54,15 @@ export const driveAgent: DriveAgentJob<
     return { state: "failed", error: verdict.error };
   }
 
-  // phase_done → drive the next phase if this was DESIGNER. SCOUT and
-  // RELEVANCE have no successor. No singletonKey — see note above.
+  // phase_done → drive the next phase if this was DESIGNER. SCOUT has no
+  // successor. No singletonKey — see note above.
   if (phase === "DESIGNER") {
     console.log(`${tag} finalized → enqueue SCOUT`);
     await driveAgentJob.submit({ beatId, phase: "SCOUT", kickoff: true });
   } else {
-    // Clear phase cursor so the next trigger (EDITOR on-demand / relevance
-    // cron) starts from a clean slate. Leaving stale currentPhase="SCOUT"
-    // is a trap even though ensureSession overwrites it.
+    // Clear phase cursor so the next trigger (EDITOR on-demand) starts from
+    // a clean slate. Leaving stale currentPhase="SCOUT" is a trap even
+    // though ensureSession overwrites it.
     await prisma.beat
       .update({
         where: { id: beatId },

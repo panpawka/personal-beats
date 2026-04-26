@@ -3,21 +3,15 @@ import { Section, Text } from "@react-email/components";
 import { useEmailT } from "../i18n";
 import { EDITORIAL, FONT_MONO, FONT_SERIF } from "./tokens";
 
-interface Props {
-  label?: "Analysis" | "Context";
-  children: React.ReactNode;
-}
-
-export function Analysis({ label = "Analysis", children }: Props) {
+export function EditorsNote({ children }: { children: React.ReactNode }) {
   const t = useEmailT();
-  const localized = label === "Context" ? t("context") : t("analysis");
   return (
     <Section
       style={{
         backgroundColor: EDITORIAL.paper2,
         borderLeft: `2px solid ${EDITORIAL.accent}`,
         padding: "14px 18px",
-        margin: "16px 0",
+        margin: "0 0 24px",
       }}
     >
       <Text
@@ -31,7 +25,7 @@ export function Analysis({ label = "Analysis", children }: Props) {
           fontWeight: 600,
         }}
       >
-        {localized}
+        {t("editorsNote")}
       </Text>
       <Text
         style={{
@@ -39,7 +33,6 @@ export function Analysis({ label = "Analysis", children }: Props) {
           fontFamily: FONT_SERIF,
           fontSize: 15,
           lineHeight: 1.4,
-          textAlign: "justify",
           color: EDITORIAL.ink2,
         }}
       >

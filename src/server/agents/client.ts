@@ -109,6 +109,26 @@ export async function deleteMemoryStore(storeId: string): Promise<void> {
   await sdk().beta.memoryStores.delete(storeId);
 }
 
+export async function createMemory(
+  memoryStoreId: string,
+  path: string,
+  content: string,
+): Promise<{ id: string }> {
+  const m = await sdk().beta.memoryStores.memories.create(memoryStoreId, {
+    path,
+    content,
+  });
+  return { id: m.id };
+}
+
+export async function listMemories(
+  memoryStoreId: string,
+  opts: { path_prefix?: string; depth?: number; order_by?: string } = {},
+): Promise<Array<{ type: string; path: string }>> {
+  const page = await sdk().beta.memoryStores.memories.list(memoryStoreId, opts);
+  return page.data.map((item) => ({ type: item.type, path: item.path }));
+}
+
 // -------- Raw HTTP — agents + environments only --------
 //
 // These two endpoints are still called by version-controlled provisioning

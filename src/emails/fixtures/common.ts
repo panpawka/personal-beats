@@ -26,11 +26,6 @@ export const fixtureSpec = (depth: "brief" | "standard" | "deep"): BeatSpec => (
   version: 1,
 });
 
-const feedback = (id: string) => ({
-  feedbackUpUrl: `https://example.com/feedback/${id}-up`,
-  feedbackDownUrl: `https://example.com/feedback/${id}-down`,
-});
-
 const item = (
   fp: string,
   headline: string,
@@ -42,8 +37,7 @@ const item = (
   primary_source_url: "https://www.wroclaw.pl/en/example-article",
   secondary_source_urls: [],
   fingerprint: fp,
-  tags: [],
-  ...feedback(fp),
+  tags: ["kino", "animacja"],
   ...extras,
 });
 

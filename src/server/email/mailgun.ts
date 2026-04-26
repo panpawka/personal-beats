@@ -3,9 +3,6 @@
  *
  * sendNewsletter(issueId) is the one public entrypoint:
  *   - Loads Issue + items + beat + user (email)
- *   - Mints one JWT per IssueItem (claims: itemId, userId). Direction (up/down)
- *     rides in the URL as ?v=up|down. Direction is not signed — threat model
- *     is a personal newsletter; only the recipient has incentive to click.
  *   - Reconstructs a minimal BeatSpec from the Beat row (email components
  *     only touch spec.title, depth, output_language).
  *   - Renders HTML + plain-text via react-email's async render().
@@ -19,42 +16,12 @@
  */
 import * as React from "react";
 import { render } from "@react-email/components";
-import jwt from "jsonwebtoken";
 import { prisma } from "wasp/server";
 import { emailSender } from "wasp/server/email";
 import { getEmail } from "wasp/auth";
 import { NewsletterEmail } from "../../emails/NewsletterEmail.js";
 import type { EmailIssue, EmailItem } from "../../emails/types.js";
 import type { BeatSpec } from "../../shared/types.js";
-
-function env(name: string): string {
-  const v = process.env[name];
-  if (!v) throw new Error(`${name} not set`);
-  return v;
-}
-
-const FEEDBACK_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 30; // 30d
-
-export type FeedbackTokenClaims = {
-  itemId: string;
-  userId: string;
-  iat: number;
-  exp: number;
-};
-
-function signFeedbackToken(itemId: string, userId: string): string {
-  return jwt.sign(
-    { itemId, userId },
-    env("JWT_SECRET"),
-    { expiresIn: FEEDBACK_TOKEN_TTL_SECONDS },
-  );
-}
-
-function feedbackUrl(serverBaseUrl: string, token: string, direction: "up" | "down"): string {
-  // Feedback is a server-side `api feedbackMagicLink` route (Phase 10) at
-  // /feedback/:token — must target WASP_SERVER_URL, not the client URL.
-  return `${serverBaseUrl.replace(/\/$/, "")}/feedback/${token}?v=${direction}`;
-}
 
 function parseJsonArray(raw: string): string[] {
   try {
@@ -105,29 +72,33 @@ function toBeatSpec(beat: LoadedIssue["beat"]): BeatSpec {
   };
 }
 
-function toEmailIssue(
-  issue: LoadedIssue,
-  tokensByItemId: Map<string, string>,
-  serverBaseUrl: string,
-): EmailIssue {
-  const items: EmailItem[] = issue.items.map((it) => {
-    const token = tokensByItemId.get(it.id)!;
-    return {
-      headline: it.headline,
-      summary: it.summary,
-      why_it_matters: it.whyItMatters ?? undefined,
-      primary_source_url: it.primarySourceUrl,
-      secondary_source_urls: parseJsonArray(it.secondarySourceUrls),
-      fingerprint: it.fingerprint,
-      tags: parseJsonArray(it.tags),
-      feedbackUpUrl: feedbackUrl(serverBaseUrl, token, "up"),
-      feedbackDownUrl: feedbackUrl(serverBaseUrl, token, "down"),
-    };
-  });
+function formatIssueDate(date: Date, locale: string): string {
+  try {
+    return new Intl.DateTimeFormat(locale || "en", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(date);
+  } catch {
+    return date.toISOString().slice(0, 10);
+  }
+}
+
+function toEmailIssue(issue: LoadedIssue, locale: string): EmailIssue {
+  const items: EmailItem[] = issue.items.map((it) => ({
+    headline: it.headline,
+    summary: it.summary,
+    why_it_matters: it.whyItMatters ?? undefined,
+    primary_source_url: it.primarySourceUrl,
+    secondary_source_urls: parseJsonArray(it.secondarySourceUrls),
+    fingerprint: it.fingerprint,
+    tags: parseJsonArray(it.tags),
+  }));
 
   return {
     beat_slug: issue.beat.slug,
-    issue_date: issue.issueDate.toISOString().slice(0, 10),
+    issue_date: formatIssueDate(issue.issueDate, locale),
     subject: issue.subject,
     dek: issue.dek,
     coverage_note: issue.coverageNote ?? undefined,
@@ -151,9 +122,7 @@ export type SendResult =
  * For the Phase 11 cron job we'll wrap this in a claim-then-send transaction.
  */
 export async function sendNewsletter(issueId: string): Promise<SendResult> {
-  const WEB_BASE_URL = env("WASP_WEB_CLIENT_URL");
-  const SERVER_BASE_URL = env("WASP_SERVER_URL");
-  env("JWT_SECRET"); // asserted early; signFeedbackToken re-reads
+  const WEB_BASE_URL = process.env.WASP_WEB_CLIENT_URL ?? 'http://localhost:3000';
 
   const issue = await loadIssueForSend(issueId);
   const recipient = getEmail(issue.beat.user);
@@ -161,25 +130,10 @@ export async function sendNewsletter(issueId: string): Promise<SendResult> {
     throw new Error(`User ${issue.beat.userId} has no email identity`);
   }
 
-  // Mint and persist one token per item. If an item already has a token
-  // (e.g. retry after a failed send), reuse it.
-  const tokensByItemId = new Map<string, string>();
-  for (const item of issue.items) {
-    let token = item.feedbackToken;
-    if (!token) {
-      token = signFeedbackToken(item.id, issue.beat.userId);
-      await prisma.issueItem.update({
-        where: { id: item.id },
-        data: { feedbackToken: token },
-      });
-    }
-    tokensByItemId.set(item.id, token);
-  }
-
   const spec = toBeatSpec(issue.beat);
   const priorCount = await countPriorIssues(issue.beatId, issue.publishedAt);
   const issueNumber = priorCount + 1;
-  const emailIssue = toEmailIssue(issue, tokensByItemId, SERVER_BASE_URL);
+  const emailIssue = toEmailIssue(issue, spec.output_language);
 
   const dashboardUrl = `${WEB_BASE_URL.replace(/\/$/, "")}/beats/${issue.beatId}`;
   const unsubscribeUrl = `${WEB_BASE_URL.replace(/\/$/, "")}/beats/${issue.beatId}?action=pause`;

@@ -15,9 +15,6 @@ export const STRINGS = {
   en: {
     issue: "Issue",
     whyItMatters: "Why it matters",
-    wasUseful: "Was this useful?",
-    yes: "👍 Yes",
-    notReally: "👎 Not really",
     dashboard: "Dashboard",
     pause: "Pause",
     unsubscribe: "Unsubscribe",
@@ -26,13 +23,11 @@ export const STRINGS = {
     context: "Context",
     sources: "Sources",
     readMore: "Read more",
+    editorsNote: "Editor's note",
   },
   pl: {
     issue: "Wydanie",
     whyItMatters: "Dlaczego to ważne",
-    wasUseful: "Czy to się przydało?",
-    yes: "👍 Tak",
-    notReally: "👎 Niezbyt",
     dashboard: "Pulpit",
     pause: "Wstrzymaj",
     unsubscribe: "Wypisz się",
@@ -41,6 +36,7 @@ export const STRINGS = {
     context: "Kontekst",
     sources: "Źródła",
     readMore: "Czytaj dalej",
+    editorsNote: "Od redakcji",
   },
 } as const;
 

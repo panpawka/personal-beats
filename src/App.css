@@ -691,7 +691,8 @@ html[data-theme="ink"] .email-frame { background: oklch(0.14 0.01 70); }
   letter-spacing: 0.12em; text-transform: uppercase;
 }
 .email-masthead h1 {
-  font-family: var(--serif); font-weight: 400; font-size: 44px;
+  font-family: var(--sans); font-weight: 400; font-size: 44px;
+  line-height: 0.95;
   letter-spacing: -0.02em; margin: 6px 0 4px;
 }
 .email-masthead .deck {
@@ -710,7 +711,8 @@ html[data-theme="ink"] .email-frame { background: oklch(0.14 0.01 70); }
   border-left: 2px solid var(--accent);
   padding: 16px 18px;
   margin-bottom: 32px;
-  font-family: var(--serif); font-size: 15.5px; line-height: 1.5;
+  text-align: justify;
+  font-family: var(--serif); font-size: 15.5px; line-height: 1.2;
   color: var(--ink-2);
 }
 .email-tldr .label {
@@ -730,7 +732,8 @@ html[data-theme="ink"] .email-frame { background: oklch(0.14 0.01 70); }
 }
 .story-eyebrow .cat { color: var(--accent-ink); }
 .story h2 {
-  font-family: var(--serif); font-weight: 400; font-size: 24px;
+  font-family: var(--sans); font-weight: 400; font-size: 24px;
+  text-align: justify;
   line-height: 1.18; letter-spacing: -0.01em; margin: 0 0 8px;
 }
 .story-deck {
@@ -738,7 +741,8 @@ html[data-theme="ink"] .email-frame { background: oklch(0.14 0.01 70); }
   margin: 0 0 14px;
 }
 .story-body p {
-  font-family: var(--serif); font-size: 16px; line-height: 1.6;
+  font-family: var(--serif); font-size: 16px; line-height: 1.3;
+  text-align: justify;
   color: var(--ink-2); margin: 0 0 12px;
 }
 .story-meta {

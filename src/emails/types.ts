@@ -1,9 +1,6 @@
 import type { BeatSpec, PublishIssueInput, PublishIssueItem } from "../shared/types";
 
-export type EmailItem = PublishIssueItem & {
-  feedbackUpUrl?: string;
-  feedbackDownUrl?: string;
-};
+export type EmailItem = PublishIssueItem;
 
 export type EmailIssue = Omit<PublishIssueInput, "items"> & {
   items: EmailItem[];

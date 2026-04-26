@@ -1,22 +1,24 @@
 /**
  * Phase 4 end-to-end smoke — Designer + Scout in sequential sessions.
  *
- * Multi-agent (Coordinator delegating to callable_agents) is research-preview
- * and not shipped in the current API, so we orchestrate from Wasp: start a
- * Designer session, drive it to finalize_beat_spec, end. Then start a Scout
- * session against the same spec store, drive it to scout_complete.
+ * Multi-agent (callable_agents) is intentionally not used: Wasp owns the
+ * phase state machine via drive.ts, so each phase runs in its own session.
+ * Smoke test mirrors that — start a Designer session, drive it to
+ * finalize_beat_spec, end. Then start a Scout session against the same spec
+ * store, drive it to scout_complete.
  *
  * Run: `npx tsx scripts/e2e-smoke.ts [brief]`
  *
  * Cost: ~$1-4 per full run.
  */
+import type { BetaManagedAgentsEventParams } from "@anthropic-ai/sdk/resources/beta/sessions/events";
 import { loadServerEnv } from "./env-loader.js";
 import {
-  cma,
   createMemoryStore,
   createSession,
+  listMemories,
   sendSessionEvents,
-  streamSession,
+  streamSessionEvents,
 } from "../src/server/agents/client.js";
 import {
   FinalizeBeatSpecSchema,
@@ -180,7 +182,7 @@ async function drive(sessionId: string): Promise<void> {
   const MAX_EVENTS = 3000;
   const MAX_MS = 25 * 60 * 1000;
 
-  for await (const ev of streamSession(sessionId)) {
+  for await (const ev of await streamSessionEvents(sessionId)) {
     eventCount++;
     if (eventCount > MAX_EVENTS) {
       throw new Error(`[drive] aborting: exceeded ${MAX_EVENTS} events`);
@@ -253,7 +255,7 @@ async function drive(sessionId: string): Promise<void> {
       }
       if (stopType === "requires_action") {
         const blocking: string[] = data.stop_reason.event_ids ?? [];
-        const replies: unknown[] = [];
+        const replies: BetaManagedAgentsEventParams[] = [];
         let clarificationToAnswer: {
           input: any;
           session_thread_id?: string;
@@ -376,16 +378,17 @@ function canonicalClarificationAnswer(input: any): string {
 
 async function listMemoryTree(storeId: string, label: string): Promise<void> {
   try {
-    const res = await cma<{ data: Array<{ type: string; path: string }> }>(
-      "GET",
-      `/v1/memory_stores/${storeId}/memories?path_prefix=/&depth=5&order_by=path`,
-    );
+    const items = await listMemories(storeId, {
+      path_prefix: "/",
+      depth: 5,
+      order_by: "path",
+    });
     console.log(`  ${label} (${storeId}):`);
-    if (!res.data?.length) {
+    if (!items.length) {
       console.log(`    (empty)`);
       return;
     }
-    for (const item of res.data) {
+    for (const item of items) {
       console.log(`    ${item.type}  ${item.path}`);
     }
   } catch (err) {

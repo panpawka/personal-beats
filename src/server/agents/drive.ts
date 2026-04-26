@@ -39,7 +39,7 @@ import {
 
 // -------- Phase + verdict --------
 
-export type AgentPhase = "DESIGNER" | "SCOUT" | "EDITOR" | "RELEVANCE";
+export type AgentPhase = "DESIGNER" | "SCOUT" | "EDITOR";
 
 export type DriveVerdict =
   // Phase still active, CMA session still running — caller should re-enqueue.
@@ -90,9 +90,9 @@ export type RunPhaseArgs = {
   beatId: string;
   phase: AgentPhase;
   kickoff?: boolean;
-  // Phase-specific payload for the kickoff user.message. For RELEVANCE this
-  // is { feedback_batch: [...] }; for DESIGNER / SCOUT / EDITOR the driver
-  // builds its own kickoff from Beat + slug.
+  // Phase-specific payload for the kickoff user.message. The driver builds
+  // its own kickoff from Beat + slug for all phases; this hook is reserved
+  // for future per-phase extras.
   kickoffPayload?: Record<string, unknown>;
 };
 
@@ -263,7 +263,6 @@ async function detectPersistedTerminal(
     return null;
   }
 
-  // RELEVANCE has no DB-observable terminal marker (success = end_turn only).
   return null;
 }
 
@@ -370,7 +369,6 @@ async function ensureSession(
 function agentRefForPhase(phase: AgentPhase): AgentRef {
   switch (phase) {
     case "DESIGNER":
-    case "RELEVANCE":
       return {
         type: "agent",
         id: BEAT_DESIGNER_AGENT_ID(),
@@ -457,16 +455,6 @@ function resourcesForPhase(beat: Beat, phase: AgentPhase): MemoryStoreResource[]
           instructions: "Reference only.",
         },
       ];
-    case "RELEVANCE":
-      return [
-        {
-          type: "memory_store",
-          memory_store_id: spec,
-          access: "read_write",
-          instructions:
-            "Beat spec store. Append new dated entries to the '## Learned from feedback' section of relevance.md.",
-        },
-      ];
   }
 }
 
@@ -479,10 +467,9 @@ function statusForPhaseStart(
       return "DESIGNING";
     case "SCOUT":
       return "SCOUTING";
-    // EDITOR / RELEVANCE do not change the Beat.status — Beat stays ACTIVE
-    // throughout the issue-generation or feedback-application cycle.
+    // EDITOR does not change the Beat.status — Beat stays ACTIVE
+    // throughout the issue-generation cycle.
     case "EDITOR":
-    case "RELEVANCE":
       return currentStatus;
   }
 }
@@ -536,12 +523,6 @@ function kickoffPayload(
         beat_slug: beat.slug,
         as_of: new Date().toISOString(),
         output_language: beat.outputLanguage,
-      };
-    case "RELEVANCE":
-      return {
-        action: "update_relevance",
-        beat_slug: beat.slug,
-        ...(args.kickoffPayload ?? {}),
       };
   }
 }
@@ -625,9 +606,7 @@ async function processEvent(
         ? "designer.thinking_pulse"
         : phase === "SCOUT"
           ? "scout.thinking_pulse"
-          : phase === "EDITOR"
-            ? "editor.thinking_pulse"
-            : "relevance.thinking_pulse";
+          : "editor.thinking_pulse";
     await persistEvent(beatId, phase, sessionId, ev, uiType, {});
     return null;
   }
@@ -777,23 +756,18 @@ async function verdictForEndOfTurn(
     return { state: "failed", error: err };
   }
 
-  if (phase === "EDITOR") {
-    // EDITOR end_turn with publish_issue persisted = phase_done. Caller
-    // reads the latest AgentEvent of type editor.publish_issue to get payload.
-    const hasPublish = await prisma.agentEvent.count({
-      where: {
-        beatId,
-        sessionId: beat.currentSessionId ?? "",
-        type: "editor.publish_issue",
-      },
-    });
-    if (hasPublish > 0) return { state: "phase_done" };
-    const err = "Editor ended turn without publish_issue";
-    return { state: "failed", error: err };
-  }
-
-  // RELEVANCE — no tool expected, end_turn is success.
-  return { state: "phase_done" };
+  // EDITOR end_turn with publish_issue persisted = phase_done. Caller
+  // reads the latest AgentEvent of type editor.publish_issue to get payload.
+  const hasPublish = await prisma.agentEvent.count({
+    where: {
+      beatId,
+      sessionId: beat.currentSessionId ?? "",
+      type: "editor.publish_issue",
+    },
+  });
+  if (hasPublish > 0) return { state: "phase_done" };
+  const err = "Editor ended turn without publish_issue";
+  return { state: "failed", error: err };
 }
 
 async function handleTool(

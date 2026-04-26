@@ -7,7 +7,6 @@
  *   - Beat Designer agent          (BEAT_DESIGNER_AGENT_ID/_VERSION)
  *   - Sources Scout agent          (SOURCES_SCOUT_AGENT_ID/_VERSION)
  *   - Editor agent                 (EDITOR_AGENT_ID/_VERSION)
- *   - Coordinator agent            (COORDINATOR_AGENT_ID/_VERSION)
  *
  * IDs/versions are written to .env.server. Idempotent: if all keys are set,
  * the script exits early. Pass --force to re-provision.
@@ -26,7 +25,6 @@ import {
 } from "../src/server/agents/client.js";
 import {
   beatDesignerDefinition,
-  coordinatorDefinition,
   editorDefinition,
   sourcesScoutDefinition,
 } from "../src/server/agents/definitions.js";
@@ -47,8 +45,6 @@ const REQUIRED_KEYS = [
   "SOURCES_SCOUT_VERSION",
   "EDITOR_AGENT_ID",
   "EDITOR_VERSION",
-  "COORDINATOR_AGENT_ID",
-  "COORDINATOR_VERSION",
 ] as const;
 
 /**
@@ -213,25 +209,6 @@ async function main() {
   updates.EDITOR_AGENT_ID = editor.id;
   updates.EDITOR_VERSION = String(editor.version);
   console.log(`  EDITOR_AGENT_ID=${editor.id} v${editor.version}`);
-
-  // --- 4. Coordinator (last — references the three above) ---
-  console.log("Creating Coordinator agent...");
-  const coordinatorBody = coordinatorDefinition({
-    designerId: designer.id,
-    designerVersion: designer.version,
-    scoutId: scout.id,
-    scoutVersion: scout.version,
-    editorId: editor.id,
-    editorVersion: editor.version,
-  });
-  const coordinator = await createAgent(
-    coordinatorBody as unknown as Record<string, unknown>,
-  );
-  updates.COORDINATOR_AGENT_ID = coordinator.id;
-  updates.COORDINATOR_VERSION = String(coordinator.version);
-  console.log(
-    `  COORDINATOR_AGENT_ID=${coordinator.id} v${coordinator.version}`,
-  );
 
   saveServerEnv(updates);
   console.log(`\nWrote ${Object.keys(updates).length} keys to .env.server`);

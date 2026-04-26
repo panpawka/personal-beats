@@ -210,20 +210,11 @@ action triggerOnDemandRun {
   entities: [Beat, Issue, AgentEvent]
 }
 
-action submitItemFeedback {
-  fn: import { submitItemFeedback } from "@src/server/actions",
+action sendIssueEmail {
+  fn: import { sendIssueEmail } from "@src/server/actions",
   entities: [Beat, Issue, IssueItem]
 }
 // #endregion Operations
-
-// #region Feedback
-api feedbackMagicLink {
-  httpRoute: (GET, "/feedback/:token"),
-  fn: import { feedbackMagicLink } from "@src/server/feedback",
-  auth: false,
-  entities: [IssueItem]
-}
-// #endregion Feedback
 
 // #region Jobs (Phase 11 — pg-boss)
 //
@@ -242,11 +233,10 @@ job generateIssueJob {
   entities: [Beat, Issue, IssueItem, AgentEvent, AgentMessage]
 }
 
-// Unified agent driver. Handles DESIGNER + SCOUT phases (RELEVANCE reused
-// via the same job with phase=RELEVANCE). EDITOR stays on generateIssueJob
-// since it creates Issue rows + sends email. Bounded-poll per tick with
-// re-enqueue when the CMA session is still running. singletonKey ensures
-// one drive tick per beat at a time.
+// Unified agent driver. Handles DESIGNER + SCOUT phases. EDITOR stays on
+// generateIssueJob since it creates Issue rows + sends email. Bounded-poll
+// per tick with re-enqueue when the CMA session is still running.
+// singletonKey ensures one drive tick per beat at a time.
 job driveAgentJob {
   executor: PgBoss,
   perform: {
@@ -272,17 +262,4 @@ job scheduleSweeperJob {
   entities: [Beat]
 }
 
-job applyFeedbackJob {
-  executor: PgBoss,
-  perform: {
-    fn: import { applyFeedback } from "@src/server/jobs/applyFeedback",
-    executorOptions: {
-      pgBoss: {=json { "retryLimit": 0, "expireInMinutes": 30 } json=}
-    }
-  },
-  schedule: {
-    cron: "15 3 * * *"
-  },
-  entities: [Beat, Issue, IssueItem, AgentEvent, AgentMessage]
-}
 // #endregion Jobs

@@ -1,3 +1,4 @@
+import * as React from "react";
 import NewsletterEmail from "../NewsletterEmail";
 import { fixtureDeepIssue, fixtureSpec } from "../fixtures/common";
 
