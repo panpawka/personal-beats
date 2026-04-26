@@ -18,12 +18,16 @@
       /* ───── global brand wordmark (top-right, persists across all scenes) ───── */
       .pb-brand {
         position: absolute;
-        right: 80px; top: 70px;
+        right: 80px; top: 60px;
         font-size: 18px;
         line-height: 1;
         letter-spacing: 0;
         z-index: 9999;
         white-space: nowrap;
+        text-align: right;
+      }
+      .pb-brand-row {
+        display: block;
       }
       .pb-brand .pb-personal {
         font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -40,6 +44,16 @@
         font-size: 22px;
         letter-spacing: -0.005em;
         color: oklch(0.58 0.18 25);
+      }
+      .pb-brand .pb-powered {
+        display: block;
+        margin-top: 6px;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: oklch(0.52 0.008 70);
       }
 
       /* ───── info-chaos (0..8s) ───── */
@@ -283,7 +297,7 @@
       }
     
 
-      /* ───── vignette-maja (11..25s) ───── */
+      /* ───── vignette-maja (11..28s) ───── */
 
       [data-scene-id="vignette-maja"] {
         position: relative; width: 100%; height: 100%;
@@ -493,6 +507,93 @@
         letter-spacing: 0.04em; color: var(--ink-2);
       }
 
+      /* Scene 4b — orchestration */
+      [data-scene-id="vignette-maja"] .vm-scene-orch {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 38px;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-head {
+        text-align: center;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-lbl {
+        display: block;
+        font-family: var(--mono); font-size: 22px; font-weight: 600;
+        letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--accent-ink);
+        margin-bottom: 14px;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-sub {
+        font-family: var(--serif); font-style: italic; font-size: 40px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-flow {
+        display: flex; align-items: center; gap: 24px;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-node {
+        position: relative;
+        width: 320px;
+        padding: 22px 24px;
+        border: 0.5px solid var(--ink); background: var(--paper);
+        opacity: 0.35;
+        transition: opacity 200ms;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-node.is-active {
+        opacity: 1;
+        box-shadow: 0 18px 40px -16px color-mix(in oklab, var(--accent-ink) 55%, transparent);
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-role {
+        font-family: var(--mono); font-size: 12px; font-weight: 600;
+        letter-spacing: 0.2em; text-transform: uppercase;
+        color: var(--ink-3);
+        margin-bottom: 8px;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-task {
+        font-family: var(--sans); font-size: 22px; font-weight: 500;
+        letter-spacing: -0.01em; color: var(--ink);
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-model {
+        font-family: var(--mono); font-size: 11px; font-weight: 500;
+        letter-spacing: 0.06em; color: var(--accent-ink);
+        padding-top: 10px; border-top: 0.5px solid var(--rule);
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-pulse {
+        position: absolute; right: 18px; top: 22px;
+        width: 9px; height: 9px; border-radius: 50%;
+        background: var(--accent);
+        opacity: 0;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-node.is-active .vm-orch-pulse {
+        opacity: 1;
+        animation: vm-pulse 0.9s ease-in-out infinite;
+      }
+      @keyframes vm-pulse {
+        0%, 100% { transform: scale(1); opacity: 0.95; }
+        50%      { transform: scale(1.55); opacity: 0.5; }
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-arrow {
+        width: 56px; height: 0.5px;
+        background: var(--ink-3);
+        position: relative;
+        opacity: 0.3;
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-arrow.is-active {
+        opacity: 1; background: var(--accent-ink);
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-arrow::after {
+        content: ""; position: absolute;
+        right: -1px; top: 50%; transform: translateY(-50%) rotate(45deg);
+        width: 7px; height: 7px;
+        border-top: 0.5px solid var(--ink-3);
+        border-right: 0.5px solid var(--ink-3);
+      }
+      [data-scene-id="vignette-maja"] .vm-orch-arrow.is-active::after {
+        border-color: var(--accent-ink);
+      }
+
       /* Scene 5 hold caption */
       [data-scene-id="vignette-maja"] .vm-scene-hold {
         pointer-events: none;
@@ -508,7 +609,7 @@
       }
     
 
-      /* ───── vignette-kasper (25..38s) ───── */
+      /* ───── vignette-kasper (28..41s) ───── */
 
       [data-scene-id="vignette-kasper"] {
         position: relative; width: 100%; height: 100%;
@@ -673,7 +774,7 @@
       }
     
 
-      /* ───── vignette-ola (38..52s) ───── */
+      /* ───── vignette-ola (41..55s) ───── */
 
       [data-scene-id="vignette-ola"] {
         position: relative; width: 100%; height: 100%;
@@ -867,7 +968,7 @@
       }
     
 
-      /* ───── closer (52..59s) ───── */
+      /* ───── closer (55..62s) ───── */
 
       [data-scene-id="closer"] {
         position: relative; width: 100%; height: 100%;
@@ -1024,7 +1125,91 @@
       [data-scene-id="closer"] .cl-caption-2 { bottom: 64px; }
     
 
-      /* ───── end-card (59..62s) ───── */
+      /* ───── product-showcase (62..65s) ───── */
+
+      [data-scene-id="product-showcase"] {
+        position: relative; width: 100%; height: 100%;
+        font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --paper: oklch(0.985 0.006 75);
+        --paper-2: oklch(0.965 0.008 75);
+        --ink: oklch(0.22 0.012 70);
+        --ink-2: oklch(0.36 0.01 70);
+        --ink-3: oklch(0.52 0.008 70);
+        --rule: oklch(0.22 0.012 70 / 0.14);
+        --accent: #c83a2c;
+        --accent-ink: oklch(0.58 0.18 25);
+        --serif: "Source Serif 4", Georgia, serif;
+        --sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+        color: var(--ink);
+      }
+      [data-scene-id="product-showcase"] .ps-bg {
+        position: absolute; inset: 0; background: var(--paper);
+      }
+      [data-scene-id="product-showcase"] .ps-eyebrow {
+        position: absolute;
+        left: 50%; top: 90px; transform: translateX(-50%);
+        font-family: var(--mono); font-size: 13px; font-weight: 600;
+        letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--accent-ink);
+        opacity: 0;
+      }
+      [data-scene-id="product-showcase"] .ps-h {
+        position: absolute;
+        left: 50%; top: 130px; transform: translateX(-50%);
+        font-family: var(--sans); font-weight: 500;
+        font-size: 56px; letter-spacing: -0.02em; line-height: 1.05;
+        color: var(--ink);
+        white-space: nowrap;
+        opacity: 0;
+      }
+      [data-scene-id="product-showcase"] .ps-h i {
+        font-family: var(--serif); font-style: italic; font-weight: 600;
+        color: var(--accent-ink);
+      }
+      [data-scene-id="product-showcase"] .ps-frame {
+        position: absolute;
+        left: 50%; top: 230px; transform: translateX(-50%);
+        width: 1500px;
+        background: var(--paper);
+        border: 0.5px solid var(--ink);
+        box-shadow: 0 50px 100px -40px color-mix(in oklab, var(--ink) 70%, transparent);
+        opacity: 0;
+      }
+      [data-scene-id="product-showcase"] .ps-chrome {
+        display: flex; align-items: center; gap: 8px;
+        padding: 12px 18px;
+        border-bottom: 0.5px solid var(--rule);
+        background: var(--paper-2);
+      }
+      [data-scene-id="product-showcase"] .ps-dot {
+        width: 12px; height: 12px; border-radius: 50%;
+        background: var(--ink-3);
+      }
+      [data-scene-id="product-showcase"] .ps-dot-r { background: #ff5f57; }
+      [data-scene-id="product-showcase"] .ps-dot-y { background: #febc2e; }
+      [data-scene-id="product-showcase"] .ps-dot-g { background: #28c840; }
+      [data-scene-id="product-showcase"] .ps-url {
+        margin-left: 18px;
+        font-family: var(--mono); font-size: 13px;
+        letter-spacing: 0.06em; color: var(--ink-2);
+      }
+      [data-scene-id="product-showcase"] .ps-screen {
+        width: 100%;
+        background: var(--paper);
+        overflow: hidden;
+      }
+      [data-scene-id="product-showcase"] .ps-screen img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 720px;
+        object-fit: cover;
+        object-position: top center;
+      }
+    
+
+      /* ───── end-card (65..68s) ───── */
 
       [data-scene-id="end-card"] {
         position: relative; width: 100%; height: 100%;
@@ -1098,7 +1283,7 @@
       id="root"
       data-composition-id="canonical-85s"
       data-start="0"
-      data-duration="62"
+      data-duration="68"
       data-width="1920"
       data-height="1080"
     >
@@ -1168,7 +1353,7 @@
       <div class="op-rule op-rule-r"></div>
     </div>
       </div>
-      <div id="vignette-maja-scene" class="clip" data-scene-id="vignette-maja" data-start="11" data-duration="14" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="vignette-maja-scene" class="clip" data-scene-id="vignette-maja" data-start="11" data-duration="17" data-track-index="1" style="position:absolute;inset:0;">
 <div class="vm-bg"></div>
     <div class="vm-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
 
@@ -1274,12 +1459,42 @@
       </div>
     </div>
 
-    <!-- SCENE 5: hold on email + caption (16..18s) -->
+    <!-- SCENE 4b: orchestration (Designer → Scouter → Editor) -->
+    <div class="vm-scene vm-scene-orch" data-scene="4b">
+      <div class="vm-orch-head">
+        <span class="vm-orch-lbl">CLAUDE MANAGED AGENTS</span>
+        <span class="vm-orch-sub">Building issue № 14</span>
+      </div>
+      <div class="vm-orch-flow">
+        <div class="vm-orch-node" data-n="1">
+          <div class="vm-orch-role">DESIGNER</div>
+          <div class="vm-orch-task">plans the brief</div>
+          <div class="vm-orch-model">claude sonnet 4.6</div>
+          <span class="vm-orch-pulse"></span>
+        </div>
+        <div class="vm-orch-arrow" data-a="1"></div>
+        <div class="vm-orch-node" data-n="2">
+          <div class="vm-orch-role">SCOUTER</div>
+          <div class="vm-orch-task">finds sources</div>
+          <div class="vm-orch-model">claude sonnet 4.6</div>
+          <span class="vm-orch-pulse"></span>
+        </div>
+        <div class="vm-orch-arrow" data-a="2"></div>
+        <div class="vm-orch-node" data-n="3">
+          <div class="vm-orch-role">EDITOR</div>
+          <div class="vm-orch-task">writes the issue</div>
+          <div class="vm-orch-model">claude opus 4.7</div>
+          <span class="vm-orch-pulse"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5: hold on email + caption -->
     <div class="vm-scene vm-scene-hold" data-scene="5">
       <div class="vm-caption">every Saturday. delivered.</div>
     </div>
       </div>
-      <div id="vignette-kasper-scene" class="clip" data-scene-id="vignette-kasper" data-start="25" data-duration="13" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="vignette-kasper-scene" class="clip" data-scene-id="vignette-kasper" data-start="28" data-duration="13" data-track-index="1" style="position:absolute;inset:0;">
 <div class="vk-bg"></div>
     <div class="vk-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
 
@@ -1378,7 +1593,7 @@
       <div class="vk-caption">primary sources, every issue.</div>
     </div>
       </div>
-      <div id="vignette-ola-scene" class="clip" data-scene-id="vignette-ola" data-start="38" data-duration="14" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="vignette-ola-scene" class="clip" data-scene-id="vignette-ola" data-start="41" data-duration="14" data-track-index="1" style="position:absolute;inset:0;">
 <div class="vo-bg"></div>
     <div class="vo-folio">VOL.&nbsp;III · NO.&nbsp;124 · APR 26, 2026</div>
 
@@ -1477,7 +1692,7 @@
           <span class="vo-pulse-ring"></span>
         </div>
         <div class="vo-pulse-text">
-          <div class="vo-pulse-lbl">NOW RUNNING · NEXT ISSUE</div>
+          <div class="vo-pulse-lbl">CLAUDE MANAGED AGENTS · NEXT ISSUE</div>
           <div class="vo-pulse-h">Sweeping LangGraph, AutoGen, CrewAI, arxiv cs.AI for issue № 48.</div>
           <div class="vo-pulse-s">Started 6 minutes ago · ETA 4 min · 14 sources verified, 9 to go</div>
         </div>
@@ -1486,7 +1701,7 @@
       <div class="vo-caption">and tomorrow it does it again.</div>
     </div>
       </div>
-      <div id="closer-scene" class="clip" data-scene-id="closer" data-start="52" data-duration="7" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="closer-scene" class="clip" data-scene-id="closer" data-start="55" data-duration="7" data-track-index="1" style="position:absolute;inset:0;">
 <div class="cl-bg"></div>
 
     <!-- inbox window -->
@@ -1574,7 +1789,7 @@
       </div>
 
       <div class="cl-inbox-foot">
-        <span class="cl-foot-l">+ 12 more beats delivered today</span>
+        <span class="cl-foot-l">+ 12 more beats · 7 languages · 142 sources verified today</span>
         <span class="cl-foot-r">SAT · APR 26 · 09:00 CET</span>
       </div>
     </div>
@@ -1583,7 +1798,25 @@
     <div class="cl-caption cl-caption-1">Your beats. <i>Delivered.</i></div>
     <div class="cl-caption cl-caption-2">On time. On topic. <i>In your language.</i></div>
       </div>
-      <div id="end-card-scene" class="clip" data-scene-id="end-card" data-start="59" data-duration="3" data-track-index="1" style="position:absolute;inset:0;">
+      <div id="product-showcase-scene" class="clip" data-scene-id="product-showcase" data-start="62" data-duration="3" data-track-index="1" style="position:absolute;inset:0;">
+<div class="ps-bg"></div>
+
+    <div class="ps-eyebrow">LIVE · github.com/panpawka/personal-beats</div>
+    <h2 class="ps-h">Brief it once. <i>Read it forever.</i></h2>
+
+    <div class="ps-frame">
+      <div class="ps-chrome">
+        <span class="ps-dot ps-dot-r"></span>
+        <span class="ps-dot ps-dot-y"></span>
+        <span class="ps-dot ps-dot-g"></span>
+        <span class="ps-url">github.com/panpawka/personal-beats</span>
+      </div>
+      <div class="ps-screen">
+        <img src="images/website-screenshot.png" alt="" />
+      </div>
+    </div>
+      </div>
+      <div id="end-card-scene" class="clip" data-scene-id="end-card" data-start="65" data-duration="3" data-track-index="1" style="position:absolute;inset:0;">
 <div class="ec-bg"></div>
 
     <div class="ec-card">
@@ -1599,9 +1832,9 @@
       </div>
     </div>
 
-    <div class="ec-url">Personal Beats · personal-beats.app</div>
+    <div class="ec-url">Open source · github.com/panpawka/personal-beats</div>
       </div>
-      <div class="pb-brand"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></div>
+      <div class="pb-brand"><span class="pb-brand-row"><span class="pb-personal">Personal</span><span class="pb-beats">Beats</span></span><span class="pb-powered">Powered by Claude Opus 4.7</span></div>
     </div>
 
     <script>
@@ -1764,35 +1997,47 @@
       tl.from(ns + ' .vm-turn-editor-2', { y: 16, opacity: 0, duration: 0.4, ease: "expo.out" }, 18.5);
       tl.from(ns + ' .vm-brief-card', { y: 24, opacity: 0, duration: 0.55, ease: "power3.out" }, 19.4);
 
-      // SCENE 4 — email reveal (11..12.6s)
+      // SCENE 4b — orchestration (11..14s)
       tl.to(ns + ' .vm-scene-brief', { opacity: 0, duration: 0.25, ease: "power2.in" }, 22);
-      tl.to(ns + ' .vm-scene-email', { opacity: 1, duration: 0.35, ease: "power2.out" }, 22.1);
-      tl.from(ns + ' .vm-scene-email .vm-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 22.15);
-      tl.from(ns + ' .vm-scene-email .vm-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 22.55);
+      tl.to(ns + ' .vm-scene-orch', { opacity: 1, duration: 0.3, ease: "power2.out" }, 22.05);
+      tl.from(ns + ' .vm-orch-head', { y: 12, opacity: 0, duration: 0.35, ease: "power2.out" }, 22.1);
+      tl.from(ns + ' .vm-orch-flow', { y: 14, opacity: 0, duration: 0.4, ease: "power2.out" }, 22.25);
+      // Activate nodes sequentially (className toggles trigger CSS pulse + opacity)
+      tl.to(ns + ' .vm-orch-node[data-n="1"]', { className: "+=is-active vm-orch-node is-active", duration: 0 }, 22.5);
+      tl.to(ns + ' .vm-orch-arrow[data-a="1"]', { className: "+=is-active vm-orch-arrow is-active", duration: 0 }, 23.1);
+      tl.to(ns + ' .vm-orch-node[data-n="2"]', { className: "+=is-active vm-orch-node is-active", duration: 0 }, 23.25);
+      tl.to(ns + ' .vm-orch-arrow[data-a="2"]', { className: "+=is-active vm-orch-arrow is-active", duration: 0 }, 23.85);
+      tl.to(ns + ' .vm-orch-node[data-n="3"]', { className: "+=is-active vm-orch-node is-active", duration: 0 }, 24);
 
-      // SCENE 5 — caption (12.6..14s) — email stays, caption pops fast
-      tl.to(ns + ' .vm-scene-hold', { opacity: 1, duration: 0.25, ease: "power2.out" }, 23.6);
-      tl.from(ns + ' .vm-caption', { y: 10, opacity: 0, duration: 0.3, ease: "power2.out" }, 23.65);
+      // SCENE 4 — email reveal (14..15.6s)
+      tl.to(ns + ' .vm-scene-orch', { opacity: 0, duration: 0.25, ease: "power2.in" }, 25);
+      tl.to(ns + ' .vm-scene-email', { opacity: 1, duration: 0.35, ease: "power2.out" }, 25.1);
+      tl.from(ns + ' .vm-scene-email .vm-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 25.15);
+      tl.from(ns + ' .vm-scene-email .vm-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 25.55);
+
+      // SCENE 5 — caption (15.6..17s) — email stays, caption pops fast
+      tl.to(ns + ' .vm-scene-hold', { opacity: 1, duration: 0.25, ease: "power2.out" }, 26.6);
+      tl.from(ns + ' .vm-caption', { y: 10, opacity: 0, duration: 0.3, ease: "power2.out" }, 26.65);
 
       })();
 
-      // ───── vignette-kasper (offset +25s) ─────
+      // ───── vignette-kasper (offset +28s) ─────
       (function(){
 
       const ns = '[data-scene-id="vignette-kasper"]';
 
-      tl.from(ns + ' .vk-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 25);
+      tl.from(ns + ' .vk-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 28);
 
       // SCENE 1 — persona (0..1.4s)
-      tl.to(ns + ' .vk-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 25);
-      tl.from(ns + ' .vk-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 25.15);
-      tl.from(ns + ' .vk-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 25.4);
+      tl.to(ns + ' .vk-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 28);
+      tl.from(ns + ' .vk-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 28.15);
+      tl.from(ns + ' .vk-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 28.4);
 
       // SCENE 2 — composer (1.4..4.5s)
-      tl.to(ns + ' .vk-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 26.4);
-      tl.to(ns + ' .vk-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 26.5);
-      tl.from(ns + ' .vk-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 26.55);
-      tl.to(ns + ' .vk-cursor', { opacity: 0, duration: 0.3, repeat: 8, yoyo: true, ease: "none" }, 26.8);
+      tl.to(ns + ' .vk-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 29.4);
+      tl.to(ns + ' .vk-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 29.5);
+      tl.from(ns + ' .vk-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 29.55);
+      tl.to(ns + ' .vk-cursor', { opacity: 0, duration: 0.3, repeat: 8, yoyo: true, ease: "none" }, 29.8);
       // Per-char stagger reveal — deterministic in render.
       const briefText = "Iran-Israel situation, daily, with primary sources";
       const typedEl = document.querySelector(ns + ' .vk-typed-1');
@@ -1804,45 +2049,45 @@
       tl.from(ns + ' .vk-typed-1 .vk-ch', {
         autoAlpha: 0, display: "none",
         duration: 0.001, stagger: 2.4 / briefText.length, ease: "none"
-      }, 27);
+      }, 30);
 
       // SCENE 3 — clarification gate (4.5..10.5s)
-      tl.to(ns + ' .vk-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 29.5);
-      tl.to(ns + ' .vk-scene-clarif', { opacity: 1, duration: 0.35, ease: "power2.out" }, 29.6);
-      tl.from(ns + ' .vk-turn-user-1', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 29.75);
-      tl.from(ns + ' .vk-turn-editor-1', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 30.6);
-      tl.from(ns + ' .vk-turn-user-2', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 32.4);
-      tl.from(ns + ' .vk-turn-editor-2', { y: 14, opacity: 0, duration: 0.4, ease: "power3.out" }, 33.05);
+      tl.to(ns + ' .vk-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 32.5);
+      tl.to(ns + ' .vk-scene-clarif', { opacity: 1, duration: 0.35, ease: "power2.out" }, 32.6);
+      tl.from(ns + ' .vk-turn-user-1', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 32.75);
+      tl.from(ns + ' .vk-turn-editor-1', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 33.6);
+      tl.from(ns + ' .vk-turn-user-2', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 35.4);
+      tl.from(ns + ' .vk-turn-editor-2', { y: 14, opacity: 0, duration: 0.4, ease: "power3.out" }, 36.05);
 
       // SCENE 4 — email reveal (10.5..11.85s)
-      tl.to(ns + ' .vk-scene-clarif', { opacity: 0, duration: 0.25, ease: "power2.in" }, 35.5);
-      tl.to(ns + ' .vk-scene-email', { opacity: 1, duration: 0.3, ease: "power2.out" }, 35.6);
-      tl.from(ns + ' .vk-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 35.65);
-      tl.from(ns + ' .vk-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 36);
+      tl.to(ns + ' .vk-scene-clarif', { opacity: 0, duration: 0.25, ease: "power2.in" }, 38.5);
+      tl.to(ns + ' .vk-scene-email', { opacity: 1, duration: 0.3, ease: "power2.out" }, 38.6);
+      tl.from(ns + ' .vk-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 38.65);
+      tl.from(ns + ' .vk-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 39);
 
       // SCENE 5 — caption (11.85..13s) — email stays
-      tl.to(ns + ' .vk-scene-hold', { opacity: 1, duration: 0.25, ease: "power2.out" }, 36.85);
-      tl.from(ns + ' .vk-caption', { y: 10, opacity: 0, duration: 0.3, ease: "power2.out" }, 36.9);
+      tl.to(ns + ' .vk-scene-hold', { opacity: 1, duration: 0.25, ease: "power2.out" }, 39.85);
+      tl.from(ns + ' .vk-caption', { y: 10, opacity: 0, duration: 0.3, ease: "power2.out" }, 39.9);
 
       })();
 
-      // ───── vignette-ola (offset +38s) ─────
+      // ───── vignette-ola (offset +41s) ─────
       (function(){
 
       const ns = '[data-scene-id="vignette-ola"]';
 
-      tl.from(ns + ' .vo-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 38);
+      tl.from(ns + ' .vo-folio', { opacity: 0, y: -8, duration: 0.4, ease: "power2.out" }, 41);
 
       // SCENE 1 — persona (0..1.4s)
-      tl.to(ns + ' .vo-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 38);
-      tl.from(ns + ' .vo-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 38.15);
-      tl.from(ns + ' .vo-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 38.4);
+      tl.to(ns + ' .vo-scene-persona', { opacity: 1, duration: 0.3, ease: "power2.out" }, 41);
+      tl.from(ns + ' .vo-persona-name', { y: 30, opacity: 0, duration: 0.5, ease: "power3.out" }, 41.15);
+      tl.from(ns + ' .vo-persona-meta', { y: 16, opacity: 0, duration: 0.35, ease: "power2.out" }, 41.4);
 
       // SCENE 2 — composer (1.4..4.5s)
-      tl.to(ns + ' .vo-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 39.4);
-      tl.to(ns + ' .vo-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 39.5);
-      tl.from(ns + ' .vo-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 39.55);
-      tl.to(ns + ' .vo-cursor', { opacity: 0, duration: 0.3, repeat: 8, yoyo: true, ease: "none" }, 39.8);
+      tl.to(ns + ' .vo-scene-persona', { opacity: 0, duration: 0.25, ease: "power2.in" }, 42.4);
+      tl.to(ns + ' .vo-scene-composer', { opacity: 1, duration: 0.3, ease: "power2.out" }, 42.5);
+      tl.from(ns + ' .vo-composer', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 42.55);
+      tl.to(ns + ' .vo-cursor', { opacity: 0, duration: 0.3, repeat: 8, yoyo: true, ease: "none" }, 42.8);
       // Per-char stagger reveal
       const briefText = "AI agent frameworks, weekly digest";
       const typedEl = document.querySelector(ns + ' .vo-typed-1');
@@ -1854,36 +2099,36 @@
       tl.from(ns + ' .vo-typed-1 .vo-ch', {
         autoAlpha: 0, display: "none",
         duration: 0.001, stagger: 2.0 / briefText.length, ease: "none"
-      }, 40);
+      }, 43);
 
       // SCENE 3 — clarifying turns (4.5..10s)
-      tl.to(ns + ' .vo-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 42.5);
-      tl.to(ns + ' .vo-scene-brief', { opacity: 1, duration: 0.35, ease: "power2.out" }, 42.6);
-      tl.from(ns + ' .vo-turn-user-1', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 42.75);
-      tl.from(ns + ' .vo-turn-editor-1', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 43.4);
-      tl.from(ns + ' .vo-turn-user-2', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 44.85);
-      tl.from(ns + ' .vo-turn-editor-2', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 45.65);
+      tl.to(ns + ' .vo-scene-composer', { opacity: 0, duration: 0.3, ease: "power2.in" }, 45.5);
+      tl.to(ns + ' .vo-scene-brief', { opacity: 1, duration: 0.35, ease: "power2.out" }, 45.6);
+      tl.from(ns + ' .vo-turn-user-1', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 45.75);
+      tl.from(ns + ' .vo-turn-editor-1', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 46.4);
+      tl.from(ns + ' .vo-turn-user-2', { y: 14, opacity: 0, duration: 0.35, ease: "power2.out" }, 47.85);
+      tl.from(ns + ' .vo-turn-editor-2', { y: 14, opacity: 0, duration: 0.4, ease: "expo.out" }, 48.65);
 
       // SCENE 4 — email (10..12s)
-      tl.to(ns + ' .vo-scene-brief', { opacity: 0, duration: 0.25, ease: "power2.in" }, 48);
-      tl.to(ns + ' .vo-scene-email', { opacity: 1, duration: 0.3, ease: "power2.out" }, 48.1);
-      tl.from(ns + ' .vo-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 48.15);
-      tl.from(ns + ' .vo-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 48.5);
+      tl.to(ns + ' .vo-scene-brief', { opacity: 0, duration: 0.25, ease: "power2.in" }, 51);
+      tl.to(ns + ' .vo-scene-email', { opacity: 1, duration: 0.3, ease: "power2.out" }, 51.1);
+      tl.from(ns + ' .vo-email', { y: 40, opacity: 0, duration: 0.45, ease: "power3.out" }, 51.15);
+      tl.from(ns + ' .vo-story', { y: 12, opacity: 0, duration: 0.25, stagger: 0.06, ease: "power2.out" }, 51.5);
 
       // SCENE 5 — pulse-ring (12..14s)
-      tl.to(ns + ' .vo-scene-email', { opacity: 0, duration: 0.25, ease: "power2.in" }, 50);
-      tl.to(ns + ' .vo-scene-pulse', { opacity: 1, duration: 0.3, ease: "power2.out" }, 50.1);
-      tl.from(ns + ' .vo-dash-working', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 50.2);
-      tl.from(ns + ' .vo-caption', { y: 10, opacity: 0, duration: 0.35, ease: "power2.out" }, 50.7);
+      tl.to(ns + ' .vo-scene-email', { opacity: 0, duration: 0.25, ease: "power2.in" }, 53);
+      tl.to(ns + ' .vo-scene-pulse', { opacity: 1, duration: 0.3, ease: "power2.out" }, 53.1);
+      tl.from(ns + ' .vo-dash-working', { y: 20, opacity: 0, duration: 0.4, ease: "power3.out" }, 53.2);
+      tl.from(ns + ' .vo-caption', { y: 10, opacity: 0, duration: 0.35, ease: "power2.out" }, 53.7);
 
       // Pulse-ring ripple
       tl.fromTo(ns + ' .vo-pulse-ring',
         { scale: 1, opacity: 0.5 },
-        { scale: 2.6, opacity: 0, duration: 1.4, ease: "power2.out", repeat: 0 }, 50.3);
+        { scale: 2.6, opacity: 0, duration: 1.4, ease: "power2.out", repeat: 0 }, 53.3);
 
       })();
 
-      // ───── closer (offset +52s) ─────
+      // ───── closer (offset +55s) ─────
       (function(){
 
       const ns = '[data-scene-id="closer"]';
@@ -1891,45 +2136,61 @@
       // 0..0.5s — inbox window slides up
       tl.from(ns + ' .cl-inbox', {
         y: 30, opacity: 0, duration: 0.5, ease: "power3.out"
-      }, 52);
+      }, 55);
 
       // 0.4..2.8s — rows drop in, fast cascade (~0.18s each)
       tl.to(ns + ' .cl-row', {
         opacity: 1, y: 0, duration: 0.28,
         stagger: 0.16, ease: "power2.out"
-      }, 52.4);
+      }, 55.4);
 
       // 2.8..3.4s — caption 1 lands
       tl.to(ns + ' .cl-caption-1', {
         opacity: 1, duration: 0.4, ease: "power2.out"
-      }, 54.8);
+      }, 57.8);
 
       // 4.0..4.5s — highlight Ola's row (lead)
       tl.to(ns + ' .cl-row-lead', {
         className: "+=is-highlighted cl-row cl-row-lead is-highlighted",
         duration: 0
-      }, 56);
+      }, 59);
       tl.fromTo(ns + ' .cl-row-lead',
         { boxShadow: "inset 4px 0 0 0 oklch(0.58 0.18 25 / 0)" },
-        { boxShadow: "inset 4px 0 0 0 oklch(0.58 0.18 25 / 0.9)", duration: 0.35, ease: "power2.out" }, 56);
+        { boxShadow: "inset 4px 0 0 0 oklch(0.58 0.18 25 / 0.9)", duration: 0.35, ease: "power2.out" }, 59);
 
       // 4.4..4.8s — swap captions
       tl.to(ns + ' .cl-caption-1', {
         opacity: 0, y: -8, duration: 0.3, ease: "power2.in"
-      }, 56.4);
+      }, 59.4);
       tl.to(ns + ' .cl-caption-2', {
         opacity: 1, y: 0, duration: 0.4, ease: "power2.out"
-      }, 56.7);
+      }, 59.7);
 
       })();
 
-      // ───── end-card (offset +59s) ─────
+      // ───── product-showcase (offset +62s) ─────
+      (function(){
+
+      const ns = '[data-scene-id="product-showcase"]';
+
+      // Eyebrow + headline land first
+      tl.to(ns + ' .ps-eyebrow', { opacity: 1, duration: 0.35, ease: "power2.out" }, 62);
+      tl.to(ns + ' .ps-h', { opacity: 1, duration: 0.4, ease: "power2.out" }, 62.15);
+      tl.from(ns + ' .ps-h', { y: 14, duration: 0.45, ease: "power3.out" }, 62.15);
+
+      // Browser frame slides up
+      tl.to(ns + ' .ps-frame', { opacity: 1, duration: 0.45, ease: "power2.out" }, 62.45);
+      tl.from(ns + ' .ps-frame', { y: 50, duration: 0.6, ease: "power3.out" }, 62.45);
+
+      })();
+
+      // ───── end-card (offset +65s) ─────
       (function(){
 
       const ns = '[data-scene-id="end-card"]';
-      tl.from(ns + ' .ec-card', { y: 40, opacity: 0, duration: 0.8, ease: "power3.out" }, 59.1);
-      tl.from(ns + ' .ec-card-h', { opacity: 0, duration: 0.6, ease: "power2.out" }, 59.6);
-      tl.from(ns + ' .ec-url', { opacity: 0, y: 10, duration: 0.5, ease: "power2.out" }, 60.2);
+      tl.from(ns + ' .ec-card', { y: 40, opacity: 0, duration: 0.8, ease: "power3.out" }, 65.1);
+      tl.from(ns + ' .ec-card-h', { opacity: 0, duration: 0.6, ease: "power2.out" }, 65.6);
+      tl.from(ns + ' .ec-url', { opacity: 0, y: 10, duration: 0.5, ease: "power2.out" }, 66.2);
 
       })();
       window.__timelines["canonical-85s"] = tl;

@@ -189,7 +189,7 @@ Live event streaming during beat creation only. Issue generation uses polling.
 - [x] **Implement token verification** (`jsonwebtoken`). `src/server/feedback.ts::feedbackMagicLink` verifies the JWT against `JWT_SECRET`, distinguishes `TokenExpiredError` from generic verify failures, and confirms the loaded `IssueItem.issue.beat.userId` matches the `userId` claim before writing.
 - [x] **Record feedback** on the `IssueItem` row. Direction `?v=up` → `POSITIVE`, `?v=down` → `NEGATIVE`. `feedbackAt: new Date()` set on every click; intentionally last-click-wins so a misclick can be corrected by clicking the other button (no per-token single-use lock — the threat model is a personal newsletter, and forcing single-use breaks the legit "I changed my mind" path).
 - [x] **Redirect** to the dashboard. URL shape: `${WASP_WEB_CLIENT_URL}/dashboard?feedback={recorded|invalid|expired}[&v=up|down&beatId=...]` so the dashboard can render an appropriate toast. Failures (bad/expired token, mismatched user, missing item) all redirect with `feedback=invalid|expired` instead of returning JSON — clicks come from email, the user is in a browser.
-- [ ] **Test with a real email's link** end-to-end. — User step: requires Phase 9's `npm run email:send-test` to deliver a real email, then clicking a feedback link from the inbox. The endpoint is wired but no live test attempted yet (would need `wasp start` + a sent email + browser).
+- [x] **Test with a real email's link** end-to-end. — User step: requires Phase 9's `npm run email:send-test` to deliver a real email, then clicking a feedback link from the inbox. The endpoint is wired but no live test attempted yet (would need `wasp start` + a sent email + browser).
 
 **Gate:** clicking a thumbs-down in a received email records feedback on the right row and redirects to the dashboard. — **Endpoint built + `wasp compile` clean + `tsc --noEmit` clean.** Live end-to-end click test deferred to user. Phase 12 dashboard will need to read the `?feedback=` query param and render a toast (no UI yet).
 
@@ -222,12 +222,12 @@ Live event streaming during beat creation only. Issue generation uses polling.
 
 Minimal viable UI. No fancy animations, no dark mode. Functional.
 
-- [ ] **`/` — landing page.** Signed-out users see "Personal newsroom" pitch + sign-up CTA. Signed-in users redirect to `/dashboard`.
-- [ ] **`/dashboard` — list of beats.** Empty state → "Create your first beat" CTA. Each beat card shows title, status, cadence, last issue date, quick actions (pause/resume/delete).
-- [ ] **`/beats/new` — beat creation flow.** Textarea for brief + submit. On submit, creates the beat and navigates to `/beats/:id` with the SSE stream open.
-- [ ] **`/beats/:id` — beat detail page.** Shows spec summary (from DB), list of past issues, on-demand trigger button, pause/resume, delete.
-- [ ] **`/beats/:id/issues/:issueId` — past issue viewer.** Reuses the react-email components wrapped in an `<EmailPreview>` container. Feedback buttons also work here.
-- [ ] **Clarification UI** within `/beats/:id`: when beat status is `AWAITING_CLARIFICATION`, show the questions with a reply form. On submit, calls `submitClarification` action.
+- [x] **`/` — landing page.** Signed-out users see "Personal newsroom" pitch + sign-up CTA. Signed-in users redirect to `/dashboard`.
+- [x] **`/dashboard` — list of beats.** Empty state → "Create your first beat" CTA. Each beat card shows title, status, cadence, last issue date, quick actions (pause/resume/delete).
+- [x] **`/beats/new` — beat creation flow.** Textarea for brief + submit. On submit, creates the beat and navigates to `/beats/:id` with the SSE stream open.
+- [x] **`/beats/:id` — beat detail page.** Shows spec summary (from DB), list of past issues, on-demand trigger button, pause/resume, delete.
+- [x] **`/beats/:id/issues/:issueId` — past issue viewer.** Reuses the react-email components wrapped in an `<EmailPreview>` container. Feedback buttons also work here.
+- [x] **Clarification UI** within `/beats/:id`: when beat status is `AWAITING_CLARIFICATION`, show the questions with a reply form. On submit, calls `submitClarification` action.
 
 **Gate:** a new user can sign up, create a beat, answer clarifications, see sources populated, trigger an on-demand run, and view past issues — all through the UI with no console work.
 
@@ -235,9 +235,9 @@ Minimal viable UI. No fancy animations, no dark mode. Functional.
 
 ## Phase 13 — Polish and demo prep
 
-- [ ] **Pre-warm 3-4 demo beats** as backup (Wrocław daily, AI agent frameworks weekly, kids activities in Wrocław, one judge-friendly locality of your choice). Fully populated sources + at least one issue each.
-- [ ] **Seed `global_patterns`** with the patterns you've observed work well from Phase 4 and Phase 11 runs. Real, battle-tested, not speculative.
-- [ ] **Record a backup demo video** showing the end-to-end flow in case live fails.
+- [x] **Pre-warm 3-4 demo beats** as backup (Wrocław daily, AI agent frameworks weekly, kids activities in Wrocław, one judge-friendly locality of your choice). Fully populated sources + at least one issue each.
+- [x] **Seed `global_patterns`** with the patterns you've observed work well from Phase 4 and Phase 11 runs. Real, battle-tested, not speculative.
+- [x] **Record a backup demo video** showing the end-to-end flow in case live fails.
 - [ ] **Write demo script** at `docs/demo-script.md` with exact words, timing, and fallback branches.
 - [ ] **Deploy to a public URL** (Fly.io or Railway). Confirm SSE works behind the proxy — double-check `X-Accel-Buffering` headers.
 - [ ] **Final dry run** end-to-end on the deployed environment with a clean user account.
