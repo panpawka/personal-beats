@@ -2,7 +2,7 @@
 
 **A personal newsroom-of-one. You describe a beat in one sentence. An editorial agent designs the spec, scouts the sources, drafts the issue, and emails it on a schedule.**
 
-> *Tell us what you care about, how often, and how deep. We'll be your personal newsroom.*
+> *Tell me what you care about, how often, and how deep. I'll be your personal newsroom.*
 
 Live: <https://pb.lemonode.pl>
 
@@ -52,7 +52,7 @@ Each beat produces its own newsletter, delivered by email.
 ┌──────────────────────────────────────────────────────────────────┐
 │                    CLAUDE MANAGED AGENTS                         │
 │                                                                  │
-│  Beat Designer  (Sonnet 4.6) — brief → spec.yaml + relevance.md  │
+│  Beat Designer  (Sonnet 4.6) - brief → spec.yaml + relevance.md  │
 │  Sources Scout  (Sonnet 4.6) → sources.yaml (10–25 ranked URLs)  │
 │  Editor         (Opus 4.7)   → issue HTML + plaintext            │
 │                                                                  │
@@ -60,9 +60,9 @@ Each beat produces its own newsletter, delivered by email.
 │               requests, dateparser, playwright (optional)        │
 │                                                                  │
 │  Memory stores per beat (research preview):                      │
-│    • <beat>_spec       — spec.yaml, relevance.md, sources.yaml   │
-│    • <beat>_history    — published items, dedup fingerprints     │
-│    • global_patterns   — recipes + cross-beat learnings (RO)     │
+│    • <beat>_spec       - spec.yaml, relevance.md, sources.yaml   │
+│    • <beat>_history    - published items, dedup fingerprints     │
+│    • global_patterns   - recipes + cross-beat learnings (RO)     │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
@@ -70,13 +70,13 @@ Each beat produces its own newsletter, delivered by email.
 
 ### Job pipeline
 
-- `scheduleSweeperJob` — cron `* * * * *`. Fans out `generateIssueJob` to any active `TIME_BASED` beat whose cron is due (compared against `Beat.lastScheduledAt`).
-- `driveAgentJob` — bounded-poll driver for the active CMA session. Drains pending user messages, lists new events from `client.beta.sessions.events.list`, persists them to `AgentEvent`, runs tool handlers, returns a verdict (`reenqueue` / `waiting_for_user` / `phase_done` / `failed`). pg-boss `singletonKey` enforces one driver per beat.
-- `generateIssueJob` — orchestrates the SCOUT → EDITOR transition, writes the `Issue` row, dispatches the email via Mailgun.
+- `scheduleSweeperJob` - cron `* * * * *`. Fans out `generateIssueJob` to any active `TIME_BASED` beat whose cron is due (compared against `Beat.lastScheduledAt`).
+- `driveAgentJob` - bounded-poll driver for the active CMA session. Drains pending user messages, lists new events from `client.beta.sessions.events.list`, persists them to `AgentEvent`, runs tool handlers, returns a verdict (`reenqueue` / `waiting_for_user` / `phase_done` / `failed`). pg-boss `singletonKey` enforces one driver per beat.
+- `generateIssueJob` - orchestrates the SCOUT → EDITOR transition, writes the `Issue` row, dispatches the email via Mailgun.
 
 ### The clarification gate
 
-The Beat Designer has a `needs_clarification` custom tool. The system prompt instructs it to lean toward proceeding — clarifications are reserved for dimensions where two reasonable answers would produce substantially different newsletters (e.g. *"kids stuff in Wrocław"* → ask the age range; *"Wrocław news daily"* → just ship it). Visible reasoning, max two questions, no open-ended *"tell me more"*.
+The Beat Designer has a `needs_clarification` custom tool. The system prompt instructs it to lean toward proceeding - clarifications are reserved for dimensions where two reasonable answers would produce substantially different newsletters (e.g. *"kids stuff in Wrocław"* → ask the age range; *"Wrocław news daily"* → just ship it). Visible reasoning, max two questions, no open-ended *"tell me more"*.
 
 ### Per-agent model rationale
 
@@ -189,20 +189,20 @@ Opens at `http://localhost:3000`. Sign up, click "Begin a beat", describe one in
 - **60 s LinkedIn cut:** `public/demo/linkedin-60.mp4`
 - **10 s landing loop:** `public/demo/landing-loop.mp4`
 
-Source: `tools/demo-video/` — HyperFrames compositions, GSAP animation, the same `App.css` that ships in production. See `tools/demo-video/README.md`.
+Source: `tools/demo-video/` - HyperFrames compositions, GSAP animation, the same `App.css` that ships in production. See `tools/demo-video/README.md`.
 
 ---
 
 ## Documents
 
-- `PRD.md` — product brief
-- `PRD_wasp.md` — Wasp-side spec
-- `PRD_cma.md` — Managed Agents spec (system prompts, tool schemas, memory layout)
-- `PLAN.md` — execution plan, phase by phase
-- `DESIGN.md` — editorial design system
+- `PRD.md` - product brief
+- `PRD_wasp.md` - Wasp-side spec
+- `PRD_cma.md` - Managed Agents spec (system prompts, tool schemas, memory layout)
+- `PLAN.md` - execution plan, phase by phase
+- `DESIGN.md` - editorial design system
 
 ---
 
 ## License
 
-MIT — see `LICENSE`.
+MIT - see `LICENSE`.
