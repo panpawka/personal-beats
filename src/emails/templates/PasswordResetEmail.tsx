@@ -1,11 +1,12 @@
 import React from 'react';
 import { EmailTemplateLayout } from '../components/EmailTemplateLayout';
 import {
-  EmailH1,
-  EmailLead,
+  EmailAccent,
   EmailButton,
-  EmailSmall,
+  EmailH1,
   EmailInlineLink,
+  EmailLead,
+  EmailSmall,
 } from '../components/primitives';
 
 export type PasswordResetEmailProps = {
@@ -18,10 +19,12 @@ export function PasswordResetEmail({ passwordResetLink }: PasswordResetEmailProp
       title="Reset password — Personal Beats"
       previewText="Click to set a new password. Link valid for 1 hour."
       eyebrow="Account security">
-      <EmailH1>Reset your password</EmailH1>
+      <EmailH1>
+        Reset your <EmailAccent>password</EmailAccent>
+      </EmailH1>
       <EmailLead>
         Someone — probably you — requested a password reset for your Personal
-        Beats account. Click the button below to set a new password.
+        Beats account. Click below to set a new one.
       </EmailLead>
       <EmailButton href={passwordResetLink}>Reset password</EmailButton>
       <EmailSmall>

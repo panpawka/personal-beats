@@ -29,7 +29,7 @@ export function CustomLoginForm() {
         setError(null);
         try {
             await login({ email: data.email, password: data.password });
-            navigate(routes.DashboardRoute.to);
+            navigate(routes.LandingRoute.to);
         } catch (err: unknown) {
             setError(translateAuthError(err as Error, i18n));
         }

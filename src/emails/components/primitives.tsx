@@ -1,36 +1,58 @@
 import React from 'react';
 import { Button, Link, Section, Text } from 'react-email';
-import { COLOR, FONT_SANS, SPACE } from './tokens';
+import { EDITORIAL, FONT_MONO, FONT_SANS, FONT_SERIF, SPACE } from './tokens';
 
 // ─── Typography ──────────────────────────────────────────────────────────────
 
+/**
+ * Page headline — sans, weight 500, with optional `<EmailAccent>` spans
+ * inline (serif italic, accent red). Mirrors the landing/dashboard h1 pattern
+ * from DESIGN.md §2.2.
+ */
 export function EmailH1({ children }: { children: React.ReactNode }) {
   return (
     <Text
       style={{
         margin: `0 0 ${SPACE.md}`,
-        font: `700 24px/1.25 ${FONT_SANS}`,
-        letterSpacing: '-0.015em',
-        color: COLOR.fg,
+        font: `500 32px/1.1 ${FONT_SANS}`,
+        letterSpacing: '-0.018em',
+        color: EDITORIAL.ink,
       }}>
       {children}
     </Text>
   );
 }
 
+/** Serif-italic accent word, rendered in `--accent`. Use inside EmailH1. */
+export function EmailAccent({ children }: { children: React.ReactNode }) {
+  return (
+    <em
+      style={{
+        fontFamily: FONT_SERIF,
+        fontStyle: 'italic',
+        fontWeight: 400,
+        color: EDITORIAL.accent,
+      }}>
+      {children}
+    </em>
+  );
+}
+
+/** Body / lede paragraph — sans 15.5px, ink-2. */
 export function EmailLead({ children }: { children: React.ReactNode }) {
   return (
     <Text
       style={{
         margin: `0 0 ${SPACE.lg}`,
-        font: `400 15px/1.6 ${FONT_SANS}`,
-        color: COLOR.fg,
+        font: `400 15.5px/1.6 ${FONT_SANS}`,
+        color: EDITORIAL.ink2,
       }}>
       {children}
     </Text>
   );
 }
 
+/** Micro-copy / disclaimer — sans 12.5px, ink-3. */
 export function EmailSmall({
   children,
   align = 'left',
@@ -42,8 +64,31 @@ export function EmailSmall({
     <Text
       style={{
         margin: `${SPACE.md} 0 0`,
-        font: `400 12px/1.55 ${FONT_SANS}`,
-        color: COLOR.fgMuted,
+        font: `400 12.5px/1.6 ${FONT_SANS}`,
+        color: EDITORIAL.ink3,
+        textAlign: align,
+      }}>
+      {children}
+    </Text>
+  );
+}
+
+/** Mono uppercase eyebrow — for section labels and metadata rows. */
+export function EmailEyebrow({
+  children,
+  align = 'left',
+}: {
+  children: React.ReactNode;
+  align?: 'left' | 'center' | 'right';
+}) {
+  return (
+    <Text
+      style={{
+        margin: 0,
+        font: `500 10.5px/1 ${FONT_MONO}`,
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: EDITORIAL.ink3,
         textAlign: align,
       }}>
       {children}
@@ -59,27 +104,31 @@ export interface EmailButtonProps {
   children: React.ReactNode;
 }
 
+/**
+ * Primary editorial button — ink fill, paper label. Outline variant uses a
+ * hairline ink border on paper. 6px radius per DESIGN §2.4.
+ */
 export function EmailButton({ href, variant = 'primary', children }: EmailButtonProps) {
   const primary: React.CSSProperties = {
-    backgroundColor: COLOR.brand,
-    color: '#111',
-    border: `1px solid ${COLOR.brand}`,
+    backgroundColor: EDITORIAL.ink,
+    color: EDITORIAL.paper,
+    border: `1px solid ${EDITORIAL.ink}`,
   };
   const outline: React.CSSProperties = {
-    backgroundColor: COLOR.bg,
-    color: COLOR.fg,
-    border: `1px solid ${COLOR.border}`,
+    backgroundColor: EDITORIAL.paper,
+    color: EDITORIAL.ink,
+    border: `1px solid ${EDITORIAL.ink}`,
   };
   return (
-    <Section style={{ textAlign: 'left', margin: `${SPACE.lg} 0` }}>
+    <Section style={{ textAlign: 'left', margin: `${SPACE.lg} 0 ${SPACE.xl}` }}>
       <Button
         href={href}
         style={{
           ...(variant === 'primary' ? primary : outline),
-          font: `700 14px/1 ${FONT_SANS}`,
+          font: `500 14px/1 ${FONT_SANS}`,
           letterSpacing: '-0.005em',
           padding: '14px 22px',
-          borderRadius: 0,
+          borderRadius: 6,
           textDecoration: 'none',
           display: 'inline-block',
         }}>
@@ -100,7 +149,7 @@ export function EmailInlineLink({
     <Link
       href={href}
       style={{
-        color: COLOR.accent700,
+        color: EDITORIAL.accent,
         textDecoration: 'underline',
         fontWeight: 500,
       }}>
@@ -108,4 +157,3 @@ export function EmailInlineLink({
     </Link>
   );
 }
-

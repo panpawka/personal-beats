@@ -57,7 +57,7 @@ app personalBeat {
     },
     onAfterSignup: import { onAfterSignup } from "@src/auth/hooks",
     onAfterEmailVerified: import { onAfterEmailVerified } from "@src/auth/hooks",
-    onAuthSucceededRedirectTo: "/dashboard",
+    onAuthSucceededRedirectTo: "/",
     onAuthFailedRedirectTo: "/login",
   },
   emailSender: {

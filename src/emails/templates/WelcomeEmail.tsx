@@ -1,11 +1,12 @@
 import React from 'react';
 import { EmailTemplateLayout } from '../components/EmailTemplateLayout';
 import {
-  EmailH1,
-  EmailLead,
+  EmailAccent,
   EmailButton,
-  EmailSmall,
+  EmailH1,
   EmailInlineLink,
+  EmailLead,
+  EmailSmall,
 } from '../components/primitives';
 
 export type WelcomeEmailProps = {
@@ -19,7 +20,9 @@ export function WelcomeEmail({ userEmail, dashboardUrl }: WelcomeEmailProps) {
       title="Welcome to Personal Beats"
       previewText="Your account is ready. Open the dashboard to design your first beat."
       eyebrow="Welcome">
-      <EmailH1>Welcome to Personal Beats.</EmailH1>
+      <EmailH1>
+        Welcome to your <EmailAccent>newsroom</EmailAccent>.
+      </EmailH1>
       <EmailLead>
         Your account ({userEmail}) is ready. Personal Beats files briefs shaped
         to your life — you tell us what to watch, our agents design the beat,

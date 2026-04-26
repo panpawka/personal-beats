@@ -14,7 +14,15 @@ export const getVerificationEmailContent: GetVerificationEmailContentFn = ({ ver
   }
   return {
     subject: 'Verify your email — Personal Beats',
-    text: `Click the link below to verify your email:\n\n${verificationLink}\n\nIf you didn't sign up for Personal Beats, ignore this message.`,
+    text: [
+      'Confirm your email to activate your Personal Beats account:',
+      '',
+      verificationLink,
+      '',
+      "Link expires in 24 hours. Didn't sign up? Ignore this message.",
+      '',
+      '— Personal Beats',
+    ].join('\n'),
     html,
   };
 };
@@ -28,7 +36,15 @@ export const getPasswordResetEmailContent: GetPasswordResetEmailContentFn = ({ p
   }
   return {
     subject: 'Reset your password — Personal Beats',
-    text: `Click the link below to reset your password:\n\n${passwordResetLink}\n\nThis link expires in 1 hour. If you didn't request a reset, ignore this message.`,
+    text: [
+      'Reset your Personal Beats password:',
+      '',
+      passwordResetLink,
+      '',
+      "Link expires in 1 hour. If this wasn't you, ignore this message — your password stays unchanged.",
+      '',
+      '— Personal Beats',
+    ].join('\n'),
     html,
   };
 };

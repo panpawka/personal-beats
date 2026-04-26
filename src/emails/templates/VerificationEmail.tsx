@@ -1,11 +1,12 @@
 import React from 'react';
 import { EmailTemplateLayout } from '../components/EmailTemplateLayout';
 import {
-  EmailH1,
-  EmailLead,
+  EmailAccent,
   EmailButton,
-  EmailSmall,
+  EmailH1,
   EmailInlineLink,
+  EmailLead,
+  EmailSmall,
 } from '../components/primitives';
 
 export type VerificationEmailProps = {
@@ -18,10 +19,12 @@ export function VerificationEmail({ verificationLink }: VerificationEmailProps) 
       title="Verify your email — Personal Beats"
       previewText="Verify your email to activate your account."
       eyebrow="Account verification">
-      <EmailH1>Verify your email</EmailH1>
+      <EmailH1>
+        Verify your <EmailAccent>email</EmailAccent>
+      </EmailH1>
       <EmailLead>
-        Confirm your email address to activate your Personal Beats account
-        and start receiving your beats.
+        Confirm your email address to activate your Personal Beats account and
+        start receiving your beats.
       </EmailLead>
       <EmailButton href={verificationLink}>Verify email</EmailButton>
       <EmailSmall>

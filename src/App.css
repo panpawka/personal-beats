@@ -87,7 +87,7 @@ body {
 .eyebrow  { font-family: var(--sans); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
 .eyebrow-mono { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-3); }
 .h-display { font-family: var(--serif); font-weight: 400; font-size: 64px; line-height: 1.02; letter-spacing: -0.02em; color: var(--ink); }
-.h-1  { font-family: var(--serif); font-weight: 400; font-size: 42px; line-height: 1.05; letter-spacing: -0.018em; color: var(--ink); }
+.h-1  { font-family: var(--serif); font-weight: 400; font-size: 42px; line-height: 1.05; letter-spacing: -0.018em; color: var(--ink); height: auto;}
 .h-2  { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.15; letter-spacing: -0.012em; color: var(--ink); }
 .h-3  { font-family: var(--serif); font-weight: 500; font-size: 20px; line-height: 1.25; letter-spacing: -0.008em; color: var(--ink); }
 .lede { font-family: var(--serif); font-weight: 400; font-size: 19px; line-height: 1.45; color: var(--ink-2); }

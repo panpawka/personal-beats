@@ -11,29 +11,32 @@ import {
   Section,
   Text,
 } from 'react-email';
-import { COLOR, FONT_SANS, SPACE } from './tokens';
+import { EDITORIAL, FONT_MONO, FONT_SANS, FONT_SERIF, SPACE } from './tokens';
 
 export interface EmailTemplateLayoutProps {
   /** Document <title> + fallback subject line. */
   title: string;
   /** Inbox preview text (hidden in body, shown in inbox snippet). */
   previewText: string;
-  /** Overline text rendered next to the wordmark (e.g. "Tygodniowy Playbook"). */
+  /** Mono uppercase eyebrow rendered top-right of the masthead. */
   eyebrow?: string;
-  /** Second line under the wordmark (e.g. business name). */
+  /** Optional second line under the wordmark. */
   subtitle?: string;
-  /** Optional unsubscribe URL. When provided, an unsubscribe link renders in the footer. */
+  /** Optional unsubscribe URL. When provided, renders in the footer. */
   unsubscribeUrl?: string;
   children: React.ReactNode;
 }
 
 /**
- * Shared email layout for transactional emails. Newsletter emails use a
- * separate chain. Structure:
+ * Editorial transactional shell — newsroom chrome around the body.
  *
- *   [brand header — mark + wordmark + optional eyebrow/subtitle]
- *   [body content, 1px hairline borders, 600px container]
- *   [footer — legal line + Lemonode attribution + optional unsubscribe]
+ *   [masthead — ink mark + serif italic wordmark + mono eyebrow]
+ *     ── 1.5px double-rule (per DESIGN §2.4) ──
+ *   [body — sans copy on paper, hairline rules]
+ *     ── 1.5px double-rule ──
+ *   [footer — mono uppercase legal line + optional unsubscribe]
+ *
+ * Newsletter sends use a separate chain (NewsletterEmail.tsx).
  */
 export function EmailTemplateLayout({
   title,
@@ -51,33 +54,33 @@ export function EmailTemplateLayout({
         <meta name="color-scheme" content="light" />
         <meta name="supported-color-schemes" content="light" />
         <Font
-          fontFamily="Inter"
-          fallbackFontFamily={['Arial', 'Helvetica', 'sans-serif']}
+          fontFamily="Source Serif 4"
+          fallbackFontFamily="Georgia"
           webFont={{
-            url: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50ojIa1ZL7.woff2',
+            url: 'https://fonts.gstatic.com/s/sourceserif4/v8/vEFy2_tTDB4M7-auWDN0ahZJW1ge6OZw.woff2',
             format: 'woff2',
           }}
           fontWeight={400}
           fontStyle="normal"
         />
         <Font
-          fontFamily="Inter"
-          fallbackFontFamily={['Arial', 'Helvetica', 'sans-serif']}
+          fontFamily="Source Serif 4"
+          fallbackFontFamily="Georgia"
           webFont={{
-            url: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50ojIa1pL7.woff2',
+            url: 'https://fonts.gstatic.com/s/sourceserif4/v8/vEFy2_tTDB4M7-auWDN0ahZJW1geyOZw.woff2',
             format: 'woff2',
           }}
-          fontWeight={600}
-          fontStyle="normal"
+          fontWeight={400}
+          fontStyle="italic"
         />
         <Font
-          fontFamily="Inter"
-          fallbackFontFamily={['Arial', 'Helvetica', 'sans-serif']}
+          fontFamily="JetBrains Mono"
+          fallbackFontFamily="monospace"
           webFont={{
-            url: 'https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50ojIa1Zr7.woff2',
+            url: 'https://fonts.gstatic.com/s/jetbrainsmono/v22/tDbY2o-flEEny0FZhsfKu5WU4xD-IQ-PuZJJXxfpAO-Lf1OQk6OK.woff2',
             format: 'woff2',
           }}
-          fontWeight={700}
+          fontWeight={400}
           fontStyle="normal"
         />
       </Head>
@@ -85,42 +88,35 @@ export function EmailTemplateLayout({
       <Body
         style={{
           margin: 0,
-          padding: 0,
-          backgroundColor: COLOR.bgPage,
+          padding: '32px 16px 56px',
+          backgroundColor: EDITORIAL.frameBg,
           fontFamily: FONT_SANS,
-          color: COLOR.fg,
+          color: EDITORIAL.ink,
           WebkitFontSmoothing: 'antialiased',
         }}>
         <Container
           style={{
-            maxWidth: '600px',
+            maxWidth: '640px',
             margin: '0 auto',
-            padding: `${SPACE.xxl} ${SPACE.lg}`,
+            backgroundColor: EDITORIAL.paper,
+            border: `1px solid ${EDITORIAL.rule}`,
+            boxShadow: '0 8px 32px -12px rgba(0,0,0,0.18)',
           }}>
-          <Section
-            style={{
-              backgroundColor: COLOR.bg,
-              border: `1px solid ${COLOR.border}`,
-              borderRadius: 0,
-            }}>
-            <BrandHeader eyebrow={eyebrow} subtitle={subtitle} />
-            <Section style={{ padding: `${SPACE.xl} ${SPACE.xxl}` }}>
-              {children}
-            </Section>
-          </Section>
-          <LegalFooter unsubscribeUrl={unsubscribeUrl} />
+          <Masthead eyebrow={eyebrow} subtitle={subtitle} />
+          <Section style={{ padding: '32px 36px 36px' }}>{children}</Section>
         </Container>
+        <LegalFooter unsubscribeUrl={unsubscribeUrl} />
       </Body>
     </Html>
   );
 }
 
-function BrandHeader({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: string }) {
+function Masthead({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: string }) {
   return (
     <Section
       style={{
-        padding: `${SPACE.xl} ${SPACE.xxl}`,
-        borderBottom: `1px solid ${COLOR.border}`,
+        padding: '26px 36px 16px',
+        borderBottom: `1.5px double ${EDITORIAL.ink}`,
       }}>
       <table
         role="presentation"
@@ -137,21 +133,23 @@ function BrandHeader({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: strin
               style={{
                 verticalAlign: 'middle',
                 paddingLeft: SPACE.md,
-                font: `800 18px/1 ${FONT_SANS}`,
+                font: `400 22px/1 ${FONT_SERIF}`,
+                fontStyle: 'italic',
                 letterSpacing: '-0.01em',
-                color: COLOR.fg,
+                color: EDITORIAL.ink,
               }}>
-              personal newsroom
+              <span style={{ fontWeight: 600, color: EDITORIAL.accent }}>Personal</span>{' '}
+              Beats
             </td>
             {eyebrow && (
               <td
                 style={{
                   verticalAlign: 'middle',
                   textAlign: 'right',
-                  font: `600 11px/1.2 ${FONT_SANS}`,
-                  color: COLOR.fgMuted,
+                  font: `500 10.5px/1 ${FONT_MONO}`,
+                  color: EDITORIAL.ink3,
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.12em',
                 }}>
                 {eyebrow}
               </td>
@@ -163,8 +161,8 @@ function BrandHeader({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: strin
         <Text
           style={{
             margin: `${SPACE.md} 0 0`,
-            font: `500 13px/1.45 ${FONT_SANS}`,
-            color: COLOR.fgMuted,
+            font: `400 13px/1.45 ${FONT_SANS}`,
+            color: EDITORIAL.ink3,
           }}>
           {subtitle}
         </Text>
@@ -173,6 +171,9 @@ function BrandHeader({ eyebrow, subtitle }: { eyebrow?: string; subtitle?: strin
   );
 }
 
+/** 38×38 ink square with serif italic "P" in paper. The accent dot from the
+ *  in-app brand mark (DESIGN §3.2) is omitted — absolute positioning is
+ *  unreliable in Outlook/Gmail. */
 function BrandMark() {
   return (
     <table
@@ -183,19 +184,20 @@ function BrandMark() {
       <tbody>
         <tr>
           <td
-            width={28}
-            height={28}
+            width={38}
+            height={38}
             style={{
-              width: '28px',
-              height: '28px',
-              backgroundColor: COLOR.brand,
+              width: '38px',
+              height: '38px',
+              backgroundColor: EDITORIAL.ink,
               textAlign: 'center',
               verticalAlign: 'middle',
-              font: `800 15px/1 ${FONT_SANS}`,
-              color: '#111',
+              font: `400 22px/1 ${FONT_SERIF}`,
+              fontStyle: 'italic',
+              color: EDITORIAL.paper,
               letterSpacing: '-0.02em',
             }}>
-            p
+            P
           </td>
         </tr>
       </tbody>
@@ -206,17 +208,24 @@ function BrandMark() {
 function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
   const year = new Date().getFullYear();
   const linkStyle: React.CSSProperties = {
-    color: COLOR.fgMuted,
+    color: EDITORIAL.ink3,
     textDecoration: 'underline',
   };
   return (
-    <Section style={{ padding: `${SPACE.xl} ${SPACE.sm} 0`, textAlign: 'center' }}>
+    <Container
+      style={{
+        maxWidth: '640px',
+        margin: `${SPACE.lg} auto 0`,
+        padding: `${SPACE.lg} ${SPACE.sm} 0`,
+        textAlign: 'center',
+      }}>
       <Text
         style={{
           margin: 0,
-          font: `500 11px/1.6 ${FONT_SANS}`,
-          color: COLOR.fgMuted,
-          letterSpacing: '0.02em',
+          font: `500 10.5px/1.6 ${FONT_MONO}`,
+          color: EDITORIAL.ink3,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
         }}>
         © {year} Personal Beats · Lemonode sp. z o.o. · Warszawa
       </Text>
@@ -225,7 +234,7 @@ function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
           <Hr
             style={{
               border: 'none',
-              borderTop: `1px solid ${COLOR.border}`,
+              borderTop: `1px solid ${EDITORIAL.rule}`,
               margin: `${SPACE.md} auto`,
               width: '40px',
             }}
@@ -234,7 +243,7 @@ function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
             style={{
               margin: 0,
               font: `400 11px/1.6 ${FONT_SANS}`,
-              color: COLOR.fgMuted,
+              color: EDITORIAL.ink3,
             }}>
             <Link href={unsubscribeUrl} style={linkStyle}>
               Unsubscribe from this kind of message
@@ -242,7 +251,7 @@ function LegalFooter({ unsubscribeUrl }: { unsubscribeUrl?: string }) {
           </Text>
         </>
       )}
-    </Section>
+    </Container>
   );
 }
 
